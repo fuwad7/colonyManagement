@@ -1,4 +1,4 @@
 package com.example.colonyManagement.service;
 
-public class BuildingService {
+public class OccupancyService {
 }

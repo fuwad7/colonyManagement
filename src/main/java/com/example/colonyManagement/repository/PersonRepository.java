@@ -1,4 +1,4 @@
 package com.example.colonyManagement.repository;
 
-public interface BuildingRepository {
+public interface PersonRepository {
 }
