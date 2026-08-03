@@ -17,6 +17,6 @@ public class Asset {
     private AssetType type;
 
     public enum AssetType {
-        FIELD, SCHOOl, COLLEGE, COMMUNITY_BUILDING
+        FIELD, SCHOOL, COLLEGE, COMMUNITY_BUILDING
     }
 }
