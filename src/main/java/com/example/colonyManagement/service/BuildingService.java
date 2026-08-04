@@ -25,7 +25,7 @@ public class BuildingService {
     @Transactional
     public List<Building>updateBuilding(Long id, Building updatedBuilding){
 return buildingRepository.findById(id)
-        .map()
+
     }
         @Transactional
         public void deleteBuilding(Long id) {
