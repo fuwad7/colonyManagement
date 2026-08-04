@@ -25,7 +25,6 @@ public class BuildingService {
     @Transactional
     public List<Building>updateBuilding(Long id, Building updatedBuilding){
 return buildingRepository.findById(id)
-hhgh
     }
         @Transactional
         public void deleteBuilding(Long id) {
