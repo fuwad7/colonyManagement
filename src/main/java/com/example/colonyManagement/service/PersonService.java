@@ -2,7 +2,6 @@ package com.example.colonyManagement.service;
 
 import com.example.colonyManagement.entity.Person;
 import com.example.colonyManagement.repository.PersonRepository;
-import com.example.colonyManagement.service.PersonService;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
