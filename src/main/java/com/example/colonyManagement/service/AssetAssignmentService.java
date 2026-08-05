@@ -15,7 +15,7 @@ public class AssetAssignmentService {
     @Autowired
     private AssetAssignmentRepository assetAssignmentRepository;
 
-public AssetAssignment saveAsset(AssetAssignment assetAssignment) {
+public AssetAssignment createAssignment(AssetAssignment assetAssignment) {
     return assetAssignmentRepository.save(assetAssignment);
 }
 public List<AssetAssignment>getAllAssignments(){
