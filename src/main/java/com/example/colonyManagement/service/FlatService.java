@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 
 public class FlatService {
-private final FlatRepository flatRepository;
+private FlatRepository flatRepository;
 
 public FlatService (FlatRepository flatRepository) {
     this.flatRepository = flatRepository;
@@ -28,5 +28,4 @@ public Flat createOrUpdateFlat(Flat flat){
 }
 public void deleteFlat(Long id){
     flatRepository.deleteById(id);}
-
 }
