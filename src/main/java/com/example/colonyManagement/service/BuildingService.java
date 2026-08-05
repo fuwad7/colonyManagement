@@ -2,9 +2,6 @@ package com.example.colonyManagement.service;
 
 import com.example.colonyManagement.repository.BuildingRepository;
 import com.example.colonyManagement.entity.Building;
-import org.hibernate.dialect.unique.CreateTableUniqueDelegate;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,12 +20,16 @@ public class BuildingService {
         return buildingRepository.findById(id);
     }
     @Transactional
-    public List<Building>updateBuilding(Long id, Building updatedBuilding){
-return buildingRepository.findById(id)
+    public Optional<Building> updateBuilding(Long id, Building buildingDetails){
+return buildingRepository.findById(id).map(building -> {
+    building.setName(buildingDetails.getName());
+    building.setFloorCount(buildingDetails.getFloorCount());
+    building.setUnitsPerFloor(buildingDetails.getUnitsPerFloor());
+    return buildingRepository.save(building);
+});
     }
         @Transactional
         public void deleteBuilding(Long id) {
             buildingRepository.deleteById(id);
         }
-
     }
