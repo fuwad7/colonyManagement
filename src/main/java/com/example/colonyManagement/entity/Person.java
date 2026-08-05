@@ -19,4 +19,7 @@ public class Person {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Person orElse(Object o) {
+    }
 }
