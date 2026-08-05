@@ -2,12 +2,13 @@ package com.example.colonyManagement.service;
 
 import com.example.colonyManagement.repository.BuildingRepository;
 import com.example.colonyManagement.entity.Building;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.beans.factory.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 public class BuildingService {
     private BuildingRepository buildingRepository;
     public Building createBuilding(Building building) {
