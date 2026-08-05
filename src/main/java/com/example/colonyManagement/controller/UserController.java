@@ -1,6 +1,4 @@
 package com.example.colonyManagement.controller;
-import com.example.colonyManagement.entity.Building;
-import com.example.colonyManagement.entity.Person;
 import com.example.colonyManagement.entity.User;
 import com.example.colonyManagement.service.UserService;
 import org.springframework.http.ResponseEntity;
