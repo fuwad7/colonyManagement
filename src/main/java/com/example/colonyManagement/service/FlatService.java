@@ -1,6 +1,5 @@
 package com.example.colonyManagement.service;
 
-import com.example.colonyManagement.entity.Building;
 import com.example.colonyManagement.entity.Flat;
 import java.util.List;
 import java.util.Optional;
