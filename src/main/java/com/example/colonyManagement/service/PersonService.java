@@ -10,7 +10,7 @@ import java.util.Optional;
 public class PersonService {
 private  PersonRepository personRepository;
 
-public Person savePerson(Person person){
+public Person createPerson(Person person){
     return personRepository.save(person);
 }
 public List<Person>getAllPerson(){

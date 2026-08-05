@@ -21,5 +21,6 @@ public class Person {
     private User user;
 
     public Person orElse(Object o) {
+        return null;
     }
 }

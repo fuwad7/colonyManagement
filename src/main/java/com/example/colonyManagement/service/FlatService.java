@@ -1,5 +1,6 @@
 package com.example.colonyManagement.service;
 
+import com.example.colonyManagement.entity.Building;
 import com.example.colonyManagement.entity.Flat;
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +24,18 @@ public List<Flat>getAllFlats(){
 public Optional<Flat>getFlatById(Long id) {
     return flatRepository.findById(id);
 }
-public Flat createOrUpdateFlat(Flat flat){
+public Flat createFlat(Flat flat){
     return flatRepository.save(flat);
 }
-public void deleteFlat(Long id){
+@Transactional
+public Optional<Flat> updateFlat(Long id, Flat flatDetails) {
+    return flatRepository.findById(id).map(flat -> {
+        flat.setFlatName(flatDetails.getFlatName());
+        flat.setFloorNumber(flatDetails.getFloorNumber());
+        return flatRepository.save(flat);
+    });
+} public void deleteFlat(Long id)
+    {
     flatRepository.deleteById(id);}
 }
+
