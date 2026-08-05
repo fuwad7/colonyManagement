@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class BuildingService {
+    @Autowired
     private BuildingRepository buildingRepository;
     public Building createBuilding(Building building) {
         return buildingRepository.save(building);

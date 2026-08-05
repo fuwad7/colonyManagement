@@ -2,12 +2,14 @@ package com.example.colonyManagement.service;
 
 import com.example.colonyManagement.entity.Person;
 import com.example.colonyManagement.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PersonService {
+    @Autowired
 private  PersonRepository personRepository;
 
 public Person createPerson(Person person){
