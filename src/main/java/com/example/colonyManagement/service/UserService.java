@@ -19,6 +19,7 @@ private UserRepository userRepository;
  public Optional<User>getUserByEmail(String email){
      return userRepository.findByEmail(email);
  }
+
  public Optional<User>getUserById(Long id){
      return userRepository.findById(id);
  }

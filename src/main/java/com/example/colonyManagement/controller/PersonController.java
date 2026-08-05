@@ -33,7 +33,6 @@ public class PersonController {
         try {Person updatedPerson = personService.updatePerson(id, personDetails);
         return ResponseEntity.ok(updatedPerson);
         } catch (RuntimeException e) {
-
             return ResponseEntity.notFound().build();}
     }
     @DeleteMapping("/{id}")
