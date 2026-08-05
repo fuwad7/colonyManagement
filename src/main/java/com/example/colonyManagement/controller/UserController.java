@@ -1,4 +1,4 @@
 package com.example.colonyManagement.controller;
 
-public class AuthController {
+public class UserController {
 }
