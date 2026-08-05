@@ -7,7 +7,6 @@ import lombok.*;
 @Table(name = "occupancies")
 @Data
 
-
 public class Occupancy {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +28,4 @@ private int id;
 public enum OccupancyType {
     OWNER, TENANT, SUB_TENANT
 }
-
 }
