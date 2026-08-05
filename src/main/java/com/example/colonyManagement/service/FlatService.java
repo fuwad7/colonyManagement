@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 
 public class FlatService {
-private FlatRepository flatRepository;
+private final FlatRepository flatRepository;
 
 public FlatService (FlatRepository flatRepository) {
     this.flatRepository = flatRepository;
