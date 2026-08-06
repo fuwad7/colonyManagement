@@ -110,7 +110,6 @@
                 vm.loading = false;
             }
         }
-
         function deleteUser(id) {
             if (!confirm('You want to remove this User?')) {
                 return;
