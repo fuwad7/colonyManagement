@@ -16,6 +16,13 @@ public class AssetService {
     public List<Asset>getAllAssets() {
         return assetRepository.findAll();
     }
+    public Asset updateAsset(Long id, Asset updated) {
+        return assetRepository.findById(id).map(existing -> {
+            existing.setName(updated.getName());
+            existing.setType(updated.getType());
+            return assetRepository.save(existing);
+        }).orElseThrow(() -> new RuntimeException("Asset not found: " + id));
+    }
     public Optional <Asset>getAssetById(Long Id)
     {
         return assetRepository.findById(Id);

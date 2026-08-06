@@ -22,6 +22,14 @@ public ResponseEntity<List<Asset>>getAllAssets(){
     List<Asset> assets = assetService.getAllAssets();
     return ResponseEntity.ok(assets);
 }
+    @PutMapping("/{id}")
+    public ResponseEntity<Asset> updateAsset(@PathVariable Long id, @RequestBody Asset updated) {
+        try {
+            return ResponseEntity.ok(assetService.updateAsset(id, updated));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 @GetMapping("/{id}")
     public ResponseEntity<Asset>getAssetById(@PathVariable Long id){
