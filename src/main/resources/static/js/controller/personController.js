@@ -3,38 +3,38 @@
 
     angular
         .module('colonyManagementApp')
-        .controller('BuildingController', BuildingController);
+        .controller('PersonController', PersonController);
 
-    BuildingController.$inject = ['BuildingService'];
+    PersonController.$inject = ['PersonService'];
 
-    function BuildingController(BuildingService) {
+    function PersonController(PersonService) {
         var vm = this;
 
-        vm.buildings = [];
-        vm.currentBuilding = {};
+        vm.persons = [];
+        vm.currentPerson = {};
         vm.error = null;
         vm.loading = false;
 
-        vm.getBuildings = getBuildings;
-        vm.getBuildingById = getBuildingById;
-        vm.editBuilding = editBuilding;
+        vm.getPersons = getPersons;
+        vm.getPersonById = getPersonById;
+        vm.editPerson = editPerson;
         vm.saveOrUpdate = saveOrUpdate;
-        vm.deleteBuilding = deleteBuilding;
+        vm.deletePerson = deletePerson;
         vm.clearForm = clearForm;
 
         activate();
 
         function activate() {
-            getBuildings();
+            getPersons();
         }
 
-        function getBuildings() {
+        function getPersons() {
             vm.loading = true;
             vm.error = null;
 
-            BuildingService.getAllBuildings()
+            PersonService.getAllPerson()
                 .then(function (data) {
-                    vm.buildings = data;
+                    vm.persons = data;
                 })
                 .catch(function (err) {
                     vm.error = err;
@@ -44,13 +44,13 @@
                 });
         }
 
-        function getBuildingById(id) {
+        function getPersonById(id) {
             vm.loading = true;
             vm.error = null;
 
-            BuildingService.getBuildingById(id)
+            PersonService.getPersonById(id)
                 .then(function (data) {
-                    vm.currentBuilding = data;
+                    vm.currentPerson = data;
                 })
                 .catch(function (err) {
                     vm.error = err;
@@ -60,26 +60,26 @@
                 });
         }
 
-        function editBuilding(building) {
-            getBuildingById(building.id);
+        function editPerson(person) {
+            getPersonById(person.id);
         }
 
         function saveOrUpdate() {
             vm.loading = true;
             vm.error = null;
 
-            if (vm.currentBuilding.id) {
-                BuildingService.updateBuilding(vm.currentBuilding.id, vm.currentBuilding)
+            if (vm.currentPerson.id) {
+                PersonService.updatePerson(vm.currentPerson.id, vm.currentPerson)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             } else {
-                BuildingService.createBuilding(vm.currentBuilding)
+                PersonService.createPerson(vm.currentPerson)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             }
 
             function handleWriteSuccess() {
-                getBuildings();
+                getPersons();
                 clearForm();
             }
 
@@ -88,14 +88,14 @@
                 vm.loading = false;
             }
         }
-        function deleteBuilding(id) {
-            if (!confirm('You want to remove this building?')) {
+        function deletePerson(id) {
+            if (!confirm('You want to remove this Person?')) {
                 return;
             }
             vm.loading = true;
-            BuildingService.deleteBuilding(id)
+            PersonService.deletePerson(id)
                 .then(function () {
-                    getBuildings();
+                    getPersons();
                 })
                 .catch(function (err) {
                     vm.error = err;
@@ -104,7 +104,7 @@
         }
 
         function clearForm() {
-            vm.currentBuilding = {};
+            vm.currentPerson = {};
         }
     }
 })();
