@@ -4,6 +4,7 @@
     angular
         .module('colonyManagementApp')
         .controller('AssetAssignmentController', AssetAssignmentController);
+
     AssetAssignmentController.$inject = ['AssetAssignmentService'];
 
     function AssetAssignmentController(AssetAssignmentService) {
@@ -15,10 +16,17 @@
         viewModel.successMessage = '';
         viewModel.newAssignmentData = {};
 
+        viewModel.searchPersonId = '';
+        viewModel.searchAssetId = '';
+
         viewModel.loadAllAssignments = loadAllAssignments;
+        viewModel.getAssignmentById = getAssignmentById;
+        viewModel.getAssignmentsByPerson = getAssignmentsByPerson;
+        viewModel.getAssignmentsByAsset = getAssignmentsByAsset;
         viewModel.saveAssignment = saveAssignment;
         viewModel.selectAssignmentForEdit = selectAssignmentForEdit;
         viewModel.removeAssignment = removeAssignment;
+        viewModel.resetFilters = resetFilters;
 
         activate();
 
@@ -35,6 +43,43 @@
                 .catch(function (error) {
                     viewModel.errorMessage = 'Assignments could not load: ' + error;
                 });
+        }
+
+        function getAssignmentById(id) {
+            clearMessages();
+            AssetAssignmentService.getAssignmentById(id)
+                .then(function (data) {
+                    viewModel.newAssignmentData = data;
+                })
+                .catch(handleError);
+        }
+
+        function getAssignmentsByPerson() {
+            if (!viewModel.searchPersonId) {
+                return loadAllAssignments();
+            }
+            clearMessages();
+            viewModel.searchAssetId = '';
+
+            AssetAssignmentService.getAssignmentsByPerson(viewModel.searchPersonId)
+                .then(function (data) {
+                    viewModel.assignments = data;
+                })
+                .catch(handleError);
+        }
+
+        function getAssignmentsByAsset() {
+            if (!viewModel.searchAssetId) {
+                return loadAllAssignments();
+            }
+            clearMessages();
+            viewModel.searchPersonId = '';
+
+            AssetAssignmentService.getAssignmentsByAsset(viewModel.searchAssetId)
+                .then(function (data) {
+                    viewModel.assignments = data;
+                })
+                .catch(handleError);
         }
 
         function saveAssignment() {
@@ -58,11 +103,13 @@
                     .catch(handleError);
             }
         }
+
         function selectAssignmentForEdit(assignment) {
-            viewModel.newAssignmentData = angular.copy(assignment);
+            getAssignmentById(assignment.id);
         }
+
         function removeAssignment(id) {
-            if (confirm('Are you sure you want to delete this assignment?')) {
+            if (confirm('You want to delete this assignment?')) {
                 clearMessages();
                 AssetAssignmentService.deleteAssignment(id)
                     .then(function () {
@@ -72,8 +119,15 @@
                     .catch(handleError);
             }
         }
+
         function resetForm() {
             viewModel.newAssignmentData = {};
+        }
+
+        function resetFilters() {
+            viewModel.searchPersonId = '';
+            viewModel.searchAssetId = '';
+            loadAllAssignments();
         }
 
         function clearMessages() {
