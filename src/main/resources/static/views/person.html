@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building Management</title>
+    <title>Person Directory Management</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; background-color: #f8f9fa; color: #333; }
         .container { max-width: 1000px; margin: 0 auto; background: #ffffff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
@@ -31,84 +31,85 @@
         .no-data { text-align: center; color: #718096; padding: 20px; font-style: italic; }
     </style>
 
-    <!-- 1. Core Framework -->
+    <!-- 1. Core Framework Engine -->
     <script src="https://googleapis.com"></script>
 
     <!-- 2. Main App Module Definition -->
     <script src="js/app.js"></script>
 
     <!-- 3. Backend Service Layer -->
-    <script src="js/services/buildingService.js"></script>
+    <script src="js/services/personService.js"></script>
 
     <!-- 4. Frontend UI Controller -->
-    <script src="js/controllers/buildingController.js"></script>
+    <script src="js/controllers/personController.js"></script>
 </head>
 
-<!-- Bind the Controller with the 'as vm' alias to scope properties and methods properly -->
-<body ng-controller="BuildingController as vm">
+<!-- Bind the Controller using your defined standard alias vm -->
+<body ng-controller="PersonController as vm">
 
 <div class="container">
-    <h1>🏢 Building Management Directory</h1>
+    <h1>👥 Person Directory Records</h1>
 
-    <!-- Global Feedback Indicators -->
+    <!-- Runtime Sync Notification Monitors -->
     <div class="status-msg loading" ng-show="vm.loading">
-        🔄 Processing request. Please wait...
+        🔄 Syncing profiles data directory... Please wait.
     </div>
     <div class="status-msg error" ng-show="vm.error">
-        ⚠️ Error Encountered: {{ vm.error }}
+        ⚠️ Execution Interrupted: {{ vm.error }}
     </div>
 
-    <!-- Dynamic Management Form -->
+
     <div class="form-section">
         <h3 style="margin-top: 0; color: #2d3748;">
-            {{ vm.currentBuilding.id ? '✏️ Edit Existing Building' : '➕ Add New Building' }}
+            {{ vm.currentPerson.id ? '✏️ Edit Profile Dossier' : '➕ Register New Member Profile' }}
         </h3>
 
         <form ng-submit="vm.saveOrUpdate()">
-            <!-- Hidden ID Track Flag -->
-            <input type="hidden" ng-model="vm.currentBuilding.id">
+            <!-- Hidden anchor attribute binding element -->
+            <input type="hidden" ng-model="vm.currentPerson.id">
 
             <div class="form-group">
-                <label for="buildingName">Building Name / Block Designation</label>
-                <input type="text" id="buildingName" ng-model="vm.currentBuilding.name" placeholder="e.g. Block A, Sunset Heights" required>
+                <label for="fullName">Individual's Full Name</label>
+                <!-- Form template targets currentPerson wrapper variables -->
+                <input type="text" id="fullName" ng-model="vm.currentPerson.fullName" placeholder="e.g. Johnathan Doe" required>
             </div>
 
             <div>
                 <button type="submit" class="btn btn-primary">
-                    {{ vm.currentBuilding.id ? 'Update Changes' : 'Save Record' }}
+                    {{ vm.currentPerson.id ? 'Update Dossier File' : 'Save Directory Record' }}
                 </button>
-                <button type="button" class="btn btn-secondary" ng-click="vm.clearForm()" ng-show="vm.currentBuilding.name || vm.currentBuilding.id">
-                    Clear / Cancel
+                <button type="button" class="btn btn-secondary" ng-click="vm.clearForm()" ng-show="vm.currentPerson.fullName || vm.currentPerson.id">
+                    Clear Data Form
                 </button>
             </div>
         </form>
     </div>
 
-    <!-- Inventory List Display Table -->
-    <h3 style="color: #2d3748;">📋 Active Building Inventories</h3>
+    <!-- Registered Population Data Table Layout Matrix -->
+    <h3 style="color: #2d3748;">📋 Active Colony Directory Index</h3>
     <table>
         <thead>
         <tr>
-            <th style="width: 15%;">Database ID</th>
-            <th style="width: 55%;">Building Location/Name</th>
-            <th style="width: 30%; text-align: right;">Available Operations</th>
+            <th style="width: 20%;">System Identifier</th>
+            <th style="width: 50%;">Member Legal Full Name</th>
+            <th style="width: 30%; text-align: right;">Operations Matrix</th>
         </tr>
         </thead>
         <tbody>
-        <!-- Conditional fallback when array object records are empty -->
-        <tr ng-if="vm.buildings.length === 0">
-            <td colspan="3" class="no-data">No building records found in backend service storage.</td>
+        <!-- Fallback safety logic block verification wrapper -->
+        <tr ng-if="vm.persons.length === 0">
+            <td colspan="3" class="no-data">No identity profiles found inside backend warehouse structures.</td>
         </tr>
 
-        <!-- Explicit controller data loop mapping -->
-        <tr ng-repeat="building in vm.buildings">
-            <td><code>#{{ building.id }}</code></td>
-            <td><strong>{{ building.name }}</strong></td>
+
+        <tr ng-repeat="person in vm.persons">
+            <td><code>#{{ person.id }}</code></td>
+            <td><strong>{{ person.fullName }}</strong></td>
             <td style="text-align: right;">
-                <button type="button" class="btn btn-edit" ng-click="vm.editBuilding(building)">
+                <button type="button" class="btn btn-edit" ng-click="vm.editPerson(person)">
                     Modify
                 </button>
-                <button type="button" class="btn btn-danger" ng-click="vm.deleteBuilding(building.id)">
+                <button type="button" class="btn btn-danger" ng-click="vm.deletePerson(person.id)">
                     Remove
                 </button>
             </td>
