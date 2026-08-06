@@ -17,11 +17,13 @@
         viewModel.newOccupancyData = {};
 
         viewModel.searchPersonId = '';
+        viewModel.searchType = '';
 
         viewModel.loadAllOccupancy = loadAllOccupancy;
         viewModel.getOccupancyById = getOccupancyById;
         viewModel.getOccupancyByPerson = getOccupancyByPerson;
-        viewModel.saveOccupancies = saveOccupancies;
+        viewModel.getOccupancyByType = getOccupancyByType;
+        viewModel.saveOccupancies = saveOccupancy;
         viewModel.selectOccupancyForEdit = selectOccupancyForEdit;
         viewModel.removeOccupancy = removeOccupancy;
         viewModel.resetFilters = resetFilters;
@@ -57,7 +59,7 @@
                 return loadAllOccupancy();
             }
             clearMessages();
-
+            viewModel.searchType = '';
 
             OccupancyService.getOccupancyByPerson(viewModel.searchPersonId)
                 .then(function (data) {
@@ -66,6 +68,19 @@
                 .catch(handleError);
         }
 
+        function getOccupancyByType() {
+            if (!viewModel.searchType) {
+                return loadAllOccupancy();
+            }
+            clearMessages();
+            viewModel.searchPersonId = '';
+
+            OccupancyService.getOccupancyByType(viewModel.searchType)
+                .then(function (data) {
+                    viewModel.occupancies = data;
+                })
+                .catch(handleError);
+        }
 
         function saveOccupancy() {
             clearMessages();
@@ -111,6 +126,7 @@
 
         function resetFilters() {
             viewModel.searchPersonId = '';
+            viewModel.searchType = '';
             loadAllOccupancy();
         }
 
