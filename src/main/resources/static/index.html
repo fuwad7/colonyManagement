@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="colonyManagementApp">
 <head>
     <meta charset="UTF-8">
-    <title>Colony Management</title>
+    <title>Colony Management System</title>
+
+    <!-- 1. Load Angular Core -->
+    <script src="https://googleapis.com"></script>
+
+    <!-- 2. Load Main Module Configuration -->
+    <script src="js/app.js"></script>
+
+    <!-- 3. Load All Registered Controllers -->
+    <script src="js/controllers/assetAssignmentController.js"></script>
+    <script src="js/controllers/assetController.js"></script>
+    <script src="js/controllers/buildingController.js"></script>
+    <script src="js/controllers/flatController.js"></script>
+    <script src="js/controllers/occupancyController.js"></script>
+    <script src="js/controllers/personController.js"></script>
+    <script src="js/controllers/userController.js"></script>
 </head>
 <body>
+
+<!-- Example: Using the Building Controller -->
+<div ng-controller="BuildingController">
+    <h2>{{ title }}</h2>
+</div>
+
+<!-- Example: Using the Person Controller -->
+<div ng-controller="PersonController">
+    <h2>{{ title }}</h2>
+</div>
 
 </body>
 </html>
