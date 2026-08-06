@@ -3,38 +3,39 @@
 
     angular
         .module('colonyManagementApp')
-        .controller('PersonController', PersonController);
+        .controller('UserController', UserController);
 
-    PersonController.$inject = ['PersonService'];
+    UserController.$inject = ['UserService'];
 
-    function PersonController(PersonService) {
+    function UserController(UserService) {
         var vm = this;
 
-        vm.persons = [];
-        vm.currentPerson = {};
+        vm.users = [];
+        vm.currentUsers = {};
         vm.error = null;
         vm.loading = false;
 
-        vm.getPersons = getPersons;
-        vm.getPersonById = getPersonById;
-        vm.editPerson = editPerson;
+        vm.getUsers = getUsers;
+        vm.getUserById = getUserById;
+        vm.editUser = editUser;
+        vm.getUserByEmail = getUserByEmail;
         vm.saveOrUpdate = saveOrUpdate;
-        vm.deletePerson = deletePerson;
+        vm.deleteUser = deleteUser;
         vm.clearForm = clearForm;
 
         activate();
 
         function activate() {
-            getPersons();
+            getUsers();
         }
 
-        function getPersons() {
+        function getUsers() {
             vm.loading = true;
             vm.error = null;
 
-            PersonService.getAllPerson()
+            UserService.getAllUsers()
                 .then(function (data) {
-                    vm.persons = data;
+                    vm.users = data;
                 })
                 .catch(function (err) {
                     vm.error = err;
@@ -44,13 +45,13 @@
                 });
         }
 
-        function getPersonById(id) {
+        function getUserById(id) {
             vm.loading = true;
             vm.error = null;
 
-            PersonService.getPersonById(id)
+            UserService.getUserById(id)
                 .then(function (data) {
-                    vm.currentPerson = data;
+                    vm.currentUsers = data;
                 })
                 .catch(function (err) {
                     vm.error = err;
@@ -60,26 +61,26 @@
                 });
         }
 
-        function editPerson(person) {
-            getPersonById(person.id);
+        function editUser(user) {
+            getUserById(user.id);
         }
 
         function saveOrUpdate() {
             vm.loading = true;
             vm.error = null;
 
-            if (vm.currentPerson.id) {
-                PersonService.updatePerson(vm.currentPerson.id, vm.currentPerson)
+            if (vm.currentUsers.id) {
+                UserService.updateUser(vm.currentUsers.id, vm.currentUsers)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             } else {
-                PersonService.createPerson(vm.currentPerson)
+                UserService.saveUser(vm.currentUsers)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             }
 
             function handleWriteSuccess() {
-                getPersons();
+                getUsers();
                 clearForm();
             }
 
@@ -88,14 +89,14 @@
                 vm.loading = false;
             }
         }
-        function deletePerson(id) {
-            if (!confirm('You want to remove this Person?')) {
+        function deleteUser(id) {
+            if (!confirm('You want to remove this User?')) {
                 return;
             }
             vm.loading = true;
-            PersonService.deletePerson(id)
+            UserService.deleteUser(id)
                 .then(function () {
-                    getPersons();
+                    getUsers();
                 })
                 .catch(function (err) {
                     vm.error = err;
@@ -104,7 +105,7 @@
         }
 
         function clearForm() {
-            vm.currentPerson = {};
+            vm.currentUsers = {};
         }
     }
 })();
