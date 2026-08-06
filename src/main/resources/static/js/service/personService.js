@@ -11,36 +11,36 @@
         var baseUrl = '/api/persons';
 
         var service = {
-            createFlat: createFlat,
-            getAllFlats: getAllFlats,
-            getFlatById: getFlatById,
-            updateFlat: updateFlat,
-            deleteFlat: deleteFlat
+            createPerson: createPerson,
+            getAllPerson: getAllPerson,
+            getPersonById: getPersonById,
+            updatePerson: updatePerson,
+            deletePerson: deletePerson
         };
 
         return service;
 
-        function createFlat(flat) {
-            return $http.post(baseUrl, flat)
+        function createPerson(person) {
+            return $http.post(baseUrl, person)
                 .then(handleSuccess, handleError);
         }
 
-        function getAllFlats() {
+        function getAllPerson() {
             return $http.get(baseUrl)
                 .then(handleSuccess, handleError);
         }
 
-        function getFlatById(id) {
+        function getPersonById(id) {
             return $http.get(baseUrl + '/' + id)
                 .then(handleSuccess, handleError);
         }
 
-        function updateFlat(id, flatDetails) {
-            return $http.put(baseUrl + '/' + id, flatDetails)
+        function updatePerson(id, personDetails) {
+            return $http.put(baseUrl + '/' + id, personDetails)
                 .then(handleSuccess, handleError);
         }
 
-        function deleteFlat(id) {
+        function deletePerson(id) {
             return $http.delete(baseUrl + '/' + id)
                 .then(handleSuccess, handleError);
         }
