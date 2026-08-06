@@ -43,6 +43,16 @@ public class AssetAssignmentController {
         List<AssetAssignment> assignments = assetAssignmentService.getAssignmentsByAsset(assetId);
         return ResponseEntity.ok(assignments);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<AssetAssignment> updateAssignment(@PathVariable Long id, @RequestBody AssetAssignment assetAssignment) {
+        try {
+            // Assumes your service layer accepts an ID and the update entity payload
+            AssetAssignment updatedAssignment = assetAssignmentService.updateAssignment(id, assetAssignment);
+            return ResponseEntity.ok(updatedAssignment);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build(); // Return 404 if the assignment ID doesn't exist
+        }
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void>deleteAssignment(@PathVariable Long id){
         assetAssignmentService.deleteAssignment(id);

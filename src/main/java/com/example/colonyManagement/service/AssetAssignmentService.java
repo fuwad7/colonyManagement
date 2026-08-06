@@ -31,6 +31,16 @@ public List<AssetAssignment>getAssignmentsByAsset(Long assetId)
 {
     return assetAssignmentRepository.findByAssetId(assetId);
 }
+    @Transactional
+    public AssetAssignment updateAssignment(Long id, AssetAssignment updatedDetails) {
+        return assetAssignmentRepository.findById(id)
+                .map(existingAssignment -> {
+                    existingAssignment.setPerson(updatedDetails.getPerson());
+                    existingAssignment.setAsset(updatedDetails.getAsset());
+                    return assetAssignmentRepository.save(existingAssignment);
+                })
+                .orElseThrow(() -> new RuntimeException("AssetAssignment not found with id " + id));
+    }
 @Transactional
     public void deleteAssignment(Long id){
     assetAssignmentRepository.deleteById(id);
