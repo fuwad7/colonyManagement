@@ -8,103 +8,119 @@
     OccupancyController.$inject = ['OccupancyService'];
 
     function OccupancyController(OccupancyService) {
-        var vm = this;
+        var viewModel = this;
 
-        vm.occupancies = [];
-        vm.currentOccupancies = {};
-        vm.error = null;
-        vm.loading = false;
+        viewModel.occupancies = [];
+        viewModel.currentOccupancy = null;
+        viewModel.errorMessage = '';
+        viewModel.successMessage = '';
+        viewModel.newOccupancyData = {};
 
-        vm.getOccupancies = getOccupancies;
-        vm.getOccupancyById = getOccupancyById;
-        vm.editOccupancy = editOccupancy;
-        vm.saveOrUpdate = saveOrUpdate;
-        vm.deleteOccupancy = deleteOccupancy;
-        vm.clearForm = clearForm;
+        viewModel.searchPersonId = '';
+
+        viewModel.loadAllOccupancy = loadAllOccupancy;
+        viewModel.getOccupancyById = getOccupancyById;
+        viewModel.getOccupancyByPerson = getOccupancyByPerson;
+        viewModel.saveOccupancies = saveOccupancies;
+        viewModel.selectOccupancyForEdit = selectOccupancyForEdit;
+        viewModel.removeOccupancy = removeOccupancy;
+        viewModel.resetFilters = resetFilters;
 
         activate();
 
         function activate() {
-            getFlats();
+            loadAllOccupancy();
         }
 
-        function getFlats() {
-            vm.loading = true;
-            vm.error = null;
-
-            FlatService.getAllFlats()
+        function loadAllOccupancy() {
+            clearMessages();
+            OccupancyService.getAllOccupancy()
                 .then(function (data) {
-                    vm.flats = data;
+                    viewModel.occupancies = data;
                 })
-                .catch(function (err) {
-                    vm.error = err;
-                })
-                .finally(function () {
-                    vm.loading = false;
+                .catch(function (error) {
+                    viewModel.errorMessage = 'Occupancies could not load: ' + error;
                 });
         }
 
-        function getFlatsById(id) {
-            vm.loading = true;
-            vm.error = null;
-
-            FlatService.getFLatsById(id)
+        function getOccupancyById(id) {
+            clearMessages();
+            OccupancyService.getOccupancyById(id)
                 .then(function (data) {
-                    vm.currentFlats = data;
+                    viewModel.newOccupancyData = data;
                 })
-                .catch(function (err) {
-                    vm.error = err;
-                })
-                .finally(function () {
-                    vm.loading = false;
-                });
+                .catch(handleError);
         }
 
-        function editFlats(flats) {
-            getFlatsById(flats.id);
+        function getOccupancyByPerson() {
+            if (!viewModel.searchPersonId) {
+                return loadAllOccupancy();
+            }
+            clearMessages();
+
+
+            OccupancyService.getOccupancyByPerson(viewModel.searchPersonId)
+                .then(function (data) {
+                    viewModel.occupancies = data;
+                })
+                .catch(handleError);
         }
 
-        function saveOrUpdate() {
-            vm.loading = true;
-            vm.error = null;
 
-            if (vm.currentFlats.id) {
-                FlatService.updateFlat(vm.currentFlats.id, vm.currentFlats)
-                    .then(handleWriteSuccess)
-                    .catch(handleWriteError);
+        function saveOccupancy() {
+            clearMessages();
+
+            if (viewModel.newOccupancyData.id) {
+                OccupancyService.updateOccupancy(viewModel.newOccupancyData.id, viewModel.newOccupancyData)
+                    .then(function (data) {
+                        viewModel.successMessage = 'Occupancy updated successfully!';
+                        resetForm();
+                        loadAllOccupancy();
+                    })
+                    .catch(handleError);
             } else {
-                FlatService.createFlat(vm.currentFlats)
-                    .then(handleWriteSuccess)
-                    .catch(handleWriteError);
-            }
-
-            function handleWriteSuccess() {
-                getFlats();
-                clearForm();
-            }
-
-            function handleWriteError(err) {
-                vm.error = err;
-                vm.loading = false;
+                OccupancyService.createOccupancy(viewModel.newOccupancyData)
+                    .then(function (data) {
+                        viewModel.successMessage = 'Occupancy created successfully!';
+                        resetForm();
+                        loadAllOccupancy();
+                    })
+                    .catch(handleError);
             }
         }
-        function deleteFlat(id) {
-            if (!confirm('You want to remove this Flat?')) {
-                return;
-            }
-            vm.loading = true;
-            FlatService.deleteFlats(id)
-                .then(function () {
-                    getFlats();
-                })
-                .catch(function (err) {
-                    vm.error = err;
-                    vm.loading = false;
-                });
+
+        function selectOccupancyForEdit(occupancy) {
+            getOccupancyById(occupancy.id);
         }
 
-        function clearForm() {
-            vm.currentFlats = {};
+        function removeOccupancy(id) {
+            if (confirm('You want to delete this Occupancy?')) {
+                clearMessages();
+                OccupancyService.deleteOccupancy(id)
+                    .then(function () {
+                        viewModel.successMessage = 'Occupancy deleted successfully.';
+                        loadAllOccupancy();
+                    })
+                    .catch(handleError);
+            }
+        }
+
+        function resetForm() {
+            viewModel.newOccupancyData = {};
+        }
+
+        function resetFilters() {
+            viewModel.searchPersonId = '';
+            loadAllOccupancy();
+        }
+
+        function clearMessages() {
+            viewModel.errorMessage = '';
+            viewModel.successMessage = '';
+        }
+
+        function handleError(error) {
+            viewModel.errorMessage = 'Operation failed: ' + error;
         }
     }
 })();
