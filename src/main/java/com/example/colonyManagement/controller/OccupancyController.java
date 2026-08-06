@@ -1,8 +1,6 @@
 package com.example.colonyManagement.controller;
-import com.example.colonyManagement.entity.AssetAssignment;
-import com.example.colonyManagement.entity.Building;
+
 import com.example.colonyManagement.entity.Occupancy;
-import com.example.colonyManagement.entity.Person;
 import com.example.colonyManagement.service.OccupancyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
