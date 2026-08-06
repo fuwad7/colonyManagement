@@ -14,11 +14,12 @@
         vm.currentUsers = {};
         vm.error = null;
         vm.loading = false;
+        vm.searchEmail = '';
 
         vm.getUsers = getUsers;
         vm.getUserById = getUserById;
-        vm.editUser = editUser;
         vm.getUserByEmail = getUserByEmail;
+        vm.editUser = editUser;
         vm.saveOrUpdate = saveOrUpdate;
         vm.deleteUser = deleteUser;
         vm.clearForm = clearForm;
@@ -61,6 +62,26 @@
                 });
         }
 
+        function getUserByEmail() {
+            if (!vm.searchEmail) {
+                return getUsers();
+            }
+            vm.loading = true;
+            vm.error = null;
+
+            UserService.getUserByEmail(vm.searchEmail)
+                .then(function (data) {
+                    vm.users = angular.isArray(data) ? data : [data];
+                })
+                .catch(function (err) {
+                    vm.error = err;
+                    vm.users = [];
+                })
+                .finally(function () {
+                    vm.loading = false;
+                });
+        }
+
         function editUser(user) {
             getUserById(user.id);
         }
@@ -89,6 +110,7 @@
                 vm.loading = false;
             }
         }
+
         function deleteUser(id) {
             if (!confirm('You want to remove this User?')) {
                 return;
@@ -106,6 +128,7 @@
 
         function clearForm() {
             vm.currentUsers = {};
+            vm.searchEmail = '';
         }
     }
 })();
