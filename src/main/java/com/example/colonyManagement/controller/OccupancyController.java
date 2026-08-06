@@ -37,6 +37,18 @@ public class OccupancyController {
         List<Occupancy> occupancies = occupancyService.getOccupancyByPerson(personId);
         return ResponseEntity.ok(occupancies);}
 
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<Occupancy>> getOccupancyByType(@PathVariable Occupancy.OccupancyType type) {
+        return ResponseEntity.ok(occupancyService.getOccupancyByType(type));
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Occupancy> updateOccupancy(@PathVariable int id, @RequestBody Occupancy occupancyDetails) {
+        try {Occupancy updatedOccupancy = occupancyService.updateOccupancy(id, occupancyDetails);
+            return ResponseEntity.ok(updatedOccupancy);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();}
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void>deleteOccupancy(@PathVariable int id){
         occupancyService.deleteOccupancy(id);
