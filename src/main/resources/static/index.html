@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colony Management Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div id="authView" class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-brand">
+                <h1>🏢 Colony Management</h1>
+                <p>Sign in to your account</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button id="tabLoginBtn" class="auth-tab-btn active" onclick="switchAuthTab('login')">Login</button>
+                <button id="tabRegBtn" class="auth-tab-btn" onclick="switchAuthTab('register')">Register</button>
+            </div>
+
+            <div id="authError" style="display:none; color:var(--accent-rose); background:rgba(244,63,94,0.1); border:1px solid rgba(244,63,94,0.3); padding:10px; border-radius:8px; margin-bottom:15px; font-size:0.85rem"></div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" class="form-input" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-input" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+
+                <div class="admin-preset-box">
+                    <span>Default Admin</span>
+                    <button type="button" class="btn-inline-preset" onclick="fillAdminCredentials()">Use admin / admin123</button>
+                </div>
+            </form>
+
+            <form id="registerForm" onsubmit="handleRegister(event)" style="display:none">
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input type="text" id="regUsername" class="form-input" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" class="form-input" placeholder="Email address">
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" class="form-input" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="appView" style="display:none; flex-direction:column; min-height:100vh">
+        <header class="app-header">
+            <div class="brand-title">
+                🏢 Colony Portal
+            </div>
+            <div class="user-profile-bar">
+                <span id="displayUsername" style="font-weight:600">user</span>
+                <span id="displayRole" class="role-badge">USER</span>
+                <button class="btn-logout" onclick="handleLogout()">Logout</button>
+            </div>
+        </header>
+
+        <div class="app-container">
+            <nav class="app-sidebar">
+                <a id="nav-dashboard" class="nav-item active" onclick="switchNav('dashboard')">
+                    📊 Dashboard
+                </a>
+                <a id="nav-buildings" class="nav-item" onclick="switchNav('buildings')">
+                    🏢 Buildings & Floors
+                </a>
+                <a id="nav-users" class="nav-item" onclick="switchNav('users')">
+                    👥 User Management
+                </a>
+                <a id="nav-assets" class="nav-item" onclick="switchNav('assets')">
+                    ⚙️ Assets
+                </a>
+                <a id="nav-persons" class="nav-item" onclick="switchNav('persons')">
+                    👤 Residents
+                </a>
+            </nav>
+
+            <main class="app-content">
+
+                <div id="sec-dashboard">
+                    <div class="section-title">
+                        <span>Dashboard</span>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
+                            <div class="stat-info">
+                                <h3 id="statBuildings">0</h3>
+                                <p>Buildings</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="color:var(--accent-indigo)">🔑</div>
+                            <div class="stat-info">
+                                <h3 id="statFlats">0</h3>
+                                <p>Flats</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="color:var(--accent-emerald)">👤</div>
+                            <div class="stat-info">
+                                <h3 id="statResidents">0</h3>
+                                <p>Residents</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="color:var(--accent-amber)">🏠</div>
+                            <div class="stat-info">
+                                <h3 id="statOwners">0</h3>
+                                <p>Owners</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="color:var(--accent-blue)">🔑</div>
+                            <div class="stat-info">
+                                <h3 id="statTenants">0</h3>
+                                <p>Tenants</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="color:var(--accent-rose)">🤝</div>
+                            <div class="stat-info">
+                                <h3 id="statSubTenants">0</h3>
+                                <p>Sub-Tenants</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="color:var(--accent-emerald)">⚙️</div>
+                            <div class="stat-info">
+                                <h3 id="statAssets">0</h3>
+                                <p>Assets</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="color:var(--accent-indigo)">🔒</div>
+                            <div class="stat-info">
+                                <h3 id="statUsers">0</h3>
+                                <p>Users</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sec-buildings" style="display:none">
+                    <div class="section-title">
+                        <span>Buildings & Floors</span>
+                    </div>
+
+                    <div class="card-panel" id="addBuildingPanel">
+                        <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-blue)">+ Add Building</h3>
+                        <form id="createBuildingForm" onsubmit="handleCreateBuilding(event)"
+                            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px">
+                            <div>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Building Name</label>
+                                <input type="text" id="bldgName" class="form-input" placeholder="Building Name" required>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Floor Count</label>
+                                <input type="number" id="bldgFloors" class="form-input" min="1" max="50" placeholder="Number of floors" required>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Units / Floor</label>
+                                <input type="number" id="bldgUnits" class="form-input" min="1" max="20" placeholder="Units per floor" required>
+                            </div>
+                            <div style="display:flex; align-items:flex-end">
+                                <button type="submit" class="btn-primary" style="height:44px">Create Building</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="section-title" style="font-size:1.1rem; margin-top:20px">Buildings:</div>
+                    <div id="buildingListGrid" class="building-grid"></div>
+
+                    <div style="margin-top:32px">
+                        <div id="selectedBuildingTitle" class="section-title" style="font-size:1.2rem; color:var(--accent-blue)">
+                            🏢 Floor Layout
+                        </div>
+                        <div id="floorLayoutContainer" class="floor-container">
+                            <p style="color:var(--text-secondary)">Select a building to view layout.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sec-users" style="display:none">
+                    <div class="section-title">
+                        <span>User Management</span>
+                    </div>
+
+                    <div class="card-panel">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="sec-assets" style="display:none">
+                    <div class="section-title">
+                        <span>Assets</span>
+                    </div>
+
+                    <div id="assetAdminRow" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px; margin-bottom:24px">
+                        <div class="card-panel">
+                            <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-blue)">+ Add Asset</h3>
+                            <form id="createAssetForm" onsubmit="handleCreateAsset(event)">
+                                <div class="form-group">
+                                    <label>Asset Name</label>
+                                    <input type="text" id="assetName" class="form-input" placeholder="Asset Name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Asset Type</label>
+                                    <select id="assetType" class="form-input" required>
+                                        <option value="FIELD">FIELD</option>
+                                        <option value="SCHOOL">SCHOOL</option>
+                                        <option value="COLLEGE">COLLEGE</option>
+                                        <option value="COMMUNITY_BUILDING">COMMUNITY_BUILDING</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-primary">Save Asset</button>
+                            </form>
+                        </div>
+
+                        <div class="card-panel">
+                            <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-emerald)">📋 Assign Person to Asset</h3>
+                            <form id="assignAssetForm" onsubmit="handleAssignAssetToPerson(event)">
+                                <div class="form-group">
+                                    <label>Select Asset</label>
+                                    <select id="assignAssetSelect" class="form-input" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="assetPersonName" class="form-input" placeholder="Person Full Name" required>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+                                    <div class="form-group">
+                                        <label>Phone</label>
+                                        <input type="text" id="assetPersonPhone" class="form-input" placeholder="Phone" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>NID / ID</label>
+                                        <input type="text" id="assetPersonId" class="form-input" placeholder="ID Number" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Role / Position</label>
+                                    <input type="text" id="assetJobRole" class="form-input" placeholder="Job Role" required>
+                                </div>
+                                <button type="submit" class="btn-primary" style="background:linear-gradient(135deg, var(--accent-emerald), #059669)">Assign Person</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card-panel">
+                        <h3 style="font-size:1.1rem; margin-bottom:16px">Asset Assignments</h3>
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Type</th>
+                                    <th>Assigned Person</th>
+                                    <th>Job Role</th>
+                                    <th id="assetActionTh">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assetAssignTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="sec-persons" style="display:none">
+                    <div class="section-title">
+                        <span>Resident Directory</span>
+                    </div>
+
+                    <div class="card-panel">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th>
+                                    <th>Phone</th>
+                                    <th>Person ID</th>
+                                </tr>
+                            </thead>
+                            <tbody id="personTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <div id="assignModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size:1.2rem; color:var(--accent-blue)">Assign Resident to <span id="modalFlatName">Flat</span></h3>
+                <button class="modal-close" onclick="closeAssignModal()">&times;</button>
+            </div>
+            <form id="assignModalForm" onsubmit="handleAssignOccupant(event)">
+                <div class="form-group">
+                    <label>Occupancy Type</label>
+                    <select id="resOccupancyType" class="form-input" required>
+                        <option value="OWNER">OWNER</option>
+                        <option value="TENANT">TENANT</option>
+                        <option value="SUB_TENANT">SUB_TENANT</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="resFullName" class="form-input" placeholder="Full Name" required>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" id="resPhone" class="form-input" placeholder="Phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>NID / ID</label>
+                        <input type="text" id="resPersonId" class="form-input" placeholder="ID Number" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Rented From (Landlord) - Optional</label>
+                    <select id="rentedFromSelect" class="form-input"></select>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
+                    <button type="button" style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer" onclick="closeAssignModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editUserModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size:1.2rem; color:var(--accent-blue)">Edit User</h3>
+                <button class="modal-close" onclick="closeEditUserModal()">&times;</button>
+            </div>
+            <form id="editUserForm" onsubmit="handleSaveEditedUser(event)">
+                <input type="hidden" id="editUserId">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="editUsername" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="editEmail" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="editRole" class="form-input" required>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="RESIDENT">RESIDENT</option>
+                        <option value="STAFF">STAFF</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>New Password (optional)</label>
+                    <input type="password" id="editPassword" class="form-input" placeholder="New password">
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
+                    <button type="button" style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer" onclick="closeEditUserModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editBuildingModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size:1.2rem; color:var(--accent-blue)">Edit Building</h3>
+                <button class="modal-close" onclick="closeEditBuildingModal()">&times;</button>
+            </div>
+            <form id="editBuildingForm" onsubmit="handleSaveEditedBuilding(event)">
+                <input type="hidden" id="editBuildingId">
+                <div class="form-group">
+                    <label>Building Name</label>
+                    <input type="text" id="editBuildingName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Floor Count</label>
+                    <input type="number" id="editBuildingFloors" class="form-input" min="1" max="50" required>
+                </div>
+                <div class="form-group">
+                    <label>Units / Floor</label>
+                    <input type="number" id="editBuildingUnits" class="form-input" min="1" max="20" required>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
+                    <button type="button" style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer" onclick="closeEditBuildingModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
