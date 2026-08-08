@@ -7,7 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
+<<<<<<< HEAD
 @RequestMapping({"/api/asset-assignments", "/api/asset-Assignment"})
+=======
+
+@RequestMapping("/api/asset-Assignment")
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838
 public class AssetAssignmentController {
 
     private final AssetAssignmentService assetAssignmentService;

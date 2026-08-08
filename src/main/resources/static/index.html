@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
 
 <head>
     <meta charset="UTF-8">
@@ -474,3 +475,127 @@
 </body>
 
 </html>
+=======
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colony Management System Hub</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px 20px; background-color: #f4f6f9; color: #333; margin: 0; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 50px; }
+        header h1 { color: #2c3e50; margin: 0 0 10px 0; font-size: 2.5em; }
+        header p { color: #7f8c8d; margin: 0; font-size: 1.1em; }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .nav-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            border-top: 4px solid #34495e;
+        }
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-infrastructure { border-top-color: #3182ce; }
+        .card-inventory { border-top-color: #dd6b20; }
+        .card-people { border-top-color: #38a169; }
+        .card-security { border-top-color: #e53e3e; }
+
+        .card-icon { font-size: 2.2em; margin-bottom: 15px; }
+        .card-title { font-size: 1.3em; font-weight: 700; color: #2d3748; margin-bottom: 10px; }
+        .card-desc { font-size: 0.95em; color: #718096; line-height: 1.5; flex-grow: 1; }
+
+        .launch-action {
+            margin-top: 20px;
+            font-weight: 600;
+            color: #3182ce;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+        }
+        .nav-card:hover .launch-action { color: #2b6cb0; text-decoration: underline; }
+
+        footer { text-align: center; margin-top: 60px; color: #a0aec0; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🏢 Colony Management System</h1>
+    </header>
+
+    <main class="dashboard-grid">
+
+        <a href="building.html" class="nav-card card-infrastructure">
+            <div class="card-icon">🏢</div>
+            <div class="card-title">Buildings Directory</div>
+            <div class="card-desc">Manage physical structural blocks, facilities layouts, and asset housing locations across the colony sectors.</div>
+            <div class="launch-action">Open Directory &rarr;</div>
+        </a>
+
+        <a href="flat.html" class="nav-card card-infrastructure">
+            <div class="card-icon">🔑</div>
+            <div class="card-title">Flat & Units Ledger</div>
+            <div class="card-desc">Log individual residential apartments, office rooms, layout details, and property structural configuration settings.</div>
+            <div class="launch-action">Manage Units &rarr;</div>
+        </a>
+
+        <a href="person.html" class="nav-card card-people">
+            <div class="card-icon">👥</div>
+            <div class="card-title">Person Profiles</div>
+            <div class="card-desc">Register civilian records, target member files, full identity indices, and historical colony member profile dossiers.</div>
+            <div class="launch-action">View Residents &rarr;</div>
+        </a>
+
+        <a href="occupancy.html" class="nav-card card-people">
+            <div class="card-icon">🏠</div>
+            <div class="card-title">Occupancy Tracking</div>
+            <div class="card-desc">Monitor resident leases, check tenant structural occupancy contexts, and log historical lease tenure types.</div>
+            <div class="launch-action">Launch Tracker &rarr;</div>
+        </a>
+
+        <a href="asset.html" class="nav-card card-inventory">
+            <div class="card-icon">⚙️</div>
+            <div class="card-title">Asset Inventory</div>
+            <div class="card-desc">Audit hardware machinery inventories, electronic items, utility grids, classifications, and system asset statuses.</div>
+            <div class="launch-action">Audit Inventory &rarr;</div>
+        </a>
+
+        <a href="asset-assignment.html" class="nav-card card-inventory">
+            <div class="card-icon">📋</div>
+            <div class="card-title">Asset Assignments</div>
+            <div class="card-desc">Allocate system assets cleanly to verified persons, manage inventory handovers, and clear check-out logs.</div>
+            <div class="launch-action">Review Allocations &rarr;</div>
+        </a>
+
+        <a href="user.html" class="nav-card card-security">
+            <div class="card-icon">🔒</div>
+            <div class="card-title">User Accounts</div>
+            <div class="card-desc">Administer high-level security permissions, modify credentials handles, and manage operator console access profiles.</div>
+            <div class="launch-action">Access Console &rarr;</div>
+        </a>
+
+    </main>
+
+    <footer>
+        Colony Management Infrastructure Network &bull; Connected with AngularJS Frontend Ecosystem
+    </footer>
+</div>
+
+</body>
+</html>
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838

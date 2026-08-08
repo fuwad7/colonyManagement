@@ -31,17 +31,38 @@
         .no-data { text-align: center; color: #718096; padding: 20px; font-style: italic; }
     </style>
 
+<<<<<<< HEAD
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/service/personService.js"></script>
     <script src="/js/controller/personController.js"></script>
 </head>
 
+=======
+    <!-- 1. Core Framework Engine -->
+    <script src="https://googleapis.com"></script>
+
+    <!-- 2. Main App Module Definition -->
+    <script src="js/app.js"></script>
+
+    <!-- 3. Backend Service Layer -->
+    <script src="js/services/personService.js"></script>
+
+    <!-- 4. Frontend UI Controller -->
+    <script src="js/controllers/personController.js"></script>
+</head>
+
+<!-- Bind the Controller using your defined standard alias vm -->
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838
 <body ng-controller="PersonController as vm">
 
 <div class="container">
     <h1>👥 Person Directory Records</h1>
 
+<<<<<<< HEAD
+=======
+    <!-- Runtime Sync Notification Monitors -->
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838
     <div class="status-msg loading" ng-show="vm.loading">
         🔄 Syncing profiles data directory... Please wait.
     </div>
@@ -49,6 +70,7 @@
         ⚠️ Execution Interrupted: {{ vm.error }}
     </div>
 
+<<<<<<< HEAD
     <div class="form-section">
         <h3 style="margin-top: 0; color: #2d3748;">
             {{ vm.currentPerson.id ? '✏️ Edit Profile' : '➕ Register New Member Profile' }}
@@ -70,6 +92,27 @@
             <div>
                 <button type="submit" class="btn btn-primary">
                     {{ vm.currentPerson.id ? 'Update Profile' : 'Save Directory Record' }}
+=======
+
+    <div class="form-section">
+        <h3 style="margin-top: 0; color: #2d3748;">
+            {{ vm.currentPerson.id ? '✏️ Edit Profile Dossier' : '➕ Register New Member Profile' }}
+        </h3>
+
+        <form ng-submit="vm.saveOrUpdate()">
+            <!-- Hidden anchor attribute binding element -->
+            <input type="hidden" ng-model="vm.currentPerson.id">
+
+            <div class="form-group">
+                <label for="fullName">Individual's Full Name</label>
+                <!-- Form template targets currentPerson wrapper variables -->
+                <input type="text" id="fullName" ng-model="vm.currentPerson.fullName" placeholder="e.g. Johnathan Doe" required>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">
+                    {{ vm.currentPerson.id ? 'Update Dossier File' : 'Save Directory Record' }}
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838
                 </button>
                 <button type="button" class="btn btn-secondary" ng-click="vm.clearForm()" ng-show="vm.currentPerson.fullName || vm.currentPerson.id">
                     Clear Data Form
@@ -78,10 +121,15 @@
         </form>
     </div>
 
+<<<<<<< HEAD
+=======
+    <!-- Registered Population Data Table Layout Matrix -->
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838
     <h3 style="color: #2d3748;">📋 Active Colony Directory Index</h3>
     <table>
         <thead>
         <tr>
+<<<<<<< HEAD
             <th style="width: 20%;">ID</th>
             <th style="width: 40%;">Full Name</th>
             <th style="width: 25%;">Phone Number</th>
@@ -97,6 +145,23 @@
             <td><code>#{{ person.id }}</code></td>
             <td><strong>{{ person.fullName }}</strong></td>
             <td>{{ person.phone || 'N/A' }}</td>
+=======
+            <th style="width: 20%;">System Identifier</th>
+            <th style="width: 50%;">Member Legal Full Name</th>
+            <th style="width: 30%; text-align: right;">Operations Matrix</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Fallback safety logic block verification wrapper -->
+        <tr ng-if="vm.persons.length === 0">
+            <td colspan="3" class="no-data">No identity profiles found inside backend warehouse structures.</td>
+        </tr>
+
+
+        <tr ng-repeat="person in vm.persons">
+            <td><code>#{{ person.id }}</code></td>
+            <td><strong>{{ person.fullName }}</strong></td>
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838
             <td style="text-align: right;">
                 <button type="button" class="btn btn-edit" ng-click="vm.editPerson(person)">
                     Modify

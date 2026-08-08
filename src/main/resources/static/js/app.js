@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 if (typeof angular !== 'undefined') {
     angular.module('colonyManagementApp', []);
 }
@@ -820,3 +821,9 @@ async function loadPersonsList() {
         });
     } catch (e) { }
 }
+=======
+(function () {
+    'use strict';
+    angular.module('colonyManagementApp', []);
+})();
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838

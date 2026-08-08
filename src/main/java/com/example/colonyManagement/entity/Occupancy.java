@@ -12,8 +12,13 @@ public class Occupancy {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int id;
 
+<<<<<<< HEAD
     @Enumerated(EnumType.STRING)
     private OccupancyType occupancyType;
+=======
+@Enumerated(EnumType.STRING)
+    private OccupancyType OccupancyType;
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838
 @ManyToOne
     @JoinColumn(name = "flat_id", nullable = false)
     private Flat flat;

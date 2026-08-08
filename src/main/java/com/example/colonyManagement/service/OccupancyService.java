@@ -34,7 +34,11 @@ public class OccupancyService {
         existingOccupancy.setOccupancyType(occupancyDetails.getOccupancyType());
         existingOccupancy.setFlat(occupancyDetails.getFlat());
         existingOccupancy.setPerson(occupancyDetails.getPerson());
+<<<<<<< HEAD
         existingOccupancy.setRentedFrom(occupancyDetails.getRentedFrom());
+=======
+        existingOccupancy.setRentedFrom(occupancyDetails.getRentedFrom().orElse(null));
+>>>>>>> 752893a7210a04fc09168da1432e95ec85df9838
         return occupancyRepository.save(existingOccupancy);
     }
     public void deleteOccupancy(int id) {
