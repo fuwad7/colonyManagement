@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="colonyManagementApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flat Management</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; background-color: #f8f9fa; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; background: #ffffff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h1 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; }
+        .status-msg { padding: 10px 15px; border-radius: 4px; margin-bottom: 20px; font-weight: 500; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .loading { background-color: #e2e3e5; color: #383d41; font-style: italic; }
+        .form-section { background: #fdfdfd; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin-bottom: 30px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #4a5568; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; }
+        .btn { padding: 8px 16px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-primary { background-color: #3182ce; color: white; }
+        .btn-primary:hover { background-color: #2b6cb0; }
+        .btn-secondary { background-color: #e2e8f0; color: #4a5568; margin-left: 5px; }
+        .btn-secondary:hover { background-color: #cbd5e0; }
+        .btn-danger { background-color: #e53e3e; color: white; padding: 4px 10px; font-size: 0.9em; }
+        .btn-danger:hover { background-color: #c53030; }
+        .btn-edit { background-color: #dd6b20; color: white; padding: 4px 10px; font-size: 0.9em; margin-right: 5px; }
+        .btn-edit:hover { background-color: #c05621; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #edf2f7; color: #4a5568; }
+        tr:hover { background-color: #f7fafc; }
+        .no-data { text-align: center; color: #718096; padding: 20px; font-style: italic; }
+    </style>
+
+    <!-- 1. Core Framework Engine -->
+    <script src="https://googleapis.com"></script>
+
+    <!-- 2. Main App Module Definition -->
+    <script src="js/app.js"></script>
+
+    <!-- 3. Backend Service Layer -->
+    <script src="js/services/flatService.js"></script>
+
+    <!-- 4. Frontend UI Controller -->
+    <script src="js/controllers/flatController.js"></script>
+</head>
+
+<!-- Bind the Controller to the template with your alias vm -->
+<body ng-controller="FlatController as vm">
+
+<div class="container">
+    <h1>🔑 Flat & Apartment Unit Management</h1>
+
+    <!-- Feedback UI Monitors -->
+    <div class="status-msg loading" ng-show="vm.loading">
+        🔄 Fetching unit structures from backend database...
+    </div>
+    <div class="status-msg error" ng-show="vm.error">
+        ⚠️ Operational Interruption: {{ vm.error }}
+    </div>
+
+    <!-- Management Input Form Panel -->
+    <div class="form-section">
+        <h3 style="margin-top: 0; color: #2d3748;">
+            {{ vm.currentFlats.id ? '✏️ Modify Unit Records' : '➕ Register New Apartment Flat' }}
+        </h3>
+
+        <form ng-submit="vm.saveOrUpdate()">
+
+            <input type="hidden" ng-model="vm.currentFlats.id">
+
+            <div class="form-group">
+                <label for="flatNumber">Flat / Apartment Unit Reference Designation</label>
+                <!-- Adjust properties based on your Java model structure matching (e.g. flatNumber) -->
+                <input type="text" id="flatNumber" ng-model="vm.currentFlats.flatNumber" placeholder="e.g. Flat-402, Apt 3B" required>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">
+                    {{ vm.currentFlats.id ? 'Save Configuration Changes' : 'Publish Unit Record' }}
+                </button>
+                <button type="button" class="btn btn-secondary" ng-click="vm.clearForm()" ng-show="vm.currentFlats.flatNumber || vm.currentFlats.id">
+                    Clear Data Form
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Registered Unit Ledger Space -->
+    <h3 style="color: #2d3748;">📋 Active Apartment Properties Matrix</h3>
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 20%;">Internal ID Tag</th>
+            <th style="width: 50%;">Flat Unit Number</th>
+            <th style="width: 30%; text-align: right;">Operations Matrix</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Empty data list container array handler verification fallback checks -->
+        <tr ng-if="vm.flats.length === 0">
+            <td colspan="3" class="no-data">No apartment flat allocations found in remote directory infrastructure.</td>
+        </tr>
+
+
+        <tr ng-repeat="flat in vm.flats">
+            <td><code>#{{ flat.id }}</code></td>
+            <td><strong>{{ flat.flatNumber }}</strong></td>
+            <td style="text-align: right;">
+                <button type="button" class="btn btn-edit" ng-click="vm.editFlats(flat)">
+                    Modify
+                </button>
+                <button type="button" class="btn btn-danger" ng-click="vm.deleteFlat(flat.id)">
+                    Remove
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

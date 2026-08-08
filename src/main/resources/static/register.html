@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="colonyManagementApp">
+<head>
+    <meta charset="UTF-8">
+    <title>System Operator Registration</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .auth-box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 350px; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background-color: #38a169; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #2f855a; }
+        .error { color: #e53e3e; text-align: center; font-weight: bold; margin-bottom: 10px; }
+        .success { color: #38a169; text-align: center; font-weight: bold; margin-bottom: 10px; }
+        .link-text { text-align: center; margin-top: 15px; font-size: 0.9em; }
+        .link-text a { color: #3182ce; text-decoration: none; }
+    </style>
+    <script src="https://googleapis.com"></script>
+    <script src="js/app.js"></script>
+    <script src="js/services/authService.js"></script>
+    <script src="js/controllers/authController.js"></script>
+</head>
+<body ng-controller="AuthController as vm">
+
+<div class="auth-box">
+    <h2>➕ Create Operator Account</h2>
+    <div class="error" ng-show="vm.errorMessage">{{ vm.errorMessage }}</div>
+    <div class="success" ng-show="vm.successMessage">{{ vm.successMessage }}</div>
+
+    <form ng-submit="vm.submitRegistration()">
+        <input type="text" ng-model="vm.registerData.username" placeholder="Username Handle" required>
+        <input type="email" ng-model="vm.registerData.email" placeholder="Email Address" required>
+        <input type="password" ng-model="vm.registerData.password" placeholder="Account Password" required>
+        <button type="submit">Register Account</button>
+    </form>
+
+    <div class="link-text">
+        Already registered? <a href="login.html">Sign in here</a>
+    </div>
+</div>
+
+</body>
+</html>

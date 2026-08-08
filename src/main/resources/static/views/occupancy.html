@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="colonyManagementApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Occupancy Management</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; background-color: #f8f9fa; color: #333; }
+        .container { max-width: 1100px; margin: 0 auto; background: #ffffff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h1 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; }
+        .status-msg { padding: 10px 15px; border-radius: 4px; margin-bottom: 20px; font-weight: 500; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        @media (max-width: 768px) { .panel-grid { grid-template-columns: 1fr; } }
+        .panel { background: #fdfdfd; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; }
+        h3 { margin-top: 0; color: #2d3748; border-bottom: 1px solid #edf2f7; padding-bottom: 8px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #4a5568; }
+        input[type="text"] { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; }
+        .inline-filter { display: flex; gap: 8px; margin-bottom: 12px; }
+        .btn { padding: 8px 16px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.2s; display: inline-block; }
+        .btn-primary { background-color: #3182ce; color: white; }
+        .btn-primary:hover { background-color: #2b6cb0; }
+        .btn-secondary { background-color: #e2e8f0; color: #4a5568; }
+        .btn-secondary:hover { background-color: #cbd5e0; }
+        .btn-filter { background-color: #4a5568; color: white; white-space: nowrap; }
+        .btn-filter:hover { background-color: #2d3748; }
+        .btn-danger { background-color: #e53e3e; color: white; padding: 4px 10px; font-size: 0.9em; }
+        .btn-danger:hover { background-color: #c53030; }
+        .btn-edit { background-color: #dd6b20; color: white; padding: 4px 10px; font-size: 0.9em; margin-right: 5px; }
+        .btn-edit:hover { background-color: #c05621; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #edf2f7; color: #4a5568; }
+        tr:hover { background-color: #f7fafc; }
+        .no-data { text-align: center; color: #718096; padding: 20px; font-style: italic; }
+    </style>
+
+    <!-- 1. Core Framework -->
+    <script src="https://googleapis.com"></script>
+
+    <!-- 2. Main App Module Definition -->
+    <script src="js/app.js"></script>
+
+    <!-- 3. Backend Service Layer -->
+    <script src="js/services/occupancyService.js"></script>
+
+    <!-- 4. Frontend UI Controller -->
+    <script src="js/controllers/occupancyController.js"></script>
+</head>
+
+<!-- Bind Controller using the explicit "as viewModel" alias -->
+<body ng-controller="OccupancyController as viewModel">
+
+<div class="container">
+    <h1>🏠 Occupancy Tracker Registry</h1>
+
+    <!-- Global Status Messages -->
+    <div class="status-msg error" ng-show="viewModel.errorMessage">
+        ⚠️ {{ viewModel.errorMessage }}
+    </div>
+    <div class="status-msg success" ng-show="viewModel.successMessage">
+        ✅ {{ viewModel.successMessage }}
+    </div>
+
+    <div class="panel-grid">
+        <!-- PART A: Management Submission Form -->
+        <div class="panel">
+            <h3>{{ viewModel.newOccupancyData.id ? '✏️ Modify Occupancy Info' : '➕ Record New Occupancy' }}</h3>
+
+            <!-- Explicit mapping to saveOccupancies as declared in your scope mapping variable -->
+            <form ng-submit="viewModel.saveOccupancies()">
+                <input type="hidden" ng-model="viewModel.newOccupancyData.id">
+
+                <div class="form-group">
+                    <label for="personId">Tenant / Person ID</label>
+                    <input type="text" id="personId" ng-model="viewModel.newOccupancyData.personId" placeholder="e.g. PER-3012" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="occupancyType">Occupancy Classification Type</label>
+                    <input type="text" id="occupancyType" ng-model="viewModel.newOccupancyData.type" placeholder="e.g. Owner, Tenant, Lease" required>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary">
+                        {{ viewModel.newOccupancyData.id ? 'Update Ledger' : 'Confirm Occupancy' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- PART B: Search & Multi-Filter Layout -->
+        <div class="panel">
+            <h3>🔍 Search Operations</h3>
+
+            <!-- Filter Group One: Person ID -->
+            <div class="form-group">
+                <label>Query Tenant ID</label>
+                <div class="inline-filter">
+                    <input type="text" ng-model="viewModel.searchPersonId" placeholder="Enter Tenant Person ID...">
+                    <button type="button" class="btn btn-filter" ng-click="viewModel.getOccupancyByPerson()">Find Tenant</button>
+                </div>
+            </div>
+
+            <!-- Filter Group Two: Type -->
+            <div class="form-group">
+                <label>Query Classification Type</label>
+                <div class="inline-filter">
+                    <input type="text" ng-model="viewModel.searchType" placeholder="e.g. Owner, Tenant...">
+                    <button type="button" class="btn btn-filter" ng-click="viewModel.getOccupancyByType()">Filter Type</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 25px; border-top: 1px dashed #cbd5e0; padding-top: 15px;">
+                <button type="button" class="btn btn-secondary" ng-click="viewModel.resetFilters()">
+                    Clear Filtering Rules
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PART C: Operational Records Grid Ledger -->
+    <h3>📜 Registered Occupancy Records Matrix</h3>
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 15%;">Occupancy ID</th>
+            <th style="width: 30%;">Tenant Person ID</th>
+            <th style="width: 25%;">Occupancy Type</th>
+            <th style="width: 30%; text-align: right;">Operations</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Empty dataset check condition validation array loop fallback -->
+        <tr ng-if="viewModel.occupancies.length === 0">
+            <td colspan="4" class="no-data">No occupancy files found matching current parameters.</td>
+        </tr>
+
+        <!-- Explicit iteration processing variables map -->
+        <tr ng-repeat="occupancy in viewModel.occupancies">
+            <td><code>#{{ occupancy.id }}</code></td>
+            <td><strong>{{ occupancy.personId }}</strong></td>
+            <td><span style="background: #edf2f7; padding: 3px 8px; border-radius: 4px; font-size: 0.9em;">{{ occupancy.type }}</span></td>
+            <td style="text-align: right;">
+                <button type="button" class="btn btn-edit" ng-click="viewModel.selectOccupancyForEdit(occupancy)">
+                    Modify
+                </button>
+                <button type="button" class="btn btn-danger" ng-click="viewModel.removeOccupancy(occupancy.id)">
+                    Remove
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
