@@ -1,3 +1,7 @@
+if (typeof angular !== 'undefined') {
+    angular.module('colonyManagementApp', []);
+}
+
 let currentUser = null;
 let currentBuildingId = null;
 let selectedFlatId = null;
@@ -254,6 +258,9 @@ async function handleCreateBuilding(e) {
             currentBuildingId = newBldg.id;
             loadBuildingsSection();
             loadDashboardStats();
+        } else {
+            const msg = await res.text();
+            alert('Failed to create building: ' + (msg || res.statusText));
         }
     } catch (err) {
         alert('Failed to create building');
@@ -361,7 +368,7 @@ async function renderFloorLayout(building) {
 
                 if (occ) {
                     const resident = occ.person;
-                    const occType = occ.occupancyType;
+                    const occType = occ.occupancyType || occ.OccupancyType || 'OCCUPIED';
                     let badgeClass = 'badge-owner';
                     if (occType === 'TENANT') badgeClass = 'badge-tenant';
                     if (occType === 'SUB_TENANT') badgeClass = 'badge-subtenant';
@@ -375,8 +382,7 @@ async function renderFloorLayout(building) {
 
                     occDetails = `
                         <strong>${resident ? resident.fullName : 'Occupant'}</strong><br>
-                        Phone: ${resident ? resident.phone : 'N/A'}<br>
-                        NID/ID: ${resident ? resident.personId : 'N/A'}
+                        Phone: ${resident ? resident.phone : 'N/A'}
                         ${rentedFromStr}
                     `;
                 }
@@ -419,44 +425,91 @@ async function openAssignModal(flatId, flatName) {
     selectedFlatId = flatId;
     document.getElementById('modalFlatName').textContent = flatName;
     document.getElementById('assignModal').classList.add('show');
+    
+    const typeSelect = document.getElementById('resOccupancyType');
+    if (typeSelect) toggleOwnerOption(typeSelect.value);
+    toggleOwnerMode('select');
 
     try {
         const res = await fetch('/api/persons');
         const persons = await res.json();
         const select = document.getElementById('rentedFromSelect');
-        select.innerHTML = '<option value="">-- None (N/A) --</option>';
-        persons.forEach(p => {
-            select.innerHTML += `<option value="${p.id}">${p.fullName} (${p.phone})</option>`;
-        });
+        if (select) {
+            select.innerHTML = '<option value="">-- Select Owner --</option>';
+            persons.forEach(p => {
+                select.innerHTML += `<option value="${p.id}">${p.fullName} (${p.phone || 'N/A'})</option>`;
+            });
+        }
     } catch (e) { }
 }
 
 function closeAssignModal() {
     document.getElementById('assignModal').classList.remove('show');
     document.getElementById('assignModalForm').reset();
+    toggleOwnerOption('OWNER');
+}
+
+function toggleOwnerOption(type) {
+    const ownerSection = document.getElementById('ownerSection');
+    if (ownerSection) {
+        ownerSection.style.display = (type === 'TENANT' || type === 'SUB_TENANT') ? 'block' : 'none';
+    }
+}
+
+function toggleOwnerMode(mode) {
+    const selectGroup = document.getElementById('ownerSelectGroup');
+    const newGroup = document.getElementById('ownerNewGroup');
+    if (mode === 'select') {
+        if (selectGroup) selectGroup.style.display = 'block';
+        if (newGroup) newGroup.style.display = 'none';
+    } else {
+        if (selectGroup) selectGroup.style.display = 'none';
+        if (newGroup) newGroup.style.display = 'grid';
+    }
 }
 
 async function handleAssignOccupant(e) {
     e.preventDefault();
     const fullName = document.getElementById('resFullName').value;
     const phone = document.getElementById('resPhone').value;
-    const personId = document.getElementById('resPersonId').value;
     const occupancyType = document.getElementById('resOccupancyType').value;
-    const rentedFromId = document.getElementById('rentedFromSelect').value;
 
     try {
         const personRes = await fetch('/api/persons', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fullName, phone, personId })
+            body: JSON.stringify({ fullName, phone, personId: phone })
         });
         const person = await personRes.json();
+
+        let rentedFromId = null;
+        if (occupancyType === 'TENANT' || occupancyType === 'SUB_TENANT') {
+            const ownerRadio = document.querySelector('input[name="ownerMode"]:checked');
+            const ownerMode = ownerRadio ? ownerRadio.value : 'select';
+
+            if (ownerMode === 'new') {
+                const newOwnerName = document.getElementById('newOwnerName').value;
+                const newOwnerPhone = document.getElementById('newOwnerPhone').value;
+                if (newOwnerName && newOwnerPhone) {
+                    const ownerRes = await fetch('/api/persons', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ fullName: newOwnerName, phone: newOwnerPhone, personId: newOwnerPhone })
+                    });
+                    const ownerPerson = await ownerRes.json();
+                    rentedFromId = ownerPerson.id;
+                }
+            } else {
+                const selectVal = document.getElementById('rentedFromSelect').value;
+                if (selectVal) rentedFromId = parseInt(selectVal);
+            }
+        }
 
         const payload = {
             occupancyType: occupancyType,
             flat: { id: selectedFlatId },
             person: { id: person.id },
-            rentedFrom: rentedFromId ? { id: parseInt(rentedFromId) } : null
+            rentedFrom: rentedFromId ? { id: rentedFromId } : null
         };
 
         const occRes = await fetch('/api/occupancies', {
@@ -761,8 +814,7 @@ async function loadPersonsList() {
             tr.innerHTML = `
                 <td>#${p.id}</td>
                 <td><b>${p.fullName}</b></td>
-                <td>${p.phone}</td>
-                <td>${p.personId}</td>
+                <td>${p.phone || 'N/A'}</td>
             `;
             tbody.appendChild(tr);
         });
