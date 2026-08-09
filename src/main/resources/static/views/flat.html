@@ -31,26 +31,26 @@
         .no-data { text-align: center; color: #718096; padding: 20px; font-style: italic; }
     </style>
 
-    <!-- 1. Core Framework Engine -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
-    <!-- 2. Main App Module Definition -->
+
     <script src="/js/app.js"></script>
 
-    <!-- 3. Backend Service Layer -->
+
     <script src="/js/service/flatService.js"></script>
 
-    <!-- 4. Frontend UI Controller -->
+
     <script src="/js/controller/flatController.js"></script>
 </head>
 
-<!-- Bind the Controller to the template with your alias vm -->
+
 <body ng-controller="FlatController as vm">
 
 <div class="container">
     <h1>🔑 Flat & Apartment Unit Management</h1>
 
-    <!-- Feedback UI Monitors -->
+
     <div class="status-msg loading" ng-show="vm.loading">
         🔄 Fetching unit structures from backend database...
     </div>
@@ -58,7 +58,7 @@
         ⚠️ Operational Interruption: {{ vm.error }}
     </div>
 
-    <!-- Management Input Form Panel -->
+
     <div class="form-section">
         <h3 style="margin-top: 0; color: #2d3748;">
             {{ vm.currentFlats.id ? '✏️ Modify Unit Records' : '➕ Register New Apartment Flat' }}
@@ -70,7 +70,7 @@
 
             <div class="form-group">
                 <label for="flatNumber">Flat / Apartment Unit Reference Designation</label>
-                <!-- Adjust properties based on your Java model structure matching (e.g. flatNumber) -->
+
                 <input type="text" id="flatNumber" ng-model="vm.currentFlats.flatNumber" placeholder="e.g. Flat-402, Apt 3B" required>
             </div>
 
@@ -85,7 +85,7 @@
         </form>
     </div>
 
-    <!-- Registered Unit Ledger Space -->
+
     <h3 style="color: #2d3748;">📋 Active Apartment Properties Matrix</h3>
     <table>
         <thead>
@@ -96,7 +96,7 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Empty data list container array handler verification fallback checks -->
+
         <tr ng-if="vm.flats.length === 0">
             <td colspan="3" class="no-data">No apartment flat allocations found in remote directory infrastructure.</td>
         </tr>

@@ -41,7 +41,7 @@
 <div class="container">
     <h1>🏢 Building Management Directory</h1>
 
-    <!-- Global Feedback Indicators -->
+
     <div class="status-msg loading" ng-show="vm.loading">
         🔄 Processing request. Please wait...
     </div>
@@ -49,7 +49,7 @@
         ⚠️ Error Encountered: {{ vm.error }}
     </div>
 
-    <!-- Dynamic Management Form -->
+
     <div class="form-section">
         <h3 style="margin-top: 0; color: #2d3748;">
             {{ vm.currentBuilding.id ? '✏️ Edit Existing Building' : '➕ Add New Building' }}
@@ -84,7 +84,7 @@
         </form>
     </div>
 
-    <!-- Inventory List Display Table -->
+
     <h3 style="color: #2d3748;">📋 Active Building Inventories</h3>
     <table>
         <thead>

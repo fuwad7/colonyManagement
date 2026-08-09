@@ -61,7 +61,7 @@
             <h3>{{ vm.currentAsset.id ? '✏️ Edit Asset Details' : '➕ Register New Asset' }}</h3>
 
             <form ng-submit="vm.saveOrUpdate()">
-                <!-- Hidden reference to ID attribute tracker -->
+
                 <input type="hidden" ng-model="vm.currentAsset.id">
 
                 <div class="form-group">

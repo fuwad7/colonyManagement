@@ -37,26 +37,20 @@
         .no-data { text-align: center; color: #718096; padding: 20px; font-style: italic; }
     </style>
 
-    <!-- 1. Core Framework -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
-    <!-- 2. Main App Module Definition -->
     <script src="/js/app.js"></script>
 
-    <!-- 3. Backend Service Layer -->
     <script src="/js/service/occupancyService.js"></script>
 
-    <!-- 4. Frontend UI Controller -->
     <script src="/js/controller/occupancyController.js"></script>
 </head>
 
-<!-- Bind Controller using the explicit "as viewModel" alias -->
 <body ng-controller="OccupancyController as viewModel">
 
 <div class="container">
     <h1>🏠 Occupancy Tracker Registry</h1>
 
-    <!-- Global Status Messages -->
     <div class="status-msg error" ng-show="viewModel.errorMessage">
         ⚠️ {{ viewModel.errorMessage }}
     </div>
@@ -65,11 +59,10 @@
     </div>
 
     <div class="panel-grid">
-        <!-- PART A: Management Submission Form -->
+
         <div class="panel">
             <h3>{{ viewModel.newOccupancyData.id ? '✏️ Modify Occupancy Info' : '➕ Record New Occupancy' }}</h3>
 
-            <!-- Explicit mapping to saveOccupancies as declared in your scope mapping variable -->
             <form ng-submit="viewModel.saveOccupancies()">
                 <input type="hidden" ng-model="viewModel.newOccupancyData.id">
 
@@ -91,11 +84,10 @@
             </form>
         </div>
 
-        <!-- PART B: Search & Multi-Filter Layout -->
+
         <div class="panel">
             <h3>🔍 Search Operations</h3>
 
-            <!-- Filter Group One: Person ID -->
             <div class="form-group">
                 <label>Query Tenant ID</label>
                 <div class="inline-filter">
@@ -104,7 +96,6 @@
                 </div>
             </div>
 
-            <!-- Filter Group Two: Type -->
             <div class="form-group">
                 <label>Query Classification Type</label>
                 <div class="inline-filter">
@@ -121,7 +112,6 @@
         </div>
     </div>
 
-    <!-- PART C: Operational Records Grid Ledger -->
     <h3>📜 Registered Occupancy Records Matrix</h3>
     <table>
         <thead>
@@ -133,12 +123,10 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Empty dataset check condition validation array loop fallback -->
         <tr ng-if="viewModel.occupancies.length === 0">
             <td colspan="4" class="no-data">No occupancy files found matching current parameters.</td>
         </tr>
 
-        <!-- Explicit iteration processing variables map -->
         <tr ng-repeat="occupancy in viewModel.occupancies">
             <td><code>#{{ occupancy.id }}</code></td>
             <td><strong>{{ occupancy.personId }}</strong></td>
