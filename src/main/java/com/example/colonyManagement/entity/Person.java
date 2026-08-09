@@ -23,7 +23,7 @@ public class Person {
     @Column(unique = true)
     private String personId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "user_id")
     private User user;
 }
