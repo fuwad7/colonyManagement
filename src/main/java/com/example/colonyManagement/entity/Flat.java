@@ -2,6 +2,7 @@ package com.example.colonyManagement.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "flats")
@@ -22,5 +23,6 @@ public class Flat {
 
     @ManyToOne
     @JoinColumn(name = "building_id")
+    @JsonIgnoreProperties("flats")
     private Building building;
 }

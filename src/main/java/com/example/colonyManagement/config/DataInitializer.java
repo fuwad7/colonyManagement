@@ -5,7 +5,6 @@ import com.example.colonyManagement.entity.User;
 import com.example.colonyManagement.repository.AssetRepository;
 import com.example.colonyManagement.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -15,12 +14,10 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final AssetRepository assetRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(UserRepository userRepository, AssetRepository assetRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(UserRepository userRepository, AssetRepository assetRepository) {
         this.userRepository = userRepository;
         this.assetRepository = assetRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -29,14 +26,14 @@ public class DataInitializer implements CommandLineRunner {
         if (adminOpt.isPresent()) {
             User admin = adminOpt.get();
             admin.setRole("ADMIN");
-            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setPassword("admin123");
             admin.setEnabled(true);
             userRepository.save(admin);
         } else {
             User admin = User.builder()
                     .username("admin")
                     .email("admin@colony.local")
-                    .password(passwordEncoder.encode("admin123"))
+                    .password("admin123")
                     .role("ADMIN")
                     .enabled(true)
                     .build();

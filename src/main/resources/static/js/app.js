@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 if (typeof angular !== 'undefined') {
     angular.module('colonyManagementApp', []);
 }
@@ -6,6 +5,7 @@ if (typeof angular !== 'undefined') {
 let currentUser = null;
 let currentBuildingId = null;
 let selectedFlatId = null;
+let dashboardIntervalId = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
@@ -26,6 +26,10 @@ async function checkAuth() {
 }
 
 function showAuthView() {
+    if (dashboardIntervalId) {
+        clearInterval(dashboardIntervalId);
+        dashboardIntervalId = null;
+    }
     document.getElementById('authView').style.display = 'flex';
     document.getElementById('appView').style.display = 'none';
 }
@@ -49,10 +53,7 @@ function showAppView() {
     }
 }
 
-function fillAdminCredentials() {
-    document.getElementById('loginUsername').value = 'admin';
-    document.getElementById('loginPassword').value = 'admin123';
-}
+
 
 function switchAuthTab(tab) {
     const loginForm = document.getElementById('loginForm');
@@ -145,6 +146,11 @@ function switchNav(section) {
         section = 'buildings';
     }
 
+    if (dashboardIntervalId) {
+        clearInterval(dashboardIntervalId);
+        dashboardIntervalId = null;
+    }
+
     const sections = ['dashboard', 'buildings', 'users', 'assets', 'persons'];
     sections.forEach(s => {
         const secEl = document.getElementById(`sec-${s}`);
@@ -156,7 +162,10 @@ function switchNav(section) {
         }
     });
 
-    if (section === 'dashboard' && isAdmin) loadDashboardStats();
+    if (section === 'dashboard' && isAdmin) {
+        loadDashboardStats();
+        dashboardIntervalId = setInterval(loadDashboardStats, 5000);
+    }
     if (section === 'buildings') loadBuildingsSection();
     if (section === 'users' && isAdmin) loadUserManagement();
     if (section === 'assets') loadAssetSection();
@@ -821,9 +830,4 @@ async function loadPersonsList() {
         });
     } catch (e) { }
 }
-=======
-(function () {
-    'use strict';
-    angular.module('colonyManagementApp', []);
-})();
->>>>>>> 752893a7210a04fc09168da1432e95ec85df9838
+
