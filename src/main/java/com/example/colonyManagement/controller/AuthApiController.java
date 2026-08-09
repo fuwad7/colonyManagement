@@ -2,6 +2,7 @@ package com.example.colonyManagement.controller;
 
 import com.example.colonyManagement.entity.User;
 import com.example.colonyManagement.repository.UserRepository;
+import com.example.colonyManagement.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ public class AuthApiController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody Map<String, String> request) {
@@ -45,7 +49,7 @@ public class AuthApiController {
                 .enabled(true)
                 .build();
 
-        userRepository.save(newUser);
+        userService.saveUser(newUser);
 
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "User registered successfully!");

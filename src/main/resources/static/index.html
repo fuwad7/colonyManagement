@@ -204,8 +204,11 @@
                 </div>
 
                 <div id="sec-users" style="display:none">
-                    <div class="section-title">
-                        <span>User Management</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+                        <div class="section-title" style="margin:0">
+                            <span>User Management</span>
+                        </div>
+                        <button class="btn-primary" onclick="openAddUserModal()" style="width:auto; padding:10px 20px">+ Add User</button>
                     </div>
 
                     <div class="card-panel">
@@ -347,13 +350,32 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Resident Full Name</label>
-                    <input type="text" id="resFullName" class="form-input" placeholder="Full Name" required>
+                    <label style="font-weight:600; color:var(--accent-indigo); display:block; margin-bottom:10px">Resident Details</label>
+                    <div style="display:flex; gap:15px; margin-bottom:12px">
+                        <label style="font-size:0.85rem; cursor:pointer">
+                            <input type="radio" name="residentMode" value="select" checked onchange="toggleResidentMode('select')"> Select Existing Resident
+                        </label>
+                        <label style="font-size:0.85rem; cursor:pointer">
+                            <input type="radio" name="residentMode" value="new" onchange="toggleResidentMode('new')"> Add New Resident
+                        </label>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Resident Phone Number</label>
-                    <input type="text" id="resPhone" class="form-input" placeholder="Phone Number" required>
+                <div id="residentSelectGroup" class="form-group">
+                    <label>Select Resident</label>
+                    <select id="residentSelect" class="form-input" required></select>
+                </div>
+
+                <div id="residentNewGroup" style="display:none; grid-template-columns:1fr 1fr; gap:12px">
+                    <div class="form-group">
+                        <label>Resident Full Name</label>
+                        <input type="text" id="resFullName" class="form-input" placeholder="Full Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Resident Phone Number</label>
+                        <input type="text" id="resPhone" class="form-input" placeholder="Phone Number">
+                    </div>
                 </div>
 
                 <div id="ownerSection"
@@ -389,6 +411,43 @@
                     <button type="button"
                         style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer"
                         onclick="closeAssignModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addUserModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size:1.2rem; color:var(--accent-blue)">Add New User</h3>
+                <button class="modal-close" onclick="closeAddUserModal()">&times;</button>
+            </div>
+            <form id="addUserForm" onsubmit="handleSaveNewUser(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="addUsername" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="addEmail" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="addPassword" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="addRole" class="form-input" required>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="RESIDENT" selected>RESIDENT</option>
+                        <option value="STAFF">STAFF</option>
+                    </select>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
+                    <button type="button"
+                        style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer"
+                        onclick="closeAddUserModal()">Cancel</button>
                     <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save</button>
                 </div>
             </form>

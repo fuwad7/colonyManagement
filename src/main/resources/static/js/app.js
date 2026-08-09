@@ -439,15 +439,30 @@ async function openAssignModal(flatId, flatName) {
     const typeSelect = document.getElementById('resOccupancyType');
     if (typeSelect) toggleOwnerOption(typeSelect.value);
     toggleOwnerMode('select');
+    toggleResidentMode('select');
+
+    const residentSelectRadio = document.querySelector('input[name="residentMode"][value="select"]');
+    if (residentSelectRadio) residentSelectRadio.checked = true;
 
     try {
         const res = await fetch('/api/persons');
         const persons = await res.json();
+        
+        const residentSelect = document.getElementById('residentSelect');
+        if (residentSelect) {
+            residentSelect.innerHTML = '<option value="">-- Select Resident --</option>';
+            persons.forEach(p => {
+                const info = p.phone ? ` (${p.phone})` : '';
+                residentSelect.innerHTML += `<option value="${p.id}">${p.fullName}${info}</option>`;
+            });
+        }
+
         const select = document.getElementById('rentedFromSelect');
         if (select) {
             select.innerHTML = '<option value="">-- Select Owner --</option>';
             persons.forEach(p => {
-                select.innerHTML += `<option value="${p.id}">${p.fullName} (${p.phone || 'N/A'})</option>`;
+                const info = p.phone ? ` (${p.phone})` : '';
+                select.innerHTML += `<option value="${p.id}">${p.fullName}${info}</option>`;
             });
         }
     } catch (e) { }
@@ -478,19 +493,61 @@ function toggleOwnerMode(mode) {
     }
 }
 
+function toggleResidentMode(mode) {
+    const selectGroup = document.getElementById('residentSelectGroup');
+    const newGroup = document.getElementById('residentNewGroup');
+    const resSelect = document.getElementById('residentSelect');
+    const resFullName = document.getElementById('resFullName');
+    const resPhone = document.getElementById('resPhone');
+    
+    if (mode === 'select') {
+        if (selectGroup) selectGroup.style.display = 'block';
+        if (newGroup) newGroup.style.display = 'none';
+        if (resSelect) resSelect.required = true;
+        if (resFullName) resFullName.required = false;
+        if (resPhone) resPhone.required = false;
+    } else {
+        if (selectGroup) selectGroup.style.display = 'none';
+        if (newGroup) newGroup.style.display = 'grid';
+        if (resSelect) resSelect.required = false;
+        if (resFullName) resFullName.required = true;
+        if (resPhone) resPhone.required = true;
+    }
+}
+
 async function handleAssignOccupant(e) {
     e.preventDefault();
-    const fullName = document.getElementById('resFullName').value;
-    const phone = document.getElementById('resPhone').value;
+
+    const residentRadio = document.querySelector('input[name="residentMode"]:checked');
+    const residentMode = residentRadio ? residentRadio.value : 'select';
+    
     const occupancyType = document.getElementById('resOccupancyType').value;
 
     try {
-        const personRes = await fetch('/api/persons', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fullName, phone, personId: phone })
-        });
-        const person = await personRes.json();
+        let personId = null;
+
+        if (residentMode === 'new') {
+            const fullName = document.getElementById('resFullName').value;
+            const phone = document.getElementById('resPhone').value;
+            
+            const personRes = await fetch('/api/persons', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fullName, phone, personId: phone })
+            });
+            const person = await personRes.json();
+            personId = person.id;
+        } else {
+            const selectVal = document.getElementById('residentSelect').value;
+            if (selectVal) {
+                personId = parseInt(selectVal);
+            }
+        }
+
+        if (!personId) {
+            alert('Please select or create a resident');
+            return;
+        }
 
         let rentedFromId = null;
         if (occupancyType === 'TENANT' || occupancyType === 'SUB_TENANT') {
@@ -518,7 +575,7 @@ async function handleAssignOccupant(e) {
         const payload = {
             occupancyType: occupancyType,
             flat: { id: selectedFlatId },
-            person: { id: person.id },
+            person: { id: personId },
             rentedFrom: rentedFromId ? { id: rentedFromId } : null
         };
 
@@ -538,6 +595,42 @@ async function handleAssignOccupant(e) {
     } catch (err) {
         console.error(err);
         alert('Error saving occupant details');
+    }
+}
+
+function openAddUserModal() {
+    document.getElementById('addUserForm').reset();
+    document.getElementById('addUserModal').classList.add('show');
+}
+
+function closeAddUserModal() {
+    document.getElementById('addUserModal').classList.remove('show');
+}
+
+async function handleSaveNewUser(e) {
+    e.preventDefault();
+    const username = document.getElementById('addUsername').value;
+    const email = document.getElementById('addEmail').value;
+    const password = document.getElementById('addPassword').value;
+    const role = document.getElementById('addRole').value;
+
+    try {
+        const res = await fetch('/api/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password, role, enabled: true })
+        });
+
+        if (res.ok) {
+            closeAddUserModal();
+            loadUserManagement();
+            loadDashboardStats();
+        } else {
+            const msg = await res.text();
+            alert('Failed to add user: ' + (msg || res.statusText));
+        }
+    } catch (err) {
+        alert('Error adding user');
     }
 }
 

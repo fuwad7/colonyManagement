@@ -23,10 +23,10 @@ public Optional<Person>getPersonById(Long id){
 }
 public Person updatePerson(Long id,Person personDetails){
     return personRepository.findById(id).map(person -> {
-        personDetails.setFullName(personDetails.getFullName());
-        personDetails.setPersonId(personDetails.getPersonId());
-        personDetails.setPhone(personDetails.getPhone());
-        personDetails.setUser(personDetails.getUser());
+        person.setFullName(personDetails.getFullName());
+        person.setPersonId(personDetails.getPersonId());
+        person.setPhone(personDetails.getPhone());
+        person.setUser(personDetails.getUser());
         return personRepository.save(person);
     }).orElseThrow(() -> new RuntimeException("Person not found with id: " + id));
 

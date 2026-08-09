@@ -1,8 +1,11 @@
 package com.example.colonyManagement.service;
 
 import com.example.colonyManagement.entity.User;
+import com.example.colonyManagement.entity.Person;
 import com.example.colonyManagement.repository.UserRepository;
+import com.example.colonyManagement.repository.PersonRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,13 +14,26 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PersonRepository personRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PersonRepository personRepository) {
         this.userRepository = userRepository;
+        this.personRepository = personRepository;
     }
 
+    @Transactional
     public User saveUser(User user) {
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        if (!personRepository.existsByUser(savedUser)) {
+            Person person = Person.builder()
+                    .fullName(savedUser.getUsername())
+                    .personId(savedUser.getUsername())
+                    .phone("")
+                    .user(savedUser)
+                    .build();
+            personRepository.save(person);
+        }
+        return savedUser;
     }
 
     public List<User> getAllUsers() {
@@ -32,6 +48,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    @Transactional
     public User updateUser(Long id, User userDetails) {
         return userRepository.findById(id)
                 .map(user -> {
@@ -54,11 +71,21 @@ public class UserService {
 
                     user.setEnabled(userDetails.isEnabled());
 
-                    return userRepository.save(user);
+                    User updatedUser = userRepository.save(user);
+
+                    // Sync corresponding Person name/personId if exists
+                    personRepository.findByUser(updatedUser).ifPresent(p -> {
+                        p.setFullName(updatedUser.getUsername());
+                        p.setPersonId(updatedUser.getUsername());
+                        personRepository.save(p);
+                    });
+
+                    return updatedUser;
                 })
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
+    @Transactional
     public User toggleUserStatus(Long id) {
         return userRepository.findById(id)
                 .map(user -> {
@@ -68,6 +95,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
+    @Transactional
     public User changeUserRole(Long id, String newRole) {
         return userRepository.findById(id)
                 .map(user -> {
@@ -77,7 +105,15 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
+    @Transactional
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        userRepository.findById(id).ifPresent(user -> {
+            Optional<Person> personOpt = personRepository.findByUser(user);
+            if (personOpt.isPresent()) {
+                personRepository.delete(personOpt.get());
+            } else {
+                userRepository.delete(user);
+            }
+        });
     }
 }
