@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/asset-assignment")
+@RequestMapping("/api/asset-Assignment")
 public class AssetAssignmentController {
 
     private final AssetAssignmentService assetAssignmentService;
