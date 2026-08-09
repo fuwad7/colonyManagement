@@ -73,7 +73,6 @@ public class UserService {
 
                     User updatedUser = userRepository.save(user);
 
-                    // Sync corresponding Person name/personId if exists
                     personRepository.findByUser(updatedUser).ifPresent(p -> {
                         p.setFullName(updatedUser.getUsername());
                         p.setPersonId(updatedUser.getUsername());

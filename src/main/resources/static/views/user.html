@@ -17,7 +17,8 @@
         h3 { margin-top: 0; color: #2d3748; border-bottom: 1px solid #edf2f7; padding-bottom: 8px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #4a5568; }
-        input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; }
+        /* FIXED: Added input[type="tel"] into styles framework */
+        input[type="text"], input[type="email"], input[type="password"], input[type="tel"] { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; }
         .inline-filter { display: flex; gap: 8px; margin-bottom: 12px; }
         .btn { padding: 8px 16px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.2s; display: inline-block; }
         .btn-primary { background-color: #3182ce; color: white; }
@@ -50,13 +51,13 @@
     <script src="js/controllers/userController.js"></script>
 </head>
 
-<!-- Bind the Controller using your defined standard alias vm -->
+
 <body ng-controller="UserController as vm">
 
 <div class="container">
     <h1>🔒 Security Users Credentials Registry</h1>
 
-    <!-- Runtime Sync Notification Monitors -->
+
     <div class="status-msg loading" ng-show="vm.loading">
         🔄 Querying security accounts ledger directory...
     </div>
@@ -65,12 +66,12 @@
     </div>
 
     <div class="panel-grid">
-        <!-- PART A: Management Security Accounts Form Sheet -->
+
         <div class="panel">
             <h3>{{ vm.currentUsers.id ? '✏️ Edit Security Credentials' : '➕ Register New System Administrator' }}</h3>
 
             <form ng-submit="vm.saveOrUpdate()">
-                <!-- Hidden database pointer flag mapping attribute -->
+
                 <input type="hidden" ng-model="vm.currentUsers.id">
 
                 <div class="form-group">
@@ -83,7 +84,13 @@
                     <input type="email" id="email" ng-model="vm.currentUsers.email" placeholder="e.g. jane.doe@colony.org" required>
                 </div>
 
-                <!-- Password visible conditionally on fresh entries -->
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" ng-model="vm.currentUsers.phone" placeholder="e.g. +1234567890">
+                </div>
+
+
                 <div class="form-group" ng-if="!vm.currentUsers.id">
                     <label for="password">Account Security Password Passcode</label>
                     <input type="password" id="password" ng-model="vm.currentUsers.password" placeholder="••••••••" required>
@@ -93,14 +100,14 @@
                     <button type="submit" class="btn btn-primary">
                         {{ vm.currentUsers.id ? 'Update Credentials' : 'Create User File' }}
                     </button>
-                    <button type="button" class="btn btn-secondary" ng-click="vm.clearForm()" ng-show="vm.currentUsers.username || vm.currentUsers.email || vm.currentUsers.id">
+                    <button type="button" class="btn btn-secondary" ng-click="vm.clearForm()" ng-show="vm.currentUsers.username || vm.currentUsers.email || vm.currentUsers.phone || vm.currentUsers.id">
                         Cancel
                     </button>
                 </div>
             </form>
         </div>
 
-        <!-- PART B: Email Search & Filtering -->
+
         <div class="panel">
             <h3>🔍 Targeted Account Queries</h3>
 
@@ -117,28 +124,32 @@
         </div>
     </div>
 
-    <!-- PART C: Security Matrix Overview Ledger -->
+
     <h3>📜 Authorized Access Account Directory</h3>
     <table>
         <thead>
         <tr>
-            <th style="width: 15%;">Account Ref</th>
-            <th style="width: 30%;">User Handle</th>
-            <th style="width: 35%;">Registered Email Matrix</th>
+            <th style="width: 10%;">Account Ref</th>
+            <th style="width: 25%;">User Handle</th>
+            <th style="width: 30%;">Registered Email Matrix</th>
+
+            <th style="width: 15%;">Phone Number</th>
             <th style="width: 20%; text-align: right;">Operations Matrix</th>
         </tr>
         </thead>
         <tbody>
-        <!-- Fallback check criteria rule configuration handling -->
+
         <tr ng-if="vm.users.length === 0">
-            <td colspan="4" class="no-data">No accounts matching current criteria exist inside the database registry.</td>
+            <td colspan="5" class="no-data">No accounts matching current criteria exist inside the database registry.</td>
         </tr>
 
-        <!-- Controller iterative processing loop structure -->
+
         <tr ng-repeat="user in vm.users">
             <td><code>#{{ user.id }}</code></td>
             <td><strong>{{ user.username }}</strong></td>
             <td><a href="mailto:{{ user.email }}" style="color: #3182ce; text-decoration: none;">{{ user.email }}</a></td>
+
+            <td><span>{{ user.phone || 'N/A' }}</span></td>
             <td style="text-align: right;">
                 <button type="button" class="btn btn-edit" ng-click="vm.editUser(user)">
                     Modify
