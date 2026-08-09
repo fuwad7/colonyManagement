@@ -5,6 +5,7 @@ import com.example.colonyManagement.service.BuildingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -16,10 +17,11 @@ public class BuildingController {
     public BuildingController(BuildingService buildingService) {
         this.buildingService = buildingService;
     }
+
     @PostMapping
-    public ResponseEntity<Building>createBuilding(@RequestBody Building building){
-        Building savedBuildings = buildingService.createBuilding(building);
-        return new ResponseEntity<>(savedBuildings, HttpStatus.CREATED);
+    public ResponseEntity<Building> createBuilding(@RequestBody Building building) {
+        Building savedBuilding = buildingService.createBuilding(building);
+        return new ResponseEntity<>(savedBuilding, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -27,19 +29,25 @@ public class BuildingController {
         List<Building> buildings = buildingService.getAllBuildings();
         return ResponseEntity.ok(buildings);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Building>getBuildingsById(@PathVariable Long id){
-        return buildingService.getBuildingsById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Building> getBuildingById(@PathVariable Long id) {
+        return buildingService.getBuildingById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Building>updateBuilding(@PathVariable Long id, @RequestBody Building buildingDetails){
-        return buildingService.updateBuilding(id, buildingDetails).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Building> updateBuilding(@PathVariable Long id,
+                                                   @RequestBody Building buildingDetails) {
+        return buildingService.updateBuilding(id, buildingDetails)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void>deleteBuilding(@PathVariable Long id){
+    public ResponseEntity<Void> deleteBuilding(@PathVariable Long id) {
         buildingService.deleteBuilding(id);
         return ResponseEntity.noContent().build();
     }
-
 }

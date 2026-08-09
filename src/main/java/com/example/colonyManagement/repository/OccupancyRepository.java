@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 
 public interface OccupancyRepository extends JpaRepository<Occupancy, Integer>{
-    List<Occupancy> findByPersonId(int person_id);
+    List<Occupancy> findByPersonId(long person_id);
 
     List<Occupancy> findByOccupancyType(Occupancy.OccupancyType occupancyType);
 }

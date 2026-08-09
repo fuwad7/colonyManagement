@@ -16,7 +16,7 @@
         vm.loading = false;
 
         vm.getFlats = getFlats;
-        vm.getFLatsById = getFlatsById;
+        vm.getFLatsById = getFlatById;
         vm.editFlats = editFlats;
         vm.saveOrUpdate = saveOrUpdate;
         vm.deleteFlat = deleteFlat;
@@ -44,7 +44,7 @@
                 });
         }
 
-        function getFlatsById(id) {
+        function getFlatById(id) {
             vm.loading = true;
             vm.error = null;
 
@@ -61,7 +61,7 @@
         }
 
         function editFlats(flats) {
-            getFlatsById(flats.id);
+            getFlatById(flats.id);
         }
 
         function saveOrUpdate() {
@@ -93,7 +93,7 @@
                 return;
             }
             vm.loading = true;
-            FlatService.deleteFlats(id)
+            FlatService.deleteFlat(id)
                 .then(function () {
                     getFlats();
                 })
