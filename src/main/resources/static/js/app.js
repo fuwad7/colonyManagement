@@ -1003,7 +1003,8 @@ async function handleAssignAssetToPerson(e) {
             alert('Failed to assign person to asset: ' + errText);
         }
     } catch (e) {
-        alert('Error creating asset assignment');
+        console.error(e);
+        alert('Error creating asset assignment: ' + (e.message || e));
     }
 }
 
