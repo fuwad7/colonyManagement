@@ -275,20 +275,34 @@
                                     <select id="assignAssetSelect" class="form-input" required></select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Full Name</label>
-                                    <input type="text" id="assetPersonName" class="form-input"
-                                        placeholder="Person Full Name" required>
-                                </div>
-                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
-                                    <div class="form-group">
-                                        <label>Phone</label>
-                                        <input type="text" id="assetPersonPhone" class="form-input" placeholder="Phone"
-                                            required>
+                                    <div style="display:flex; gap:15px; margin-bottom:12px">
+                                        <label style="font-size:0.85rem; cursor:pointer">
+                                            <input type="radio" name="assetPersonMode" value="select" checked onchange="toggleAssetPersonMode('select')"> Select Existing Person
+                                        </label>
+                                        <label style="font-size:0.85rem; cursor:pointer">
+                                            <input type="radio" name="assetPersonMode" value="new" onchange="toggleAssetPersonMode('new')"> Add New Person
+                                        </label>
                                     </div>
+                                </div>
+                                <div id="assetPersonSelectGroup" class="form-group">
+                                    <label>Select Person</label>
+                                    <select id="assignPersonSelect" class="form-input" required></select>
+                                </div>
+                                <div id="assetPersonNewGroup" style="display:none">
                                     <div class="form-group">
-                                        <label>NID / ID</label>
-                                        <input type="text" id="assetPersonId" class="form-input" placeholder="ID Number"
-                                            required>
+                                        <label>Full Name</label>
+                                        <input type="text" id="assetPersonName" class="form-input"
+                                            placeholder="Person Full Name">
+                                    </div>
+                                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+                                        <div class="form-group">
+                                            <label>Phone</label>
+                                            <input type="text" id="assetPersonPhone" class="form-input" placeholder="Phone">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>NID / ID</label>
+                                            <input type="text" id="assetPersonId" class="form-input" placeholder="ID Number">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">

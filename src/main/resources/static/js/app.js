@@ -563,6 +563,31 @@ function toggleResidentMode(mode) {
     }
 }
 
+function toggleAssetPersonMode(mode) {
+    const selectGroup = document.getElementById('assetPersonSelectGroup');
+    const newGroup = document.getElementById('assetPersonNewGroup');
+    const personSelect = document.getElementById('assignPersonSelect');
+    const personName = document.getElementById('assetPersonName');
+    const personPhone = document.getElementById('assetPersonPhone');
+    const personId = document.getElementById('assetPersonId');
+    
+    if (mode === 'select') {
+        if (selectGroup) selectGroup.style.display = 'block';
+        if (newGroup) newGroup.style.display = 'none';
+        if (personSelect) personSelect.required = true;
+        if (personName) personName.required = false;
+        if (personPhone) personPhone.required = false;
+        if (personId) personId.required = false;
+    } else {
+        if (selectGroup) selectGroup.style.display = 'none';
+        if (newGroup) newGroup.style.display = 'block';
+        if (personSelect) personSelect.required = false;
+        if (personName) personName.required = true;
+        if (personPhone) personPhone.required = true;
+        if (personId) personId.required = true;
+    }
+}
+
 async function handleAssignOccupant(e) {
     e.preventDefault();
 
@@ -817,13 +842,15 @@ async function loadAssetSection() {
     if (assetActionTh) assetActionTh.style.display = isAdmin ? 'table-cell' : 'none';
 
     try {
-        const [assetsRes, assignmentsRes] = await Promise.all([
+        const [assetsRes, assignmentsRes, personsRes] = await Promise.all([
             fetch('/api/assets'),
-            fetch('/api/asset-assignments')
+            fetch('/api/asset-assignments'),
+            fetch('/api/persons')
         ]);
 
         const assets = await assetsRes.json();
         const assignments = await assignmentsRes.json();
+        const persons = await personsRes.json();
 
         if (isAdmin) {
             const assetSelect = document.getElementById('assignAssetSelect');
@@ -833,6 +860,19 @@ async function loadAssetSection() {
                     assetSelect.innerHTML += `<option value="${a.id}">${a.name} (${a.type})</option>`;
                 });
             }
+
+            const personSelect = document.getElementById('assignPersonSelect');
+            if (personSelect) {
+                personSelect.innerHTML = '<option value="">-- Select Person --</option>';
+                persons.forEach(p => {
+                    const info = p.phone ? ` (${p.phone})` : '';
+                    personSelect.innerHTML += `<option value="${p.id}">${p.fullName}${info}</option>`;
+                });
+            }
+
+            const selectRadio = document.querySelector('input[name="assetPersonMode"][value="select"]');
+            if (selectRadio) selectRadio.checked = true;
+            toggleAssetPersonMode('select');
         }
 
         const tbody = document.getElementById('assetAssignTableBody');
@@ -902,9 +942,6 @@ async function handleAssignAssetToPerson(e) {
     }
 
     const assetId = document.getElementById('assignAssetSelect').value;
-    const fullName = document.getElementById('assetPersonName').value;
-    const phone = document.getElementById('assetPersonPhone').value;
-    const personId = document.getElementById('assetPersonId').value;
     const jobRole = document.getElementById('assetJobRole').value;
 
     if (!assetId) {
@@ -912,18 +949,37 @@ async function handleAssignAssetToPerson(e) {
         return;
     }
 
-    try {
-        const personRes = await fetch('/api/persons', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fullName, phone, personId })
-        });
+    const modeRadio = document.querySelector('input[name="assetPersonMode"]:checked');
+    const personMode = modeRadio ? modeRadio.value : 'select';
 
-        if (!personRes.ok) {
-            alert('Failed to register person details');
-            return;
+    try {
+        let finalPersonId = null;
+
+        if (personMode === 'new') {
+            const fullName = document.getElementById('assetPersonName').value;
+            const phone = document.getElementById('assetPersonPhone').value;
+            const personId = document.getElementById('assetPersonId').value;
+
+            const personRes = await fetch('/api/persons', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fullName, phone, personId })
+            });
+
+            if (!personRes.ok) {
+                alert('Failed to register person details');
+                return;
+            }
+            const person = await personRes.json();
+            finalPersonId = person.id;
+        } else {
+            const selectVal = document.getElementById('assignPersonSelect').value;
+            if (!selectVal) {
+                alert('Please select a person to assign!');
+                return;
+            }
+            finalPersonId = parseInt(selectVal);
         }
-        const person = await personRes.json();
 
         const assignRes = await fetch('/api/asset-assignments', {
             method: 'POST',
@@ -931,12 +987,15 @@ async function handleAssignAssetToPerson(e) {
             body: JSON.stringify({
                 jobRole: jobRole,
                 asset: { id: parseInt(assetId) },
-                person: { id: person.id }
+                person: { id: finalPersonId }
             })
         });
 
         if (assignRes.ok) {
             document.getElementById('assignAssetForm').reset();
+            const selectRadio = document.querySelector('input[name="assetPersonMode"][value="select"]');
+            if (selectRadio) selectRadio.checked = true;
+            toggleAssetPersonMode('select');
             loadAssetSection();
             alert('Person assigned to asset successfully!');
         } else {
