@@ -6,6 +6,7 @@ let currentUser = null;
 let currentBuildingId = null;
 let selectedFlatId = null;
 let dashboardIntervalId = null;
+let layoutClosedByUser = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
@@ -106,6 +107,7 @@ async function handleRegister(e) {
     e.preventDefault();
     const username = document.getElementById('regUsername').value;
     const email = document.getElementById('regEmail').value;
+    const phone = document.getElementById('regPhone').value;
     const password = document.getElementById('regPassword').value;
     const errorEl = document.getElementById('authError');
     errorEl.style.display = 'none';
@@ -114,7 +116,7 @@ async function handleRegister(e) {
         const res = await fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, email, password })
+            body: JSON.stringify({ username, email, phone, password })
         });
 
         if (res.ok) {
@@ -233,7 +235,7 @@ async function loadBuildingsSection() {
             container.appendChild(card);
         });
 
-        if (buildings.length > 0 && !currentBuildingId) {
+        if (buildings.length > 0 && !currentBuildingId && !layoutClosedByUser) {
             selectBuilding(buildings[0]);
         } else if (currentBuildingId) {
             const found = buildings.find(b => b.id === currentBuildingId);
@@ -333,6 +335,7 @@ async function deleteBuilding(id) {
 
 async function selectBuilding(building) {
     currentBuildingId = building.id;
+    layoutClosedByUser = false;
     loadBuildingsSection();
     renderFloorLayout(building);
 }
@@ -340,6 +343,8 @@ async function selectBuilding(building) {
 async function renderFloorLayout(building) {
     const isAdmin = currentUser && currentUser.role === 'ADMIN';
     document.getElementById('selectedBuildingTitle').textContent = `🏢 Floor Layout & Resident Occupancy: ${building.name}`;
+    const closeBtn = document.getElementById('closeFloorLayoutBtn');
+    if (closeBtn) closeBtn.style.display = 'block';
     const floorContainer = document.getElementById('floorLayoutContainer');
     floorContainer.innerHTML = '<p style="color:var(--text-secondary)">Loading floor layout...</p>';
 
@@ -397,11 +402,20 @@ async function renderFloorLayout(building) {
                     `;
                 }
 
-                const assignBtnHtml = isAdmin ? `
-                    <button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')">
-                        ${occ ? 'Edit Occupant' : '+ Add Resident'}
+                const assignBtnHtml = isAdmin ? (occ ? `
+                    <div style="display:flex; gap:6px; margin-top:8px">
+                        <button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')" style="margin-top:0; flex:1">
+                            Edit Occupant
+                        </button>
+                        <button onclick="removeOccupant(${occ.id})" style="background:#fee2e2; border:1px solid #fca5a5; color:#b91c1c; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer">
+                            Remove
+                        </button>
+                    </div>
+                ` : `
+                    <button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')" style="margin-top:8px">
+                        + Add Resident
                     </button>
-                ` : '';
+                `) : '';
 
                 flatsHtml += `
                     <div class="flat-card">
@@ -428,6 +442,40 @@ async function renderFloorLayout(building) {
     } catch (e) {
         console.error(e);
         floorContainer.innerHTML = '<p style="color:var(--accent-rose)">Failed to load floor layout.</p>';
+    }
+}
+
+function closeFloorLayout() {
+    currentBuildingId = null;
+    layoutClosedByUser = true;
+    document.getElementById('selectedBuildingTitle').textContent = '🏢 Floor Layout';
+    const closeBtn = document.getElementById('closeFloorLayoutBtn');
+    if (closeBtn) closeBtn.style.display = 'none';
+    document.getElementById('floorLayoutContainer').innerHTML = '<p style="color:var(--text-secondary)">Select a building to view layout.</p>';
+    loadBuildingsSection();
+}
+
+async function removeOccupant(occId) {
+    if (!currentUser || currentUser.role !== 'ADMIN') {
+        alert('Only admin can remove occupants');
+        return;
+    }
+    if (!confirm('Are you sure you want to remove this resident occupancy?')) {
+        return;
+    }
+    try {
+        const res = await fetch(`/api/occupancies/${occId}`, {
+            method: 'DELETE'
+        });
+        if (res.ok) {
+            loadBuildingsSection();
+            loadDashboardStats();
+        } else {
+            alert('Failed to remove resident');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error removing resident');
     }
 }
 

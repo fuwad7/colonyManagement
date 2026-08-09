@@ -47,6 +47,10 @@
                     <input type="email" id="regEmail" class="form-input" placeholder="Email address">
                 </div>
                 <div class="form-group">
+                    <label for="regPhone">Phone Number</label>
+                    <input type="text" id="regPhone" class="form-input" placeholder="Phone Number" required>
+                </div>
+                <div class="form-group">
                     <label for="regPassword">Password</label>
                     <input type="password" id="regPassword" class="form-input" placeholder="Password" required>
                 </div>
@@ -193,9 +197,15 @@
                     <div id="buildingListGrid" class="building-grid"></div>
 
                     <div style="margin-top:32px">
-                        <div id="selectedBuildingTitle" class="section-title"
-                            style="font-size:1.2rem; color:var(--accent-blue)">
-                            🏢 Floor Layout
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+                            <div id="selectedBuildingTitle" class="section-title"
+                                style="font-size:1.2rem; color:var(--accent-blue); margin:0">
+                                🏢 Floor Layout
+                            </div>
+                            <button id="closeFloorLayoutBtn" onclick="closeFloorLayout()"
+                                style="display:none; background:#e2e8f0; color:#475569; border:none; padding:6px 12px; border-radius:4px; font-weight:600; font-size:0.85rem; cursor:pointer">
+                                ✖ Close Layout
+                            </button>
                         </div>
                         <div id="floorLayoutContainer" class="floor-container">
                             <p style="color:var(--text-secondary)">Select a building to view layout.</p>
