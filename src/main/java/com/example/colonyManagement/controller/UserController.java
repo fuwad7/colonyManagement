@@ -21,12 +21,12 @@ public class UserController {
     }
 
     private boolean isAdmin(HttpSession session) {
-        return session != null && "ADMIN".equals(session.getAttribute("ROLE"));
+        return session == null || !"ADMIN".equals(session.getAttribute("ROLE"));
     }
 
     @PostMapping
     public ResponseEntity<?> saveUser(@RequestBody User user, HttpSession session) {
-        if (!isAdmin(session)) {
+        if (isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: Only Admin can create users.");
         }
         User savedUser = userService.saveUser(user);
@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getAllUsers(HttpSession session) {
-        if (!isAdmin(session)) {
+        if (isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");
         }
         List<User> users = userService.getAllUsers();
@@ -44,7 +44,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id, HttpSession session) {
-        if (!isAdmin(session)) {
+        if (isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");
         }
         return userService.getUserById(id)
@@ -54,7 +54,7 @@ public class UserController {
 
     @GetMapping("/email/{email}")
     public ResponseEntity<?> getUserByEmail(@PathVariable String email, HttpSession session) {
-        if (!isAdmin(session)) {
+        if (isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");
         }
         return userService.getUserByEmail(email)
@@ -67,7 +67,7 @@ public class UserController {
             @PathVariable Long id,
             @RequestBody User userDetails,
             HttpSession session) {
-        if (!isAdmin(session)) {
+        if (isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");
         }
 
@@ -81,7 +81,7 @@ public class UserController {
 
     @PutMapping("/{id}/toggle-status")
     public ResponseEntity<?> toggleUserStatus(@PathVariable Long id, HttpSession session) {
-        if (!isAdmin(session)) {
+        if (isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");
         }
 
@@ -98,7 +98,7 @@ public class UserController {
             @PathVariable Long id,
             @RequestBody Map<String, String> body,
             HttpSession session) {
-        if (!isAdmin(session)) {
+        if (isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");
         }
 
@@ -113,7 +113,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpSession session) {
-        if (!isAdmin(session)) {
+        if (isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");
         }
         userService.deleteUser(id);

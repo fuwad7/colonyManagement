@@ -24,7 +24,7 @@ public class UserService {
     @Transactional
     public User saveUser(User user) {
         User savedUser = userRepository.save(user);
-        if (!personRepository.existsByUser(savedUser)) {
+        if (personRepository.existsByUser(savedUser)) {
             Person person = Person.builder()
                     .fullName(savedUser.getUsername())
                     .personId(savedUser.getUsername())

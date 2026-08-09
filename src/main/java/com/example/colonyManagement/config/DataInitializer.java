@@ -45,8 +45,7 @@ public class DataInitializer implements CommandLineRunner {
             admin = userRepository.save(admin);
         }
 
-        // Ensure admin has a Person record
-        if (!personRepository.existsByUser(admin)) {
+        if (personRepository.existsByUser(admin)) {
             Person adminPerson = Person.builder()
                     .fullName(admin.getUsername())
                     .personId(admin.getUsername())
