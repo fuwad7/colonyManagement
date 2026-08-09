@@ -996,7 +996,7 @@ async function handleAssignAssetToPerson(e) {
             const selectRadio = document.querySelector('input[name="assetPersonMode"][value="select"]');
             if (selectRadio) selectRadio.checked = true;
             toggleAssetPersonMode('select');
-            loadAssetSection();
+            await loadAssetSection();
             alert('Person assigned to asset successfully!');
         } else {
             const errText = await assignRes.text();
@@ -1010,7 +1010,7 @@ async function handleAssignAssetToPerson(e) {
 async function deleteAssetAssignment(id) {
     try {
         const res = await fetch(`/api/asset-Assignments/${id}`, { method: 'DELETE' });
-        if (res.ok) loadAssetSection();
+        if (res.ok) await loadAssetSection();
     } catch (e) {
         alert('Failed to delete assignment');
     }
