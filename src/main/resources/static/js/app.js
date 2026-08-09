@@ -844,7 +844,7 @@ async function loadAssetSection() {
     try {
         const [assetsRes, assignmentsRes, personsRes] = await Promise.all([
             fetch('/api/assets'),
-            fetch('/api/asset-Assignments'),
+            fetch('/api/asset-Assignment'),
             fetch('/api/persons')
         ]);
 
@@ -981,7 +981,7 @@ async function handleAssignAssetToPerson(e) {
             finalPersonId = parseInt(selectVal);
         }
 
-        const assignRes = await fetch('/api/asset-Assignments', {
+        const assignRes = await fetch('/api/asset-Assignment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1009,7 +1009,7 @@ async function handleAssignAssetToPerson(e) {
 
 async function deleteAssetAssignment(id) {
     try {
-        const res = await fetch(`/api/asset-Assignments/${id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/asset-Assignment/${id}`, { method: 'DELETE' });
         if (res.ok) await loadAssetSection();
     } catch (e) {
         alert('Failed to delete assignment');
