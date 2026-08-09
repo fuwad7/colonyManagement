@@ -24,11 +24,11 @@ public class UserService {
     @Transactional
     public User saveUser(User user) {
         User savedUser = userRepository.save(user);
-        if (personRepository.existsByUser(savedUser)) {
+        if (!personRepository.existsByUser(savedUser)) {
             Person person = Person.builder()
                     .fullName(savedUser.getUsername())
                     .personId(savedUser.getUsername())
-                    .phone("")
+                    .phone(savedUser.getPhone() != null ? savedUser.getPhone() : "")
                     .user(savedUser)
                     .build();
             personRepository.save(person);
@@ -69,6 +69,10 @@ public class UserService {
                         user.setPassword(userDetails.getPassword());
                     }
 
+                    if (userDetails.getPhone() != null) {
+                        user.setPhone(userDetails.getPhone());
+                    }
+
                     user.setEnabled(userDetails.isEnabled());
 
                     User updatedUser = userRepository.save(user);
@@ -76,6 +80,9 @@ public class UserService {
                     personRepository.findByUser(updatedUser).ifPresent(p -> {
                         p.setFullName(updatedUser.getUsername());
                         p.setPersonId(updatedUser.getUsername());
+                        if (updatedUser.getPhone() != null) {
+                            p.setPhone(updatedUser.getPhone());
+                        }
                         personRepository.save(p);
                     });
 

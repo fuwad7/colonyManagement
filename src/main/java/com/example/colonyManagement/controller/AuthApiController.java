@@ -28,6 +28,7 @@ public class AuthApiController {
         String username = request.get("username");
         String email = request.get("email");
         String password = request.get("password");
+        String phone = request.get("phone");
 
         if (username == null || username.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
@@ -45,6 +46,7 @@ public class AuthApiController {
                 .username(username)
                 .email((email != null && !email.trim().isEmpty()) ? email : username + "@colony.local")
                 .password(password)
+                .phone(phone)
                 .role(userRole)
                 .enabled(true)
                 .build();

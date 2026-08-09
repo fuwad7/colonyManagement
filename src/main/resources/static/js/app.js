@@ -611,6 +611,7 @@ async function handleSaveNewUser(e) {
     e.preventDefault();
     const username = document.getElementById('addUsername').value;
     const email = document.getElementById('addEmail').value;
+    const phone = document.getElementById('addPhone').value;
     const password = document.getElementById('addPassword').value;
     const role = document.getElementById('addRole').value;
 
@@ -618,7 +619,7 @@ async function handleSaveNewUser(e) {
         const res = await fetch('/api/users', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, email, password, role, enabled: true })
+            body: JSON.stringify({ username, email, phone, password, role, enabled: true })
         });
 
         if (res.ok) {
@@ -649,6 +650,7 @@ async function loadUserManagement() {
             tr.innerHTML = `
                 <td><b>${u.username}</b></td>
                 <td>${u.email}</td>
+                <td>${u.phone || 'N/A'}</td>
                 <td>
                     <select onchange="changeUserRole(${u.id}, this.value)" style="background:var(--bg-input); color:var(--text-primary); border:1px solid var(--border-color); padding:4px 8px; border-radius:6px">
                         <option value="ADMIN" ${u.role === 'ADMIN' ? 'selected' : ''}>ADMIN</option>
@@ -663,7 +665,7 @@ async function loadUserManagement() {
                 </td>
                 <td>
                     <div style="display:flex; gap:6px">
-                        <button onclick="openEditUserModal(${u.id}, '${u.username}', '${u.email}', '${u.role}')" style="background:var(--bg-input); color:var(--accent-blue); border:1px solid var(--border-color); padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer">Edit</button>
+                        <button onclick="openEditUserModal(${u.id}, '${u.username}', '${u.email}', '${u.role}', '${u.phone || ''}')" style="background:var(--bg-input); color:var(--accent-blue); border:1px solid var(--border-color); padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer">Edit</button>
                         <button onclick="deleteUser(${u.id})" style="background:rgba(244,63,94,0.2); color:var(--accent-rose); border:1px solid rgba(244,63,94,0.3); padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer">Delete</button>
                     </div>
                 </td>
@@ -697,11 +699,12 @@ async function changeUserRole(userId, newRole) {
     }
 }
 
-function openEditUserModal(id, username, email, role) {
+function openEditUserModal(id, username, email, role, phone) {
     document.getElementById('editUserId').value = id;
     document.getElementById('editUsername').value = username;
     document.getElementById('editEmail').value = email;
     document.getElementById('editRole').value = role;
+    document.getElementById('editPhone').value = phone || '';
     document.getElementById('editPassword').value = '';
     document.getElementById('editUserModal').classList.add('show');
 }
@@ -716,10 +719,11 @@ async function handleSaveEditedUser(e) {
     const username = document.getElementById('editUsername').value;
     const email = document.getElementById('editEmail').value;
     const role = document.getElementById('editRole').value;
+    const phone = document.getElementById('editPhone').value;
     const password = document.getElementById('editPassword').value;
 
     try {
-        const payload = { username, email, role };
+        const payload = { username, email, role, phone };
         if (password && password.trim().length > 0) payload.password = password;
 
         const res = await fetch(`/api/users/${id}`, {

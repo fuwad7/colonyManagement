@@ -27,6 +27,8 @@ public class User {
 
     private String role;
 
+    private String phone;
+
     @Builder.Default
     private boolean enabled = true;
 }

@@ -45,11 +45,11 @@ public class DataInitializer implements CommandLineRunner {
             admin = userRepository.save(admin);
         }
 
-        if (personRepository.existsByUser(admin)) {
+        if (!personRepository.existsByUser(admin)) {
             Person adminPerson = Person.builder()
                     .fullName(admin.getUsername())
                     .personId(admin.getUsername())
-                    .phone("")
+                    .phone("123-456-7890")
                     .user(admin)
                     .build();
             personRepository.save(adminPerson);
