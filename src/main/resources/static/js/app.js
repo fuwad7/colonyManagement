@@ -54,8 +54,6 @@ function showAppView() {
     }
 }
 
-
-
 function switchAuthTab(tab) {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
