@@ -25,7 +25,6 @@ async function checkAuth() {
         showAuthView();
     }
 }
-
 function showAuthView() {
     if (dashboardIntervalId) {
         clearInterval(dashboardIntervalId);
