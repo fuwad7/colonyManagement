@@ -99,83 +99,45 @@ public class UserService {
         return userRepository.findById(id)
                 .map(user -> {
 
-                    if (profileDetails.getUsername() != null
-                            && !profileDetails.getUsername().trim().isEmpty()) {
-
-                        user.setUsername(
-                                profileDetails.getUsername().trim()
-                        );
+                    if (profileDetails.getUsername() != null && !profileDetails.getUsername().trim().isEmpty()) {
+                        user.setUsername(profileDetails.getUsername().trim());
                     }
 
-                    if (profileDetails.getEmail() != null
-                            && !profileDetails.getEmail().trim().isEmpty()) {
-
-                        user.setEmail(
-                                profileDetails.getEmail().trim()
-                        );
+                    if (profileDetails.getEmail() != null && !profileDetails.getEmail().trim().isEmpty()) {
+                        user.setEmail(profileDetails.getEmail().trim());
                     }
 
                     if (profileDetails.getPhone() != null) {
-
-                        user.setPhone(
-                                profileDetails.getPhone().trim()
-                        );
+                        user.setPhone(profileDetails.getPhone().trim());
                     }
+                    User updatedUser = userRepository.save(user);
 
+                    personRepository.findByUser(updatedUser) .ifPresent(person -> {
+                        person.setFullName(updatedUser.getUsername());
+                        person.setPersonId(updatedUser.getUsername());
 
-                    User updatedUser =
-                            userRepository.save(user);
-
-
-
-                    personRepository.findByUser(updatedUser)
-                            .ifPresent(person -> {
-
-                                person.setFullName(
-                                        updatedUser.getUsername()
-                                );
-
-                                person.setPersonId(
-                                        updatedUser.getUsername()
-                                );
-
-                                if (updatedUser.getPhone() != null) {
-
-                                    person.setPhone(
-                                            updatedUser.getPhone()
-                                    );
-                                }
-
-                                personRepository.save(person);
+                        if (updatedUser.getPhone() != null) {
+                            person.setPhone(updatedUser.getPhone());}
+                            personRepository.save(person);
                             });
-
                     return updatedUser;
                 })
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "User not found with id: " + id
-                        )
-                );
-    }
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));}
     @Transactional
     public User toggleUserStatus(Long id) {
-        return userRepository.findById(id)
-                .map(user -> {
+        return userRepository.findById(id).map(user -> {
                     user.setEnabled(!user.isEnabled());
                     return userRepository.save(user);
                 })
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-    }
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));}
 
     @Transactional
     public User changeUserRole(Long id, String newRole) {
-        return userRepository.findById(id)
-                .map(user -> {
+        return userRepository.findById(id).map(user -> {
                     user.setRole(newRole);
                     return userRepository.save(user);
                 })
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-    }
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));}
 
     @Transactional
     public void deleteUser(Long id) {
