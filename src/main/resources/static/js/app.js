@@ -222,7 +222,7 @@ async function loadBuildingsSection() {
 
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:flex-start">
-                    <h3 style="color:var(--accent-blue); font-size:1.1rem; margin-bottom:8px">🏢 ${b.name}</h3>
+                    <h3 style="color:var(--accent-blue); font-size:1.1rem; margin-bottom:8px"> ${b.name}</h3>
                     ${adminButtonsHtml}
                 </div>
                 <p style="color:var(--text-secondary); font-size:0.85rem">Floors: <b>${b.floorCount}</b> | Units/Floor: <b>${b.unitsPerFloor}</b></p>
@@ -339,7 +339,7 @@ async function selectBuilding(building) {
 
 async function renderFloorLayout(building) {
     const isAdmin = currentUser && currentUser.role === 'ADMIN';
-    document.getElementById('selectedBuildingTitle').textContent = `🏢 Floor Layout & Resident Occupancy: ${building.name}`;
+    document.getElementById('selectedBuildingTitle').textContent = `Floor Layout & Resident Occupancy: ${building.name}`;
     const closeBtn = document.getElementById('closeFloorLayoutBtn');
     if (closeBtn) closeBtn.style.display = 'block';
     const floorContainer = document.getElementById('floorLayoutContainer');
@@ -417,7 +417,7 @@ async function renderFloorLayout(building) {
                 flatsHtml += `
                     <div class="flat-card">
                         <div class="flat-card-title">
-                            <span>🔑 ${flat.flatName}</span>
+                            <span> ${flat.flatName}</span>
                             ${occBadge}
                         </div>
                         <div class="occupant-details">
@@ -445,7 +445,7 @@ async function renderFloorLayout(building) {
 function closeFloorLayout() {
     currentBuildingId = null;
     layoutClosedByUser = true;
-    document.getElementById('selectedBuildingTitle').textContent = '🏢 Floor Layout';
+    document.getElementById('selectedBuildingTitle').textContent = 'Floor Layout';
     const closeBtn = document.getElementById('closeFloorLayoutBtn');
     if (closeBtn) closeBtn.style.display = 'none';
     document.getElementById('floorLayoutContainer').innerHTML = '<p style="color:var(--text-secondary)">Select a building to view layout.</p>';
@@ -1033,3 +1033,105 @@ async function loadPersonsList() {
     } catch (e) { }
 }
 
+
+function openProfileModal() {
+
+    const modal = document.getElementById('profileModal');
+
+    if (!modal) {
+        console.error('Profile modal not found.');
+        return;
+    }
+
+    loadProfileData();
+
+    modal.classList.add('show');
+}
+function closeProfileModal() {
+
+    const modal = document.getElementById('profileModal');
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove('show');
+}
+
+function loadProfileData() {
+
+    if (!currentUser) {
+        console.warn('No logged-in user found.');
+        return;
+    }
+
+    const username = currentUser.username || 'User';
+    const email = currentUser.email || '-';
+    const phone = currentUser.phone || '-';
+    const role = currentUser.role || 'RESIDENT';
+
+    const firstLetter =
+        username.charAt(0).toUpperCase();
+
+    const profileAvatar =
+        document.getElementById('profileAvatar');
+
+    if (profileAvatar) {
+        profileAvatar.textContent = firstLetter;
+    }
+
+    const profileModalAvatar =
+        document.getElementById('profileModalAvatar');
+
+    if (profileModalAvatar) {
+        profileModalAvatar.textContent = firstLetter;
+    }
+
+    const profileModalName =
+        document.getElementById('profileModalName');
+
+    if (profileModalName) {
+        profileModalName.textContent = username;
+    }
+
+    const profileModalRole =
+        document.getElementById('profileModalRole');
+
+    if (profileModalRole) {
+        profileModalRole.textContent = role;
+    }
+
+    const profileUsername =
+        document.getElementById('profileUsername');
+
+    if (profileUsername) {
+        profileUsername.textContent = username;
+    }
+
+    const profileEmail =
+        document.getElementById('profileEmail');
+
+    if (profileEmail) {
+        profileEmail.textContent = email;
+    }
+
+    const profilePhone =
+        document.getElementById('profilePhone');
+
+    if (profilePhone) {
+        profilePhone.textContent = phone;
+    }
+
+    const profileRole =
+        document.getElementById('profileRole');
+
+    if (profileRole) {
+        profileRole.textContent = role;
+    }
+}
+
+function openEditProfile() {
+
+    console.log('Edit profile clicked.');
+
+}
