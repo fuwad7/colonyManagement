@@ -113,6 +113,7 @@ public class AuthApiController {
             Map<String, Object> resp = new HashMap<>();
             resp.put("username", user.getUsername());
             resp.put("email", user.getEmail());
+            resp.put("phone", user.getPhone());
             resp.put("role", user.getRole());
             resp.put("enabled", user.isEnabled());
             return ResponseEntity.ok(resp);

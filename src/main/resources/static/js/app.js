@@ -1033,7 +1033,6 @@ async function loadPersonsList() {
     } catch (e) { }
 }
 
-
 function openProfileModal() {
 
     const modal = document.getElementById('profileModal');
