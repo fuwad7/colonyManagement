@@ -63,134 +63,74 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(
-            @PathVariable Long id,
-            @RequestBody User userDetails,
-            HttpSession session) {
+
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User userDetails, HttpSession session) {
         if (isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");
         }
 
-        try {
-            User updatedUser = userService.updateUser(id, userDetails);
+        try { User updatedUser = userService.updateUser(id, userDetails);
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
     @PutMapping("/profile")
-    public ResponseEntity<?> updateMyProfile(
-            @RequestBody Map<String, String> profileData,
-            HttpSession session) {
+    public ResponseEntity<?> updateMyProfile(@RequestBody Map<String, String> profileData, HttpSession session) {
 
-        String currentUsername =
-                (String) session.getAttribute("LOGGED_IN_USER");
+        String currentUsername = (String) session.getAttribute("LOGGED_IN_USER");
 
         if (currentUsername == null) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Not logged in.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in.");
         }
 
         try {
 
-            User currentUser =
-                    userService
-                            .getUserByUsername(currentUsername)
-                            .orElseThrow(() ->
-                                    new RuntimeException(
-                                            "User not found"
-                                    )
-                            );
+            User currentUser = userService.getUserByUsername(currentUsername).orElseThrow(() -> new RuntimeException("User not found"));
+            String username = profileData.get("username");
 
-            String username =
-                    profileData.get("username");
+            String email = profileData.get("email");
 
-            String email =
-                    profileData.get("email");
+            String phone = profileData.get("phone");
 
-            String phone =
-                    profileData.get("phone");
+            if (username == null || username.trim().isEmpty()) {
 
-
-            if (username == null ||
-                    username.trim().isEmpty()) {
-
-                return ResponseEntity
-                        .badRequest()
-                        .body("Username is required.");
+                return ResponseEntity.badRequest().body("Username is required.");
             }
 
+            if (email == null || email.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Email is required.");}
 
-            if (email == null ||
-                    email.trim().isEmpty()) {
+            User profileDetails = new User();
 
-                return ResponseEntity
-                        .badRequest()
-                        .body("Email is required.");
-            }
+            profileDetails.setUsername(username.trim());
 
+            profileDetails.setEmail(email.trim());
 
-            User profileDetails =
-                    new User();
+            profileDetails.setPhone( phone != null ? phone.trim() : "");
 
-            profileDetails.setUsername(
-                    username.trim()
-            );
+            User updatedUser = userService.updateProfile(currentUser.getId(), profileDetails);
 
-            profileDetails.setEmail(
-                    email.trim()
-            );
-
-            profileDetails.setPhone(
-                    phone != null
-                            ? phone.trim()
-                            : ""
-            );
-
-
-            User updatedUser =
-                    userService.updateProfile(
-                            currentUser.getId(),
-                            profileDetails
-                    );
-
-
-            session.setAttribute(
-                    "LOGGED_IN_USER",
-                    updatedUser.getUsername()
-            );
-
+            session.setAttribute("LOGGED_IN_USER", updatedUser.getUsername());
 
             return ResponseEntity.ok(
-                    Map.of(
-                            "message",
+                    Map.of("message",
                             "Profile updated successfully",
-                            "username",
-                            updatedUser.getUsername(),
-                            "email",
-                            updatedUser.getEmail(),
-                            "phone",
-                            updatedUser.getPhone()
-                    )
-            );
+                            "username", updatedUser.getUsername(),
+                            "email", updatedUser.getEmail(),
+                            "phone", updatedUser.getPhone()));
 
         } catch (Exception e) {
-
             e.printStackTrace();
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(
-                            "Failed to update profile: "
-                                    + e.getMessage()
-                    );
+                    .body( "Failed to update profile: " + e.getMessage());
         }
     }
     @PutMapping("/{id}/toggle-status")
     public ResponseEntity<?> toggleUserStatus(@PathVariable Long id, HttpSession session) {
         if (isAdmin(session)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");
-        }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");}
 
         try {
             User updatedUser = userService.toggleUserStatus(id);

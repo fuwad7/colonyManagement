@@ -81,7 +81,6 @@ public class AuthApiController {
                     user.setRole("ADMIN");
                     userRepository.save(user);
                 }
-
                 session.setAttribute("LOGGED_IN_USER", user.getUsername());
                 session.setAttribute("ROLE", user.getRole());
 
