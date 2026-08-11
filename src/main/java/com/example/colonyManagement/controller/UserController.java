@@ -80,39 +80,110 @@ public class UserController {
     }
     @PutMapping("/profile")
     public ResponseEntity<?> updateMyProfile(
-            @RequestBody User userDetails,
+            @RequestBody Map<String, String> profileData,
             HttpSession session) {
 
-        String username =
+        String currentUsername =
                 (String) session.getAttribute("LOGGED_IN_USER");
-        if (username == null) {
+
+        if (currentUsername == null) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("Not logged in.");
         }
+
         try {
+
             User currentUser =
                     userService
-                            .getUserByUsername(username)
+                            .getUserByUsername(currentUsername)
                             .orElseThrow(() ->
                                     new RuntimeException(
                                             "User not found"
                                     )
                             );
 
+            String username =
+                    profileData.get("username");
+
+            String email =
+                    profileData.get("email");
+
+            String phone =
+                    profileData.get("phone");
+
+
+            if (username == null ||
+                    username.trim().isEmpty()) {
+
+                return ResponseEntity
+                        .badRequest()
+                        .body("Username is required.");
+            }
+
+
+            if (email == null ||
+                    email.trim().isEmpty()) {
+
+                return ResponseEntity
+                        .badRequest()
+                        .body("Email is required.");
+            }
+
+
+            User profileDetails =
+                    new User();
+
+            profileDetails.setUsername(
+                    username.trim()
+            );
+
+            profileDetails.setEmail(
+                    email.trim()
+            );
+
+            profileDetails.setPhone(
+                    phone != null
+                            ? phone.trim()
+                            : ""
+            );
+
+
             User updatedUser =
                     userService.updateProfile(
                             currentUser.getId(),
-                            userDetails
+                            profileDetails
                     );
 
-            return ResponseEntity.ok(updatedUser);
 
-        } catch (RuntimeException e) {
+            session.setAttribute(
+                    "LOGGED_IN_USER",
+                    updatedUser.getUsername()
+            );
 
+
+            return ResponseEntity.ok(
+                    Map.of(
+                            "message",
+                            "Profile updated successfully",
+                            "username",
+                            updatedUser.getUsername(),
+                            "email",
+                            updatedUser.getEmail(),
+                            "phone",
+                            updatedUser.getPhone()
+                    )
+            );
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
+                    .body(
+                            "Failed to update profile: "
+                                    + e.getMessage()
+                    );
         }
     }
     @PutMapping("/{id}/toggle-status")
