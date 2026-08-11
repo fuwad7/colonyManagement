@@ -50,8 +50,7 @@ public class AssetAssignmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AssetAssignment> updateAssignment(@PathVariable Long id,
-                                                            @RequestBody AssetAssignment assetAssignment) {
+    public ResponseEntity<AssetAssignment> updateAssignment(@PathVariable Long id, @RequestBody AssetAssignment assetAssignment) {
         try {
             AssetAssignment updatedAssignment = assetAssignmentService.updateAssignment(id, assetAssignment);
             return ResponseEntity.ok(updatedAssignment);
