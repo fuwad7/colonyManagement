@@ -32,8 +32,7 @@ public class Flat {
     @OneToMany(
             mappedBy = "flat",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+            orphanRemoval = true)
     @JsonIgnore
     @Builder.Default
     private List<Occupancy> occupancies = new ArrayList<>();

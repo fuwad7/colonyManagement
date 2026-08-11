@@ -17,8 +17,7 @@ public class BuildingService {
     private final BuildingRepository buildingRepository;
     private final FlatRepository flatRepository;
 
-    public BuildingService(BuildingRepository buildingRepository,
-                           FlatRepository flatRepository) {
+    public BuildingService(BuildingRepository buildingRepository, FlatRepository flatRepository) {
         this.buildingRepository = buildingRepository;
         this.flatRepository = flatRepository;
     }
@@ -41,14 +40,12 @@ public class BuildingService {
             for (int unit = 1; unit <= unitsPerFloor; unit++) {
 
                 Flat flat = new Flat();
-
                 flat.setFloorNumber(floor);
 
                 String flatName = "Flat " + floor + String.format("%02d", unit);
                 flat.setFlatName(flatName);
 
                 flat.setBuilding(savedBuilding);
-
                 flats.add(flat);
             }
         }
@@ -57,7 +54,6 @@ public class BuildingService {
             List<Flat> savedFlats = flatRepository.saveAll(flats);
             savedBuilding.setFlats(savedFlats);
         }
-
         return savedBuilding;
     }
 

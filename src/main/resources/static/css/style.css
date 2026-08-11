@@ -438,9 +438,6 @@ body {
     font-size: 1.3rem;
     cursor: pointer;
 }
-/* =========================================
-   PROFILE HEADER
-   ========================================= */
 
 .btn-profile {
     display: flex;
@@ -499,11 +496,6 @@ body {
     margin-left: 2px;
 }
 
-
-/* =========================================
-   PROFILE HEADER
-   ========================================= */
-
 .btn-profile {
     display: flex;
     align-items: center;
@@ -560,11 +552,6 @@ body {
     color: #bdc3c7;
     margin-left: 2px;
 }
-
-
-/* =========================================
-   PROFILE MODAL
-   ========================================= */
 
 .profile-modal-content {
     width: 100%;

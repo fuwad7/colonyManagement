@@ -39,26 +39,18 @@ public class OccupancyService {
     public Occupancy updateOccupancy(int id, Occupancy occupancyDetails) {
 
         Occupancy existingOccupancy = occupancyRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Occupancy record not found with id: " + id
-                        )
-                );
+                .orElseThrow(() -> new RuntimeException("Occupancy record not found with id: " + id));
 
-        existingOccupancy.setOccupancyType(
-                occupancyDetails.getOccupancyType()
+        existingOccupancy.setOccupancyType(occupancyDetails.getOccupancyType()
         );
 
-        existingOccupancy.setFlat(
-                occupancyDetails.getFlat()
+        existingOccupancy.setFlat(occupancyDetails.getFlat()
         );
 
-        existingOccupancy.setPerson(
-                occupancyDetails.getPerson()
+        existingOccupancy.setPerson(occupancyDetails.getPerson()
         );
 
-        existingOccupancy.setRentedFrom(
-                occupancyDetails.getRentedFrom()
+        existingOccupancy.setRentedFrom(occupancyDetails.getRentedFrom()
         );
 
         return occupancyRepository.save(existingOccupancy);

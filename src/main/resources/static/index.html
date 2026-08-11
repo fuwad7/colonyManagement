@@ -8,7 +8,6 @@
 </head>
 
 <body>
-
     <div id="authView" class="auth-wrapper">
         <div class="auth-card">
             <div class="auth-brand">
@@ -65,36 +64,19 @@
                 🏢 Colony Management
             </div>
             <div class="user-profile-bar">
+            <button class="btn-profile" onclick="openProfileModal()">
 
-                <button class="btn-profile" onclick="openProfileModal()">
-
-        <span id="profileAvatar" class="profile-avatar">
-            U
-        </span>
-
-                    <span class="profile-header-info">
-
+        <span id="profileAvatar" class="profile-avatar">U</span>
+            <span class="profile-header-info">
             <span id="displayUsername"
-                  class="profile-header-name">
-                user
-            </span>
+            class="profile-header-name">user</span>
 
             <span id="displayRole"
-                  class="role-badge">
-                USER
-            </span>
-
+            class="role-badge">USER</span>
         </span>
-
-                    <span class="profile-chevron">⌄</span>
-
+                <span class="profile-chevron">⌄</span>
                 </button>
-
-                <button class="btn-logout"
-                        onclick="handleLogout()">
-                    Logout
-                </button>
-
+                <button class="btn-logout" onclick="handleLogout()">Logout</button>
             </div>
         </header>
 
@@ -587,149 +569,94 @@
             <div class="modal-header">
                 <div>
                     <h3 class="profile-modal-title">My Profile</h3>
-                    <p class="profile-modal-subtitle">
-                        Your account information
-                    </p>
+                    <p class="profile-modal-subtitle">Your account information</p>
                 </div>
                 <button class="modal-close"
-                        onclick="closeProfileModal()">
-                    &times;
-                </button>
-
+                        onclick="closeProfileModal()">&times;</button>
             </div>
-
             <div class="profile-modal-body">
 
                 <div class="profile-summary">
 
                     <div id="profileModalAvatar"
-                         class="profile-modal-avatar">
-                        U
+                         class="profile-modal-avatar">U
                     </div>
                     <div>
-                        <h2 id="profileModalName">
-                            User
-                        </h2>
+                        <h2 id="profileModalName">User</h2>
                         <span id="profileModalRole"
-                              class="role-badge">
-                        USER
-                    </span>
+                              class="role-badge">USER</span>
                     </div>
                 </div>
                 <div class="profile-info-grid">
                     <div class="profile-info-item">
-                    <span class="profile-info-label">
-                        Username
-                    </span>
+                    <span class="profile-info-label">Username</span>
                         <span id="profileUsername"
                               class="profile-info-value">
                     </span>
                     </div>
                     <div class="profile-info-item">
-                    <span class="profile-info-label">
-                        Email
-                    </span>
+                    <span class="profile-info-label">Email</span>
                         <span id="profileEmail"
-                              class="profile-info-value">
-                    </span>
-                    </div>
-                    <div class="profile-info-item">
-                    <span class="profile-info-label">
-                        Phone
-                    </span>
-                        <span id="profilePhone"
-                              class="profile-info-value">
-                    </span>
-                    </div>
+                              class="profile-info-value"></span>
 
+                    </div>
                     <div class="profile-info-item">
-                    <span class="profile-info-label">
-                        Role
-                    </span>
+                    <span class="profile-info-label">Phone</span>
+                        <span id="profilePhone"
+                              class="profile-info-value"></span>
+                    </div>
+                    <div class="profile-info-item">
+                    <span class="profile-info-label">Role</span>
                         <span id="profileRole"
-                              class="profile-info-value">
-                    </span>
+                              class="profile-info-value"></span>
                     </div>
                 </div>
             </div>
             <div class="profile-modal-footer">
                 <button type="button"
                         class="profile-close-btn"
-                        onclick="closeProfileModal()">
-                    Close
-                </button>
+                        onclick="closeProfileModal()">Close</button>
                 <button type="button"
                         class="btn-primary"
-                        onclick="openEditProfile()">
-                    Edit Profile
-                </button>
-
+                        onclick="openEditProfile()">Edit Profile</button>
             </div>
         </div>
     </div>
-    <!-- Edit Profile Modal -->
-    <div id="editProfileModal" class="modal-backdrop">
 
+    <div id="editProfileModal" class="modal-backdrop">
         <div class="modal-content profile-modal-content">
 
             <div class="modal-header">
-
                 <div>
-                    <h3 class="profile-modal-title">
-                        Edit Profile
-                    </h3>
-
-                    <p class="profile-modal-subtitle">
-                        Update your account information
-                    </p>
+                    <h3 class="profile-modal-title">Edit Profile</h3>
+                    <p class="profile-modal-subtitle">Update your account information</p>
                 </div>
-
                 <button class="modal-close"
                         type="button"
-                        onclick="closeEditProfile()">
-                    &times;
-                </button>
-
+                        onclick="closeEditProfile()">&times;</button>
             </div>
-
 
             <form id="editProfileForm"
                   onsubmit="saveEditProfile(event)">
-
                 <div class="profile-modal-body">
 
                     <div class="profile-edit-grid">
-
                         <div class="form-group">
-
-                            <label for="editProfileUsername">
-                                Username
-                            </label>
-                            <input
-                                    type="text"
+                            <label for="editProfileUsername">Username</label>
+                            <input  type="text"
                                     id="editProfileUsername"
                                     class="form-input"
-                                    required>
-
-                        </div>
+                                    required></div>
                         <div class="form-group">
-                            <label for="editProfileEmail">
-                                Email
-                            </label>
-                            <input
-                                    type="email"
+                            <label for="editProfileEmail">Email</label>
+                            <input  type="email"
                                     id="editProfileEmail"
                                     class="form-input"
-                                    required>
-                        </div>
+                                    required></div>
 
                         <div class="form-group">
-
-                            <label for="editProfilePhone">
-                                Phone Number
-                            </label>
-                            <input
-                                    type="text"
+                            <label for="editProfilePhone">Phone Number</label>
+                            <input  type="text"
                                     id="editProfilePhone"
                                     class="form-input"
                                     required>
@@ -738,18 +665,12 @@
                 </div>
 
                 <div class="profile-modal-footer">
-                    <button
-                            type="button"
+                    <button type="button"
                             class="profile-close-btn"
-                            onclick="closeEditProfile()">
-                        Cancel
-                    </button>
-                    <button
-                            type="submit"
+                            onclick="closeEditProfile()">Cancel</button>
+                    <button type="submit"
                             class="btn-primary"
-                            style="width:auto; padding:10px 20px;">
-                        Save Changes
-                    </button>
+                            style="width:auto; padding:10px 20px;">Save Changes</button>
                 </div>
             </form>
         </div>
