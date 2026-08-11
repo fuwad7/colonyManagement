@@ -701,3 +701,23 @@ body {
         width: calc(100% - 20px);
     }
 }
+
+.profile-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.profile-edit-grid .form-group {
+    margin-bottom: 0;
+}
+
+@media (min-width: 600px) {
+    .profile-edit-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .profile-edit-grid .form-group:last-child {
+        grid-column: 1 / -1;
+    }
+}

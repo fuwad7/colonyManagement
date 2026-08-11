@@ -1131,6 +1131,153 @@ function loadProfileData() {
 
 function openEditProfile() {
 
-    console.log('Edit profile clicked.');
+    if (!currentUser) {
+        console.warn('No logged-in user found.');
+        return;
+    }
+    document.getElementById('editProfileUsername').value =
+        currentUser.username || '';
+    document.getElementById('editProfileEmail').value =
+        currentUser.email || '';
 
+    document.getElementById('editProfilePhone').value =
+        currentUser.phone || '';
+
+    closeProfileModal();
+    document.getElementById('editProfileModal')
+        .classList.add('show');
+}
+function closeEditProfile() {
+
+    const modal =
+        document.getElementById('editProfileModal');
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove('show');
+}
+async function saveEditProfile(e) {
+
+    e.preventDefault();
+
+    if (!currentUser) {
+        alert('No logged-in user found.');
+        return;
+    }
+
+    const username =
+        document.getElementById('editProfileUsername').value.trim();
+
+    const email =
+        document.getElementById('editProfileEmail').value.trim();
+
+    const phone =
+        document.getElementById('editProfilePhone').value.trim();
+
+
+    if (!username || !email || !phone) {
+        alert('Please fill in all fields.');
+        return;
+    }
+
+    try {
+
+        if (!currentUser.id) {
+            alert('User ID is missing. We need to retrieve your user ID first.');
+            return;
+        }
+
+
+        const payload = {
+            username: username,
+            email: email,
+            phone: phone
+        };
+
+
+        const res = await fetch(
+            `/api/users/${currentUser.id}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }
+        );
+
+
+        if (!res.ok) {
+
+            const message = await res.text();
+
+            alert(
+                'Failed to update profile: ' +
+                (message || res.statusText)
+            );
+
+            return;
+        }
+
+        await refreshCurrentUser();
+
+
+        closeEditProfile();
+
+        openProfileModal();
+
+
+    } catch (error) {
+
+        console.error('Profile update error:', error);
+
+        alert('Error updating profile.');
+    }
+}
+async function refreshCurrentUser() {
+
+    try {
+
+        const res = await fetch('/api/auth/me');
+
+        if (!res.ok) {
+
+            console.error(
+                'Failed to refresh current user.'
+            );
+
+            return false;
+        }
+
+        currentUser = await res.json();
+
+        const usernameElement =
+            document.getElementById('displayUsername');
+
+        if (usernameElement) {
+            usernameElement.textContent =
+                currentUser.username || 'User';
+        }
+
+        const roleElement =
+            document.getElementById('displayRole');
+
+        if (roleElement) {
+            roleElement.textContent =
+                currentUser.role || 'RESIDENT';
+        }
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            'Failed to refresh current user:',
+            error
+        );
+
+        return false;
+    }
 }

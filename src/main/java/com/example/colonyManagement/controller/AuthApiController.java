@@ -111,6 +111,7 @@ public class AuthApiController {
             User user = userOpt.get();
 
             Map<String, Object> resp = new HashMap<>();
+            resp.put("id", user.getId());
             resp.put("username", user.getUsername());
             resp.put("email", user.getEmail());
             resp.put("phone", user.getPhone());
