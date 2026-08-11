@@ -47,6 +47,9 @@ public class UserService {
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 
     @Transactional
     public User updateUser(Long id, User userDetails) {
@@ -90,7 +93,70 @@ public class UserService {
                 })
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
+    @Transactional
+    public User updateProfile(Long id, User profileDetails) {
 
+        return userRepository.findById(id)
+                .map(user -> {
+
+                    if (profileDetails.getUsername() != null
+                            && !profileDetails.getUsername().trim().isEmpty()) {
+
+                        user.setUsername(
+                                profileDetails.getUsername().trim()
+                        );
+                    }
+
+                    if (profileDetails.getEmail() != null
+                            && !profileDetails.getEmail().trim().isEmpty()) {
+
+                        user.setEmail(
+                                profileDetails.getEmail().trim()
+                        );
+                    }
+
+                    if (profileDetails.getPhone() != null) {
+
+                        user.setPhone(
+                                profileDetails.getPhone().trim()
+                        );
+                    }
+
+
+                    User updatedUser =
+                            userRepository.save(user);
+
+
+
+                    personRepository.findByUser(updatedUser)
+                            .ifPresent(person -> {
+
+                                person.setFullName(
+                                        updatedUser.getUsername()
+                                );
+
+                                person.setPersonId(
+                                        updatedUser.getUsername()
+                                );
+
+                                if (updatedUser.getPhone() != null) {
+
+                                    person.setPhone(
+                                            updatedUser.getPhone()
+                                    );
+                                }
+
+                                personRepository.save(person);
+                            });
+
+                    return updatedUser;
+                })
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "User not found with id: " + id
+                        )
+                );
+    }
     @Transactional
     public User toggleUserStatus(Long id) {
         return userRepository.findById(id)

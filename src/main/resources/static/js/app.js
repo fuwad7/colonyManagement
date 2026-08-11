@@ -1168,50 +1168,50 @@ async function saveEditProfile(e) {
     }
 
     const username =
-        document.getElementById('editProfileUsername').value.trim();
+        document.getElementById(
+            'editProfileUsername'
+        ).value.trim();
 
     const email =
-        document.getElementById('editProfileEmail').value.trim();
+        document.getElementById(
+            'editProfileEmail'
+        ).value.trim();
+
 
     const phone =
-        document.getElementById('editProfilePhone').value.trim();
-
+        document.getElementById(
+            'editProfilePhone'
+        ).value.trim();
 
     if (!username || !email || !phone) {
+
         alert('Please fill in all fields.');
+
         return;
     }
 
     try {
-
-        if (!currentUser.id) {
-            alert('User ID is missing. We need to retrieve your user ID first.');
-            return;
-        }
-
-
-        const payload = {
-            username: username,
-            email: email,
-            phone: phone
-        };
-
-
         const res = await fetch(
-            `/api/users/${currentUser.id}`,
+            '/api/users/profile',
             {
                 method: 'PUT',
+
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(payload)
+
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    phone: phone
+                })
             }
         );
 
-
         if (!res.ok) {
 
-            const message = await res.text();
+            const message =
+                await res.text();
 
             alert(
                 'Failed to update profile: ' +
@@ -1221,19 +1221,33 @@ async function saveEditProfile(e) {
             return;
         }
 
-        await refreshCurrentUser();
+        const refreshed =
+            await refreshCurrentUser();
 
+
+        if (!refreshed) {
+
+            alert(
+                'Profile updated, but the latest user information could not be loaded.'
+            );
+
+            return;
+        }
 
         closeEditProfile();
 
         openProfileModal();
 
-
     } catch (error) {
 
-        console.error('Profile update error:', error);
+        console.error(
+            'Profile update error:',
+            error
+        );
 
-        alert('Error updating profile.');
+        alert(
+            'An error occurred while updating your profile.'
+        );
     }
 }
 async function refreshCurrentUser() {

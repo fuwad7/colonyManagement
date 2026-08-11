@@ -78,7 +78,43 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateMyProfile(
+            @RequestBody User userDetails,
+            HttpSession session) {
 
+        String username =
+                (String) session.getAttribute("LOGGED_IN_USER");
+        if (username == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Not logged in.");
+        }
+        try {
+            User currentUser =
+                    userService
+                            .getUserByUsername(username)
+                            .orElseThrow(() ->
+                                    new RuntimeException(
+                                            "User not found"
+                                    )
+                            );
+
+            User updatedUser =
+                    userService.updateProfile(
+                            currentUser.getId(),
+                            userDetails
+                    );
+
+            return ResponseEntity.ok(updatedUser);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
+    }
     @PutMapping("/{id}/toggle-status")
     public ResponseEntity<?> toggleUserStatus(@PathVariable Long id, HttpSession session) {
         if (isAdmin(session)) {
