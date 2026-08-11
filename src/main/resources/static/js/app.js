@@ -403,8 +403,7 @@ async function renderFloorLayout(building) {
                         <button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')" style="margin-top:0; flex:1">
                             Edit Occupant
                         </button>
-                        <button onclick="removeOccupant(${occ.id})" style="background:#fee2e2; border:1px solid #fca5a5; color:#b91c1c; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer">Remove Occupant
-                        </button>
+                        <button onclick="removeOccupant(${occ.id})" style="background:#fee2e2; border:1px solid #fca5a5; color:#b91c1c; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer">Remove</button>
                     </div>
                 ` : `
                     <button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')" style="margin-top:8px">Add Occupant
