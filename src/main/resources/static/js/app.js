@@ -8,9 +8,7 @@ let selectedFlatId = null;
 let dashboardIntervalId = null;
 let layoutClosedByUser = false;
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkAuth();
-});
+document.addEventListener('DOMContentLoaded', () => { checkAuth();});
 
 async function checkAuth() {
     try {
@@ -155,8 +153,8 @@ function switchNav(section) {
         const secEl = document.getElementById(`sec-${s}`);
         const navEl = document.getElementById(`nav-${s}`);
         if (secEl) secEl.style.display = (s === section) ? 'block' : 'none';
-        if (navEl) {
-            if (s === section) navEl.classList.add('active');
+        if (navEl)
+        { if (s === section) navEl.classList.add('active');
             else navEl.classList.remove('active');
         }
     });
@@ -246,11 +244,9 @@ async function loadBuildingsSection() {
 
 async function handleCreateBuilding(e) {
     e.preventDefault();
-    if (!currentUser || currentUser.role !== 'ADMIN') {
-        alert('Only admin can add buildings');
+    if (!currentUser || currentUser.role !== 'ADMIN') { alert('Only admin can add buildings');
         return;
     }
-
     const name = document.getElementById('bldgName').value;
     const floorCount = parseInt(document.getElementById('bldgFloors').value);
     const unitsPerFloor = parseInt(document.getElementById('bldgUnits').value);
@@ -261,6 +257,7 @@ async function handleCreateBuilding(e) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, floorCount, unitsPerFloor })
         });
+
         if (res.ok) {
             const newBldg = await res.json();
             document.getElementById('createBuildingForm').reset();
@@ -315,7 +312,7 @@ async function handleSaveEditedBuilding(e) {
 }
 
 async function deleteBuilding(id) {
-    if (!confirm('Are you sure you want to delete this building and all its flats?')) return;
+    if (!confirm('You want to delete this building and all its flats?')) return;
     try {
         const res = await fetch(`/api/buildings/${id}`, { method: 'DELETE' });
         if (res.ok) {
@@ -339,8 +336,10 @@ async function selectBuilding(building) {
 
 async function renderFloorLayout(building) {
     const isAdmin = currentUser && currentUser.role === 'ADMIN';
+
     document.getElementById('selectedBuildingTitle').textContent = `Floor Layout & Resident Occupancy: ${building.name}`;
     const closeBtn = document.getElementById('closeFloorLayoutBtn');
+
     if (closeBtn) closeBtn.style.display = 'block';
     const floorContainer = document.getElementById('floorLayoutContainer');
     floorContainer.innerHTML = '<p style="color:var(--text-secondary)">Loading floor layout...</p>';
@@ -376,7 +375,7 @@ async function renderFloorLayout(building) {
             floorFlats.forEach(flat => {
                 const occ = occupancies.find(o => o.flat && o.flat.id === flat.id);
                 let occBadge = '<span class="occupant-badge badge-vacant">VACANT</span>';
-                let occDetails = '<em>No resident assigned</em>';
+                let occDetails = '<em>No Occupant assigned</em>';
 
                 if (occ) {
                     const resident = occ.person;
@@ -404,13 +403,11 @@ async function renderFloorLayout(building) {
                         <button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')" style="margin-top:0; flex:1">
                             Edit Occupant
                         </button>
-                        <button onclick="removeOccupant(${occ.id})" style="background:#fee2e2; border:1px solid #fca5a5; color:#b91c1c; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer">
-                            Remove
+                        <button onclick="removeOccupant(${occ.id})" style="background:#fee2e2; border:1px solid #fca5a5; color:#b91c1c; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer">Remove Occupant
                         </button>
                     </div>
                 ` : `
-                    <button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')" style="margin-top:8px">
-                        + Add Resident
+                    <button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')" style="margin-top:8px">Add Occupant
                     </button>
                 `) : '';
 
@@ -454,10 +451,10 @@ function closeFloorLayout() {
 
 async function removeOccupant(occId) {
     if (!currentUser || currentUser.role !== 'ADMIN') {
-        alert('Only admin can remove occupants');
+        alert('Only admin can remove occupant');
         return;
     }
-    if (!confirm('Are you sure you want to remove this resident occupancy?')) {
+    if (!confirm('You want to remove this Occupant?')) {
         return;
     }
     try {
@@ -468,11 +465,11 @@ async function removeOccupant(occId) {
             loadBuildingsSection();
             loadDashboardStats();
         } else {
-            alert('Failed to remove resident');
+            alert('Failed to remove Occupant');
         }
     } catch (err) {
         console.error(err);
-        alert('Error removing resident');
+        alert('Error removing Occupant');
     }
 }
 
@@ -585,8 +582,7 @@ function toggleAssetPersonMode(mode) {
     }
 }
 
-async function handleAssignOccupant(e) {
-    e.preventDefault();
+async function handleAssignOccupant(e) {e.preventDefault();
 
     const residentRadio = document.querySelector('input[name="residentMode"]:checked');
     const residentMode = residentRadio ? residentRadio.value : 'select';
@@ -659,12 +655,11 @@ async function handleAssignOccupant(e) {
             closeAssignModal();
             loadBuildingsSection();
             loadDashboardStats();
-        } else {
-            alert('Failed to assign occupant');
+        }
+        else {alert('Failed to assign occupant');
         }
     } catch (err) {
-        console.error(err);
-        alert('Error saving occupant details');
+        console.error(err);alert('Error saving occupant details');
     }
 }
 
@@ -700,8 +695,7 @@ async function handleSaveNewUser(e) {
             const msg = await res.text();
             alert('Failed to add user: ' + (msg || res.statusText));
         }
-    } catch (err) {
-        alert('Error adding user');
+    } catch (err) {alert('Error adding user');
     }
 }
 
@@ -815,17 +809,16 @@ async function handleSaveEditedUser(e) {
 }
 
 async function deleteUser(userId) {
-    if (!confirm('Are you sure you want to delete this user account?')) return;
+    if (!confirm('Are you sure you want to delete this account?')) return;
     try {
         const res = await fetch(`/api/users/${userId}`, { method: 'DELETE' });
         if (res.ok) {
             loadUserManagement();
             loadDashboardStats();
-        } else {
-            alert('Failed to delete user');
         }
-    } catch (e) {
-        alert('Error deleting user');
+        else {alert('Failed to delete user');
+        }
+    } catch (e) {alert('Error deleting user');
     }
 }
 
