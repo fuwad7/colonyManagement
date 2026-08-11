@@ -941,8 +941,7 @@ async function handleAssignAssetToPerson(e) {
     const assetId = document.getElementById('assignAssetSelect').value;
     const jobRole = document.getElementById('assetJobRole').value;
 
-    if (!assetId) {
-        alert('Please select an asset to assign!');
+    if (!assetId) {alert('Please select an asset to assign!');
         return;
     }
 
@@ -1001,16 +1000,14 @@ async function handleAssignAssetToPerson(e) {
         }
     } catch (e) {
         console.error(e);
-        alert('Error creating asset assignment: ' + (e.message || e));
-    }
+        alert('Error creating asset assignment: ' + (e.message || e));}
 }
 
 async function deleteAssetAssignment(id) {
     try {
         const res = await fetch(`/api/asset-Assignment/${id}`, { method: 'DELETE' });
         if (res.ok) await loadAssetSection();
-    } catch (e) {
-        alert('Failed to delete assignment');
+    } catch (e) { alert('Failed to delete assignment');
     }
 }
 
@@ -1023,11 +1020,10 @@ async function loadPersonsList() {
 
         persons.forEach(p => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>#${p.id}</td>
-                <td><b>${p.fullName}</b></td>
-                <td>${p.phone || 'N/A'}</td>
-            `;
+            tr.innerHTML =
+                `<td>#${p.id}</td>
+                 <td><b>${p.fullName}</b></td>
+                 <td>${p.phone || 'N/A'}</td>`;
             tbody.appendChild(tr);
         });
     } catch (e) { }
@@ -1043,7 +1039,6 @@ function openProfileModal() {
     }
 
     loadProfileData();
-
     modal.classList.add('show');
 }
 function closeProfileModal() {
@@ -1059,8 +1054,7 @@ function closeProfileModal() {
 
 function loadProfileData() {
 
-    if (!currentUser) {
-        console.warn('No logged-in user found.');
+    if (!currentUser) {console.warn('No logged-in user found.');
         return;
     }
 
@@ -1069,60 +1063,51 @@ function loadProfileData() {
     const phone = currentUser.phone || '-';
     const role = currentUser.role || 'RESIDENT';
 
-    const firstLetter =
-        username.charAt(0).toUpperCase();
+    const firstLetter = username.charAt(0).toUpperCase();
 
-    const profileAvatar =
-        document.getElementById('profileAvatar');
+    const profileAvatar = document.getElementById('profileAvatar');
 
     if (profileAvatar) {
         profileAvatar.textContent = firstLetter;
     }
 
-    const profileModalAvatar =
-        document.getElementById('profileModalAvatar');
+    const profileModalAvatar = document.getElementById('profileModalAvatar');
 
     if (profileModalAvatar) {
         profileModalAvatar.textContent = firstLetter;
     }
 
-    const profileModalName =
-        document.getElementById('profileModalName');
+    const profileModalName = document.getElementById('profileModalName');
 
     if (profileModalName) {
         profileModalName.textContent = username;
     }
 
-    const profileModalRole =
-        document.getElementById('profileModalRole');
+    const profileModalRole = document.getElementById('profileModalRole');
 
     if (profileModalRole) {
         profileModalRole.textContent = role;
     }
 
-    const profileUsername =
-        document.getElementById('profileUsername');
+    const profileUsername = document.getElementById('profileUsername');
 
     if (profileUsername) {
         profileUsername.textContent = username;
     }
 
-    const profileEmail =
-        document.getElementById('profileEmail');
+    const profileEmail = document.getElementById('profileEmail');
 
     if (profileEmail) {
         profileEmail.textContent = email;
     }
 
-    const profilePhone =
-        document.getElementById('profilePhone');
+    const profilePhone = document.getElementById('profilePhone');
 
     if (profilePhone) {
         profilePhone.textContent = phone;
     }
 
-    const profileRole =
-        document.getElementById('profileRole');
+    const profileRole = document.getElementById('profileRole');
 
     if (profileRole) {
         profileRole.textContent = role;
@@ -1131,167 +1116,92 @@ function loadProfileData() {
 
 function openEditProfile() {
 
-    if (!currentUser) {
-        console.warn('No logged-in user found.');
+    if (!currentUser) {console.warn('No logged-in user found.');
         return;
     }
-    document.getElementById('editProfileUsername').value =
-        currentUser.username || '';
-    document.getElementById('editProfileEmail').value =
-        currentUser.email || '';
+    document.getElementById('editProfileUsername').value = currentUser.username || '';
+    document.getElementById('editProfileEmail').value = currentUser.email || '';
 
-    document.getElementById('editProfilePhone').value =
-        currentUser.phone || '';
+    document.getElementById('editProfilePhone').value = currentUser.phone || '';
 
-    closeProfileModal();
-    document.getElementById('editProfileModal')
-        .classList.add('show');
+    closeProfileModal();document.getElementById('editProfileModal').classList.add('show');
 }
 function closeEditProfile() {
 
-    const modal =
-        document.getElementById('editProfileModal');
+    const modal = document.getElementById('editProfileModal');
 
     if (!modal) {
         return;
     }
-
     modal.classList.remove('show');
 }
-async function saveEditProfile(e) {
+async function saveEditProfile(e) { e.preventDefault();
 
-    e.preventDefault();
-
-    if (!currentUser) {
-        alert('No logged-in user found.');
+    if (!currentUser) {alert('No logged-in user found.');
         return;
     }
 
-    const username =
-        document.getElementById(
-            'editProfileUsername'
-        ).value.trim();
+    const username = document.getElementById('editProfileUsername').value.trim();
 
-    const email =
-        document.getElementById(
-            'editProfileEmail'
-        ).value.trim();
-
+    const email = document.getElementById('editProfileEmail').value.trim();
 
     const phone =
-        document.getElementById(
-            'editProfilePhone'
-        ).value.trim();
+        document.getElementById('editProfilePhone').value.trim();
 
-    if (!username || !email || !phone) {
-
-        alert('Please fill in all fields.');
-
+    if (!username || !email || !phone) {alert('Please fill in all fields.');
         return;
     }
 
     try {
-        const res = await fetch(
-            '/api/users/profile',
-            {
-                method: 'PUT',
-
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-
+        const res = await fetch('/api/users/profile',
+            {method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     username: username,
                     email: email,
-                    phone: phone
-                })
+                    phone: phone})
             }
         );
 
         if (!res.ok) {
-
-            const message =
-                await res.text();
-
-            alert(
-                'Failed to update profile: ' +
-                (message || res.statusText)
-            );
-
+            const message = await res.text();
+            alert('Failed to update profile: ' + (message || res.statusText));
             return;
         }
-
         const refreshed =
             await refreshCurrentUser();
 
-
-        if (!refreshed) {
-
-            alert(
-                'Profile updated, but the latest user information could not be loaded.'
-            );
-
+        if (!refreshed) { alert( 'Profile updated, but the latest user information could not be loaded.');
             return;
         }
-
         closeEditProfile();
-
         openProfileModal();
 
-    } catch (error) {
-
-        console.error(
-            'Profile update error:',
-            error
-        );
-
-        alert(
-            'An error occurred while updating your profile.'
-        );
+    } catch (error) { console.error('Profile update error:', error);
+        alert('An error occurred while updating your profile.');
     }
 }
 async function refreshCurrentUser() {
 
-    try {
-
-        const res = await fetch('/api/auth/me');
+    try { const res = await fetch('/api/auth/me');
 
         if (!res.ok) {
-
-            console.error(
-                'Failed to refresh current user.'
-            );
-
+            console.error('Failed to refresh current user.');
             return false;
         }
-
         currentUser = await res.json();
+        const usernameElement = document.getElementById('displayUsername');
 
-        const usernameElement =
-            document.getElementById('displayUsername');
-
-        if (usernameElement) {
-            usernameElement.textContent =
-                currentUser.username || 'User';
+        if (usernameElement) {usernameElement.textContent = currentUser.username || 'User';
         }
+        const roleElement = document.getElementById('displayRole');
 
-        const roleElement =
-            document.getElementById('displayRole');
-
-        if (roleElement) {
-            roleElement.textContent =
-                currentUser.role || 'RESIDENT';
+        if (roleElement) {roleElement.textContent = currentUser.role || 'RESIDENT';
         }
-
         return true;
 
     } catch (error) {
-
-        console.error(
-            'Failed to refresh current user:',
-            error
-        );
-
+        console.error('Failed to refresh current user:', error);
         return false;
     }
 }

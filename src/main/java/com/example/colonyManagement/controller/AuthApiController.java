@@ -30,13 +30,11 @@ public class AuthApiController {
         String password = request.get("password");
         String phone = request.get("phone");
 
-        if (username == null || username.trim().isEmpty() ||
-                password == null || password.trim().isEmpty()) {
+        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             return ResponseEntity.badRequest().body("Username and password are required!");
         }
 
-        if (userRepository.existsByUsername(username) ||
-                (email != null && !email.trim().isEmpty() && userRepository.existsByEmail(email))) {
+        if (userRepository.existsByUsername(username) || (email != null && !email.trim().isEmpty() && userRepository.existsByEmail(email))) {
             return ResponseEntity.badRequest().body("Username or Email already taken!");
         }
 
@@ -69,8 +67,7 @@ public class AuthApiController {
 
         Optional<User> userOpt = userRepository.findByUsername(username);
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
+        if (userOpt.isPresent()) {User user = userOpt.get();
 
             if (!user.isEnabled()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account disabled by Admin.");
