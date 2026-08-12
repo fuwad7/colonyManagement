@@ -85,6 +85,7 @@ public class AuthApiController {
                 response.put("status", "SUCCESS");
                 response.put("username", user.getUsername());
                 response.put("email", user.getEmail());
+                response.put("phone", user.getPhone());
                 response.put("role", user.getRole());
                 return ResponseEntity.ok(response);
             }
