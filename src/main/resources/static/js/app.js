@@ -1210,7 +1210,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (matchingSidebarLink) {
                 matchingSidebarLink.click();
             } else {
-                console.error(`Navigation failed: No sidebar link found with ID "nav-${pageId}"`);
+                console.error(`Failed`);
             }
         });
     });
