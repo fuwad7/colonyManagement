@@ -71,9 +71,6 @@
             <span id="displayUsername"
             class="profile-header-name">user</span>
 
-            <span id="displayRole"
-            class="role-badge">USER</span>
-        </span>
                 <span class="profile-chevron">⌄</span>
                 </button>
                 <button class="btn-logout" onclick="handleLogout()">Logout</button>
@@ -82,21 +79,11 @@
 
         <div class="app-container">
             <nav class="app-sidebar">
-                <a id="nav-dashboard" class="nav-item active" onclick="switchNav('dashboard')">
-                    📊 Dashboard
-                </a>
-                <a id="nav-buildings" class="nav-item" onclick="switchNav('buildings')">
-                    🏢 Buildings & Floors
-                </a>
-                <a id="nav-users" class="nav-item" onclick="switchNav('users')">
-                    👥 User Management
-                </a>
-                <a id="nav-assets" class="nav-item" onclick="switchNav('assets')">
-                    ⚙️ Assets
-                </a>
-                <a id="nav-persons" class="nav-item" onclick="switchNav('persons')">
-                    👤 Residents
-                </a>
+                <a id="nav-dashboard" class="nav-item active" href="/dashboard">📊 Dashboard</a>
+                <a id="nav-buildings" class="nav-item" href="/buildings">🏢 Buildings & Floors</a>
+                <a id="nav-users" class="nav-item" href="/users">👥 User Management</a>
+                <a id="nav-assets" class="nav-item" href="/assets">⚙️ Assets</a>
+                <a id="nav-persons" class="nav-item" href="/persons">👤 Residents</a>
             </nav>
 
             <main class="app-content">
@@ -105,14 +92,15 @@
                     <div class="section-title">
                         <span>Dashboard</span>
                     </div>
-
                     <div class="stats-grid">
-                        <div class="stat-card" data-target="buildings">
-                            <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
-                            <div class="stat-info">
-                                <h3 id="statBuildings">0</h3>
-                                <p>Buildings</p>
-                            </div>
+                        <div class="stat-card">
+                            <a href="/buildings" style="text-decoration: none; color: inherit; display: block;">
+                                <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
+                                <div class="stat-info">
+                                    <h3 id="statBuildings">0</h3>
+                                    <p>Buildings</p>
+                                </div>
+                            </a>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon" style="color:var(--accent-indigo)">🔑</div>
@@ -149,24 +137,26 @@
                                 <p>Sub-Tenants</p>
                             </div>
                         </div>
-
-                        <div class="stat-card" data-target="assets">
-                            <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
-                            <div class="stat-info">
-                                <h3 id="statAssets">0</h3>
-                                <p>Assets</p>
-                            </div>
+                        <div class="stat-card">
+                            <a href="/assets" style="text-decoration: none; color: inherit; display: block;">
+                                <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
+                                <div class="stat-info">
+                                    <h3 id="statAssets">0</h3>
+                                    <p>Assets</p>
+                                </div>
+                            </a>
                         </div>
-                        <div class="stat-card" data-target="users">
-                            <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
-                            <div class="stat-info">
-                                <h3 id="statUsers">0</h3>
-                                <p>Users</p>
-                            </div>
+                        <div class="stat-card">
+                            <a href="/users" style="text-decoration: none; color: inherit; display: block;">
+                                <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
+                                <div class="stat-info">
+                                    <h3 id="statUsers">0</h3>
+                                    <p>Assets</p>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
-
                 <div id="sec-buildings" style="display:none">
                     <div class="section-title">
                         <span>Buildings & Floors</span>
@@ -584,8 +574,6 @@
                     </div>
                     <div>
                         <h2 id="profileModalName">User</h2>
-                        <span id="profileModalRole"
-                              class="role-badge">USER</span>
                     </div>
                 </div>
                 <div class="profile-info-grid">

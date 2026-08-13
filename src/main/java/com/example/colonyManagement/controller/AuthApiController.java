@@ -90,7 +90,6 @@ public class AuthApiController {
                 return ResponseEntity.ok(response);
             }
         }
-
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials supplied.");
     }
 

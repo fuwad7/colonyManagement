@@ -160,15 +160,6 @@ body {
     gap: 15px;
 }
 
-.role-badge {
-    padding: 3px 8px;
-    background: #27ae60;
-    color: #ffffff;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: bold;
-}
-
 .btn-logout {
     background: #e74c3c;
     color: #ffffff;
