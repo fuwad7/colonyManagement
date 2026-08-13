@@ -1196,4 +1196,22 @@ async function refreshCurrentUser() {
         console.error('Failed to refresh current user:', error);
         return false;
     }
+
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const dashboardCards = document.querySelectorAll('.stat-card[data-target]');
+
+    dashboardCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const pageId = this.getAttribute('data-target');
+
+            const matchingSidebarLink = document.getElementById(`nav-${pageId}`);
+
+            if (matchingSidebarLink) {
+                matchingSidebarLink.click();
+            } else {
+                console.error(`Navigation failed: No sidebar link found with ID "nav-${pageId}"`);
+            }
+        });
+    });
+});
