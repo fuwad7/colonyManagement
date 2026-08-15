@@ -18,7 +18,9 @@ public class DataInitializer implements CommandLineRunner {
     private final AssetRepository assetRepository;
     private final PersonRepository personRepository;
 
-    public DataInitializer(UserRepository userRepository, AssetRepository assetRepository, PersonRepository personRepository) {
+    public DataInitializer(UserRepository userRepository,
+                           AssetRepository assetRepository,
+                           PersonRepository personRepository) {
         this.userRepository = userRepository;
         this.assetRepository = assetRepository;
         this.personRepository = personRepository;

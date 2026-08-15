@@ -16,6 +16,9 @@ import java.util.Map;
 public class DashboardApiController {
 
     @Autowired
+    private ColonyRepository colonyRepository;
+
+    @Autowired
     private BuildingRepository buildingRepository;
 
     @Autowired
@@ -37,6 +40,7 @@ public class DashboardApiController {
     public ResponseEntity<Map<String, Object>> getStats() {
         Map<String, Object> stats = new HashMap<>();
 
+        long colonyCount = colonyRepository.count();
         long buildingCount = buildingRepository.count();
         long flatCount = flatRepository.count();
         long personCount = personRepository.count();
@@ -55,6 +59,7 @@ public class DashboardApiController {
                 .filter(o -> o.getOccupancyType() == Occupancy.OccupancyType.SUB_TENANT)
                 .count();
 
+        stats.put("colonyCount", colonyCount);
         stats.put("buildingCount", buildingCount);
         stats.put("flatCount", flatCount);
         stats.put("residentCount", personCount);

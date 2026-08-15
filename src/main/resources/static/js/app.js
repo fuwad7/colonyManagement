@@ -242,6 +242,7 @@ function switchNav(section) {
 
     const sections = [
         'dashboard',
+        'colonies',
         'buildings',
         'users',
         'assets',
@@ -282,6 +283,10 @@ function switchNav(section) {
                 loadDashboardStats,
                 5000
             );
+    }
+
+    if (section === 'colonies') {
+        loadColoniesSection();
     }
 
     if (section === 'buildings') {
@@ -459,6 +464,11 @@ async function loadDashboardStats() {
             const data =
                 await res.json();
 
+            const statColoniesEl = document.getElementById('statColonies');
+            if (statColoniesEl) {
+                statColoniesEl.textContent = data.colonyCount || 0;
+            }
+
             document.getElementById(
                 'statBuildings'
             ).textContent =
@@ -520,6 +530,27 @@ async function loadBuildingsSection() {
     }
 
     try {
+        const colRes = await fetch('/api/colonies');
+        if (colRes.ok) {
+            const colonies = await colRes.json();
+            const sel = document.getElementById('bldgColonySelect');
+            if (sel) {
+                const currentVal = sel.value;
+                sel.innerHTML = '<option value="">-- Select Colony --</option>';
+                colonies.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    sel.appendChild(opt);
+                });
+                if (currentVal) sel.value = currentVal;
+            }
+        }
+    } catch (e) {
+        console.error('Error loading colony dropdown:', e);
+    }
+
+    try {
         const res =
             await fetch('/api/buildings');
 
@@ -570,18 +601,20 @@ async function loadBuildingsSection() {
                         <div style="display:flex; gap:6px">
                             <button
                                 onclick="event.stopPropagation(); openEditBuildingModal(${b.id}, '${b.name}', ${b.floorCount}, ${b.unitsPerFloor})"
-                                style="background:var(--bg-input); color:var(--accent-blue); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer">
-                                Edit
+                                style="background:var(--bg-input); color:var(--accent-blue); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer" title="Edit Building">
+                                ✏️ Edit
                             </button>
 
                             <button
                                 onclick="event.stopPropagation(); deleteBuilding(${b.id})"
-                                style="background:rgba(244,63,94,0.2); color:var(--accent-rose); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer">
-                                Delete
+                                style="background:rgba(244,63,94,0.2); color:var(--accent-rose); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer" title="Delete Building">
+                                🗑️ Delete
                             </button>
                         </div>
                     `
                     : '';
+
+            const colonyName = b.colony ? b.colony.name : 'Unassigned Colony';
 
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:flex-start">
@@ -592,6 +625,10 @@ async function loadBuildingsSection() {
 
                     ${adminButtonsHtml}
                 </div>
+
+                <p style="color:var(--accent-emerald); font-size:0.8rem; margin-bottom:4px; font-weight:600">
+                    🏘️ ${colonyName}
+                </p>
 
                 <p style="color:var(--text-secondary); font-size:0.85rem">
                     Floors:
@@ -607,23 +644,11 @@ async function loadBuildingsSection() {
                 </p>
             `;
 
-            card.onclick =
-                () => selectBuilding(b);
-
+            card.onclick = () => selectBuilding(b);
             container.appendChild(card);
         });
 
-        if (
-            buildings.length > 0 &&
-            !currentBuildingId &&
-            !layoutClosedByUser
-        ) {
-            selectBuilding(
-                buildings[0]
-            );
-        } else if (
-            currentBuildingId
-        ) {
+        if (!layoutClosedByUser) {
             const found =
                 buildings.find(
                     b =>
@@ -659,6 +684,7 @@ async function handleCreateBuilding(e) {
         return;
     }
 
+    const colonyId = document.getElementById('bldgColonySelect').value;
     const name =
         document.getElementById(
             'bldgName'
@@ -691,7 +717,8 @@ async function handleCreateBuilding(e) {
                     body: JSON.stringify({
                         name,
                         floorCount,
-                        unitsPerFloor
+                        unitsPerFloor,
+                        colony: colonyId ? { id: parseInt(colonyId) } : null
                     })
                 }
             );
@@ -934,17 +961,17 @@ async function renderFloorLayout(building) {
         buildingFlats.forEach(f => {
             if (
                 !floorsMap[
-                    f.floorNumber
-                    ]
+                f.floorNumber
+                ]
             ) {
                 floorsMap[
                     f.floorNumber
-                    ] = [];
+                ] = [];
             }
 
             floorsMap[
                 f.floorNumber
-                ].push(f);
+            ].push(f);
         });
 
         floorContainer.innerHTML =
@@ -1028,19 +1055,17 @@ async function renderFloorLayout(building) {
                         }
                         occDetails = `
                             <strong>
-                                ${
-                            resident
+                                ${resident
                                 ? resident.fullName
                                 : 'Occupant'
-                        }
+                            }
                             </strong>
                             <br>
                             Phone:
-                            ${
-                            resident
+                            ${resident
                                 ? resident.phone
                                 : 'N/A'
-                        }
+                            }
                             ${rentedFromStr}
                         `;
                     }
@@ -1082,7 +1107,8 @@ async function renderFloorLayout(building) {
                                 </span>${occBadge}</div>
                             <div class="occupant-details">
                                 ${occDetails}
-                            </div>${assignBtnHtml}</div>`;}
+                            </div>${assignBtnHtml}</div>`;
+                }
             );
 
             floorRow.innerHTML = `
@@ -1643,11 +1669,11 @@ async function handleAssignOccupant(e) {
                                 },
                                 body: JSON.stringify({
                                     fullName:
-                                    newOwnerName,
+                                        newOwnerName,
                                     phone:
-                                    newOwnerPhone,
+                                        newOwnerPhone,
                                     personId:
-                                    newOwnerPhone
+                                        newOwnerPhone
                                 })
                             }
                         );
@@ -1682,7 +1708,7 @@ async function handleAssignOccupant(e) {
 
         const payload = {
             occupancyType:
-            occupancyType,
+                occupancyType,
 
             flat: {
                 id: selectedFlatId
@@ -1877,7 +1903,8 @@ async function loadUserManagement() {
 
                 <td>
                     <select
-                        onchange="changeUserRole(${u.id}, this.value)"
+                        data-old-role="${u.role}"
+                        onchange="changeUserRole(${u.id}, this, '${escapeQuote(u.username)}')"
                         style="background:var(--bg-input); color:var(--text-primary); border:1px solid var(--border-color); padding:4px 8px; border-radius:6px">
 
                         <option value="ADMIN"
@@ -1911,14 +1938,14 @@ async function loadUserManagement() {
 
                         <button
                             onclick="openEditUserModal(${u.id}, '${u.username}', '${u.email}', '${u.role}', '${u.phone || ''}')"
-                            style="background:var(--bg-input); color:var(--accent-blue); border:1px solid var(--border-color); padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer">
-                            Edit
+                            style="background:var(--bg-input); color:var(--accent-blue); border:1px solid var(--border-color); padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer" title="Edit User">
+                            ✏️ Edit
                         </button>
 
                         <button
                             onclick="deleteUser(${u.id})"
-                            style="background:rgba(244,63,94,0.2); color:var(--accent-rose); border:1px solid rgba(244,63,94,0.3); padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer">
-                            Delete
+                            style="background:rgba(244,63,94,0.2); color:var(--accent-rose); border:1px solid rgba(244,63,94,0.3); padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer" title="Delete User">
+                            🗑️ Delete
                         </button>
 
                     </div>
@@ -1956,8 +1983,25 @@ async function toggleUserStatus(
 
 async function changeUserRole(
     userId,
-    newRole
+    selectEl,
+    username
 ) {
+    const newRole = selectEl.value;
+    const oldRole = selectEl.getAttribute('data-old-role') || 'previous role';
+
+    if (newRole === oldRole) {
+        return;
+    }
+
+    const confirmed = confirm(
+        `Are you sure you want to change the role of user "${username}" from ${oldRole} to ${newRole}?`
+    );
+
+    if (!confirmed) {
+        selectEl.value = oldRole;
+        return;
+    }
+
     try {
         const res =
             await fetch(
@@ -1975,18 +2019,26 @@ async function changeUserRole(
             );
 
         if (res.ok) {
+            selectEl.setAttribute('data-old-role', newRole);
             alert(
-                'Role updated successfully!'
+                `Role for "${username}" updated to ${newRole} successfully!`
             );
+        } else {
+            alert(
+                'Failed to update role.'
+            );
+            selectEl.value = oldRole;
         }
     } catch (e) {
         alert(
-            'Failed to update role'
+            'Failed to update role due to server error.'
         );
+        selectEl.value = oldRole;
     }
 }
 
-function openEditUserModal(id, username, email, role, phone) {document.getElementById('editUserId').value = id;
+function openEditUserModal(id, username, email, role, phone) {
+    document.getElementById('editUserId').value = id;
     document.getElementById('editUsername').value = username;
 
     document.getElementById('editEmail').value = email;
@@ -2271,46 +2323,41 @@ async function loadAssetSection() {
             tr.innerHTML = `
                 <td>
                     <b>
-                        ${
-                as.asset
+                        ${as.asset
                     ? as.asset.name
                     : 'N/A'
-            }
+                }
                     </b>
                 </td>
 
                 <td>
                     <span class="occupant-badge badge-tenant">
-                        ${
-                as.asset
+                        ${as.asset
                     ? as.asset.type
                     : 'N/A'
-            }
+                }
                     </span>
                 </td>
 
                 <td>
-                    ${
-                as.person
+                    ${as.person
                     ? as.person.fullName
                     : 'N/A'
-            }
+                }
                     (
                     ID:
-                    ${
-                as.person
+                    ${as.person
                     ? as.person.personId
                     : 'N/A'
-            }
+                }
                     )
                 </td>
 
                 <td>
                     <b>
-                        ${
-                as.jobRole ||
+                        ${as.jobRole ||
                 'Assignee'
-            }
+                }
                     </b>
                 </td>
 
@@ -2520,7 +2567,7 @@ async function handleAssignAssetToPerson(
                         },
                         person: {
                             id:
-                            finalPersonId
+                                finalPersonId
                         }
                     })
                 }
@@ -2961,5 +3008,139 @@ async function refreshCurrentUser() {
         );
 
         return false;
+    }
+}
+
+/* Colony Management Functions */
+function escapeQuote(str) {
+    if (!str) return '';
+    return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+}
+
+async function loadColoniesSection() {
+    try {
+        const res = await fetch('/api/colonies');
+        if (!res.ok) return;
+        const colonies = await res.json();
+        const tbody = document.getElementById('colonyTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        if (colonies.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding:20px">No colonies found. Create one above!</td></tr>`;
+            return;
+        }
+
+        const isAdmin = currentUser && currentUser.role === 'ADMIN';
+
+        colonies.forEach(colony => {
+            const tr = document.createElement('tr');
+            const bldgCount = colony.buildings ? colony.buildings.length : 0;
+            const safeName = escapeQuote(colony.name);
+            const safeLoc = escapeQuote(colony.location || '');
+            const safeDesc = escapeQuote(colony.description || '');
+
+            tr.innerHTML = `
+                <td>#${colony.id}</td>
+                <td style="font-weight:600; color:var(--accent-emerald)">${colony.name}</td>
+                <td>${colony.location || '-'}</td>
+                <td>${colony.description || '-'}</td>
+                <td><span style="background:rgba(16,185,129,0.15); color:var(--accent-emerald); padding:2px 8px; border-radius:12px; font-weight:600; font-size:0.8rem">${bldgCount} Buildings</span></td>
+                <td>
+                    ${isAdmin ? `
+                        <button onclick="openEditColonyModal(${colony.id}, '${safeName}', '${safeLoc}', '${safeDesc}')" style="background:var(--bg-input); color:var(--accent-blue); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer; margin-right:4px" title="Edit Colony">✏️ Edit</button>
+                        <button onclick="deleteColony(${colony.id})" style="background:rgba(244,63,94,0.2); color:var(--accent-rose); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer" title="Delete Colony">🗑️ Delete</button>
+                    ` : '<span style="color:var(--text-secondary); font-size:0.8rem">View Only</span>'}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (e) {
+        console.error('Error loading colonies:', e);
+    }
+}
+
+async function handleCreateColony(e) {
+    e.preventDefault();
+    if (!currentUser || currentUser.role !== 'ADMIN') {
+        alert('Only admins can create colonies.');
+        return;
+    }
+    const name = document.getElementById('colonyName').value;
+    const location = document.getElementById('colonyLocation').value;
+    const description = document.getElementById('colonyDescription').value;
+
+    try {
+        const res = await fetch('/api/colonies', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, location, description })
+        });
+        if (res.ok) {
+            document.getElementById('createColonyForm').reset();
+            loadColoniesSection();
+        } else {
+            alert('Failed to create colony.');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Server error while creating colony.');
+    }
+}
+
+function openEditColonyModal(id, name, location, description) {
+    document.getElementById('editColonyId').value = id;
+    document.getElementById('editColonyName').value = name;
+    document.getElementById('editColonyLocation').value = location;
+    document.getElementById('editColonyDescription').value = description;
+    document.getElementById('editColonyModal').style.display = 'flex';
+}
+
+function closeEditColonyModal() {
+    document.getElementById('editColonyModal').style.display = 'none';
+}
+
+async function handleUpdateColony(e) {
+    e.preventDefault();
+    if (!currentUser || currentUser.role !== 'ADMIN') {
+        alert('Only admins can edit colonies.');
+        return;
+    }
+    const id = document.getElementById('editColonyId').value;
+    const name = document.getElementById('editColonyName').value;
+    const location = document.getElementById('editColonyLocation').value;
+    const description = document.getElementById('editColonyDescription').value;
+
+    try {
+        const res = await fetch(`/api/colonies/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, location, description })
+        });
+        if (res.ok) {
+            closeEditColonyModal();
+            loadColoniesSection();
+        } else {
+            alert('Failed to update colony.');
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function deleteColony(id) {
+    if (!currentUser || currentUser.role !== 'ADMIN') {
+        alert('Only admins can delete colonies.');
+        return;
+    }
+    if (!confirm('Are you sure you want to delete this colony?')) return;
+    try {
+        const res = await fetch(`/api/colonies/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            loadColoniesSection();
+        } else {
+            alert('Failed to delete colony.');
+        }
+    } catch (err) {
+        console.error(err);
     }
 }

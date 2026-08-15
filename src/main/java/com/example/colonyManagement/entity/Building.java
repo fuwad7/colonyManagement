@@ -3,6 +3,8 @@ package com.example.colonyManagement.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,11 @@ public class Building {
 
     @Column(nullable = false)
     private Integer unitsPerFloor;
+
+    @ManyToOne
+    @JoinColumn(name = "colony_id")
+    @JsonIgnoreProperties({"buildings", "assets"})
+    private Colony colony;
 
     @OneToMany(
             mappedBy = "building",

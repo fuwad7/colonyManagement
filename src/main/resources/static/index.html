@@ -80,6 +80,7 @@
         <div class="app-container">
             <nav class="app-sidebar">
                 <a id="nav-dashboard" class="nav-item active" href="/dashboard">📊 Dashboard</a>
+                <a id="nav-colonies" class="nav-item" href="/colonies">🏘️ Colonies</a>
                 <a id="nav-buildings" class="nav-item" href="/buildings">🏢 Buildings & Floors</a>
                 <a id="nav-users" class="nav-item" href="/users">👥 User Management</a>
                 <a id="nav-assets" class="nav-item" href="/assets">⚙️ Assets</a>
@@ -93,6 +94,15 @@
                         <span>Dashboard</span>
                     </div>
                     <div class="stats-grid">
+                        <div class="stat-card">
+                            <a href="/colonies" class="stat-card-link">
+                                <div class="stat-icon" style="color:var(--accent-emerald)">🏘️</div>
+                                <div class="stat-info">
+                                    <h3 id="statColonies">0</h3>
+                                    <p>Colonies</p>
+                                </div>
+                            </a>
+                        </div>
                         <div class="stat-card">
                             <a href="/buildings" class="stat-card-link">
                                 <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
@@ -157,6 +167,54 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="sec-colonies" style="display:none">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+                        <div class="section-title" style="margin:0">
+                            <span>Colony Management</span>
+                        </div>
+                    </div>
+
+                    <div class="card-panel" id="addColonyPanel" style="margin-bottom:24px">
+                        <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-emerald)">Add New Colony</h3>
+                        <form id="createColonyForm" onsubmit="handleCreateColony(event)"
+                            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px">
+                            <div>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Colony Name</label>
+                                <input type="text" id="colonyName" class="form-input" placeholder="e.g. Green Valley Colony" required>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Location / Address</label>
+                                <input type="text" id="colonyLocation" class="form-input" placeholder="e.g. Sector 5, North Avenue">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Description</label>
+                                <input type="text" id="colonyDescription" class="form-input" placeholder="Optional description">
+                            </div>
+                            <div style="display:flex; align-items:flex-end">
+                                <button type="submit" class="btn-primary" style="height:44px">Create Colony</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card-panel">
+                        <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--text-primary)">All Colonies</h3>
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Colony Name</th>
+                                    <th>Location</th>
+                                    <th>Description</th>
+                                    <th>Total Buildings</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="colonyTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div id="sec-buildings" style="display:none">
                     <div class="section-title">
                         <span>Buildings & Floors</span>
@@ -166,6 +224,12 @@
                         <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-blue)">Add Building</h3>
                         <form id="createBuildingForm" onsubmit="handleCreateBuilding(event)"
                             style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px">
+                            <div>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Colony</label>
+                                <select id="bldgColonySelect" class="form-input" required>
+                                    <option value="">-- Select Colony --</option>
+                                </select>
+                            </div>
                             <div>
                                 <label
                                     style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Building
@@ -664,6 +728,37 @@
             </form>
         </div>
     </div>
+
+    <div id="editColonyModal" class="modal-backdrop">
+        <div class="modal-content" style="max-width:500px">
+            <div class="modal-header">
+                <div>
+                    <h3 style="margin:0; font-size:1.2rem; color:var(--text-primary)">Edit Colony</h3>
+                </div>
+                <button class="modal-close" type="button" onclick="closeEditColonyModal()">&times;</button>
+            </div>
+            <form id="editColonyForm" onsubmit="handleUpdateColony(event)">
+                <input type="hidden" id="editColonyId">
+                <div class="form-group" style="margin-bottom:15px">
+                    <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Colony Name</label>
+                    <input type="text" id="editColonyName" class="form-input" required>
+                </div>
+                <div class="form-group" style="margin-bottom:15px">
+                    <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Location / Address</label>
+                    <input type="text" id="editColonyLocation" class="form-input">
+                </div>
+                <div class="form-group" style="margin-bottom:15px">
+                    <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Description</label>
+                    <input type="text" id="editColonyDescription" class="form-input">
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px">
+                    <button type="button" class="btn-secondary" onclick="closeEditColonyModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="js/app.js"></script>
 </body>
 </html>
