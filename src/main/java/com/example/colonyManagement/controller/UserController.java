@@ -111,6 +111,13 @@ public class UserController {
 
             String password = profileData.get("password");
             if (password != null && !password.trim().isEmpty()) {
+                String currentPassword = profileData.get("currentPassword");
+                if (currentPassword == null || currentPassword.trim().isEmpty()) {
+                    return ResponseEntity.badRequest().body("Current password is required to change password.");
+                }
+                if (!currentPassword.equals(currentUser.getPassword())) {
+                    return ResponseEntity.badRequest().body("Incorrect current password.");
+                }
                 profileDetails.setPassword(password.trim());
             }
 

@@ -2896,6 +2896,10 @@ function openEditProfile() {
         'editProfilePassword'
     ).value = '';
 
+    document.getElementById(
+        'editProfileCurrentPassword'
+    ).value = '';
+
     closeProfileModal();
 
     document.getElementById(
@@ -2950,6 +2954,11 @@ async function saveEditProfile(e) {
             'editProfilePassword'
         ).value;
 
+    const currentPassword =
+        document.getElementById(
+            'editProfileCurrentPassword'
+        ).value;
+
     if (
         !username ||
         !email ||
@@ -2959,6 +2968,13 @@ async function saveEditProfile(e) {
             'Please fill in all fields.'
         );
         return;
+    }
+
+    if (password && password.trim().length > 0) {
+        if (!currentPassword || currentPassword.trim().length === 0) {
+            alert('Current password is required to change password.');
+            return;
+        }
     }
 
     try {
@@ -2975,7 +2991,8 @@ async function saveEditProfile(e) {
                         username,
                         email,
                         phone,
-                        password
+                        password,
+                        currentPassword
                     })
                 }
             );
