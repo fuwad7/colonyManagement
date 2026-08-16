@@ -6,18 +6,6 @@
     <title>Colony Management</title>
     <link rel="stylesheet" href="css/style.css">
 
-    <div ng-controller="LanguageController">
-        <label class="header_toggle">
-            <input type="checkbox"
-                   ng-model="isBangla"
-                   ng-change="toggleLanguage()">
-            <span class="header_slider"></span>
-            <span class="header_labels" data-on="বাংলা" data-off="ENG"></span>
-        </label>
-
-        <p>{{ 'WELCOME_MSG' | translate }}</p>
-    </div>
-
 </head>
 
 <body>
@@ -72,21 +60,38 @@
     </div>
 
     <div id="appView" style="display:none; flex-direction:column; min-height:100vh">
-        <header class="app-header">
+        <header class="app-header" ng-controller="LanguageController">
             <div class="brand-title">
                 🏢 Colony Management
             </div>
-            <div class="user-profile-bar dropdown">
-                <button class="btn-profile dropdown-toggle" onclick="toggleProfileDropdown(event)">
-                    <span id="profileAvatar" class="profile-avatar">U</span>
-                    <span class="profile-header-info">
-                        <span id="displayUsername" class="profile-header-name">user</span>
-                    </span>
-                </button>
-                <div id="profileDropdownContent" class="dropdown-menu">
-                    <button type="button" class="dropdown-item" onclick="openProfileModal(); closeProfileDropdown();">👤 My Profile</button>
-                    <button type="button" class="dropdown-item btn-logout-dropdown" onclick="handleLogout(); closeProfileDropdown();">🚪 Logout</button>
+
+            <!-- Container grouping the language switcher and profile together -->
+            <div class="header-actions-group" style="display: flex; align-items: center; gap: 15px;">
+
+                <!-- 1. Language Toggle Switch (Placed on the LEFT side of profile) -->
+                <div class="language-toggle-wrapper">
+                    <label class="header_toggle">
+                        <input type="checkbox"
+                               ng-model="isBangla"
+                               ng-change="toggleLanguage()">
+                        <span class="header_slider"></span>
+                        <span class="header_labels" data-on="বাংলা" data-off="ENG"></span>
+                    </label>
                 </div>
+
+                <div class="user-profile-bar dropdown">
+                    <button class="btn-profile dropdown-toggle" onclick="toggleProfileDropdown(event)">
+                        <span id="profileAvatar" class="profile-avatar">U</span>
+                        <span class="profile-header-info">
+                    <span id="displayUsername" class="profile-header-name">user</span>
+                </span>
+                    </button>
+                    <div id="profileDropdownContent" class="dropdown-menu">
+                        <button type="button" class="dropdown-item" onclick="openProfileModal(); closeProfileDropdown();">👤 My Profile</button>
+                        <button type="button" class="dropdown-item btn-logout-dropdown" onclick="handleLogout(); closeProfileDropdown();">🚪 Logout</button>
+                    </div>
+                </div>
+
             </div>
         </header>
 

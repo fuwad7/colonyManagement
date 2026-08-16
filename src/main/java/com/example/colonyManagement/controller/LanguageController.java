@@ -17,7 +17,8 @@ public class LanguageController {
 
     @GetMapping("/status")
     public ResponseEntity<?> getStatusMessage() {
-
+        String localizedMessage = messageSource.getMessage("api.success.save", null, LocaleContextHolder.getLocale());
+        return ResponseEntity.ok(Map.of("message", localizedMessage));
     }
 
 }
