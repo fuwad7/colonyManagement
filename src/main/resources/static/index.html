@@ -149,7 +149,7 @@
                         </div>
                         <div class="stat-card">
                             <a href="/assets" class="stat-card-link">
-                                <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
+                                <div class="stat-icon" style="color:var(--accent-blue)">⚙️</div>
                                 <div class="stat-info">
                                     <h3 id="statAssets">0</h3>
                                     <p>Assets</p>
@@ -158,10 +158,10 @@
                         </div>
                         <div class="stat-card">
                             <a href="/users" class="stat-card-link">
-                                <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
+                                <div class="stat-icon" style="color:var(--accent-blue)">👥</div>
                                 <div class="stat-info">
                                     <h3 id="statUsers">0</h3>
-                                    <p>Assets</p>
+                                    <p>Users</p>
                                 </div>
                             </a>
                         </div>
@@ -752,7 +752,9 @@
                     <input type="text" id="editColonyDescription" class="form-input">
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px">
-                    <button type="button" class="btn-secondary" onclick="closeEditColonyModal()">Cancel</button>
+                    <button type="button"
+                        style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer"
+                        onclick="closeEditColonyModal()">Cancel</button>
                     <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save Changes</button>
                 </div>
             </form>
