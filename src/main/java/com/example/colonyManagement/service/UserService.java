@@ -110,6 +110,10 @@ public class UserService {
                     if (profileDetails.getPhone() != null) {
                         user.setPhone(profileDetails.getPhone().trim());
                     }
+
+                    if (profileDetails.getPassword() != null && !profileDetails.getPassword().trim().isEmpty()) {
+                        user.setPassword(profileDetails.getPassword().trim());
+                    }
                     User updatedUser = userRepository.save(user);
 
                     personRepository.findByUser(updatedUser) .ifPresent(person -> {

@@ -109,6 +109,11 @@ public class UserController {
 
             profileDetails.setPhone( phone != null ? phone.trim() : "");
 
+            String password = profileData.get("password");
+            if (password != null && !password.trim().isEmpty()) {
+                profileDetails.setPassword(password.trim());
+            }
+
             User updatedUser = userService.updateProfile(currentUser.getId(), profileDetails);
 
             session.setAttribute("LOGGED_IN_USER", updatedUser.getUsername());

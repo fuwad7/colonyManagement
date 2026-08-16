@@ -47,6 +47,16 @@ function showAuthView() {
 
     document.getElementById('authView').style.display = 'flex';
     document.getElementById('appView').style.display = 'none';
+
+    // Route logic for auth views
+    const path = window.location.pathname;
+    if (path === '/register') {
+        switchAuthTab('register');
+        history.replaceState({ section: 'register' }, '', '/register');
+    } else {
+        switchAuthTab('login');
+        history.replaceState({ section: 'login' }, '', '/login');
+    }
 }
 
 function showAppView() {
@@ -79,8 +89,10 @@ function showAppView() {
     const currentPath = window.location.pathname;
     let defaultPath = isResident ? '/buildings' : '/dashboard';
     
-    // If resident tries to access restricted root path, redirect
-    if (isResident && (currentPath === '/' || currentPath === '/dashboard')) {
+    // Redirect if logged in user is on /login or /register
+    if (currentPath === '/login' || currentPath === '/register' || currentPath === '/') {
+        navigateTo(defaultPath, true);
+    } else if (isResident && (currentPath === '/' || currentPath === '/dashboard' || currentPath === '/persons' || currentPath === '/users')) {
         navigateTo('/buildings', true);
     } else {
         navigateTo(currentPath || defaultPath, true);
@@ -105,12 +117,20 @@ function switchAuthTab(tab) {
 
         tabLoginBtn.classList.add('active');
         tabRegBtn.classList.remove('active');
+
+        if (window.location.pathname !== '/login') {
+            history.pushState({ section: 'login' }, '', '/login');
+        }
     } else {
         loginForm.style.display = 'none';
         registerForm.style.display = 'block';
 
         tabLoginBtn.classList.remove('active');
         tabRegBtn.classList.add('active');
+
+        if (window.location.pathname !== '/register') {
+            history.pushState({ section: 'register' }, '', '/register');
+        }
     }
 }
 
@@ -453,13 +473,28 @@ document.addEventListener(
 window.addEventListener(
     'popstate',
     (event) => {
+        if (!currentUser) {
+            const path = window.location.pathname;
+            if (path === '/register') {
+                switchAuthTab('register');
+            } else {
+                switchAuthTab('login');
+            }
+            return;
+        }
+
         if (
             event.state &&
             event.state.section
         ) {
-            switchNav(
-                event.state.section
-            );
+            if (event.state.section === 'login' || event.state.section === 'register') {
+                const defaultPath = currentUser.role === 'RESIDENT' ? '/buildings' : '/dashboard';
+                navigateTo(defaultPath, true);
+            } else {
+                switchNav(
+                    event.state.section
+                );
+            }
         } else {
             navigateTo(
                 window.location.pathname,
@@ -2857,6 +2892,10 @@ function openEditProfile() {
     ).value =
         currentUser.phone || '';
 
+    document.getElementById(
+        'editProfilePassword'
+    ).value = '';
+
     closeProfileModal();
 
     document.getElementById(
@@ -2906,6 +2945,11 @@ async function saveEditProfile(e) {
             'editProfilePhone'
         ).value.trim();
 
+    const password =
+        document.getElementById(
+            'editProfilePassword'
+        ).value;
+
     if (
         !username ||
         !email ||
@@ -2930,7 +2974,8 @@ async function saveEditProfile(e) {
                     body: JSON.stringify({
                         username,
                         email,
-                        phone
+                        phone,
+                        password
                     })
                 }
             );
@@ -3160,3 +3205,29 @@ async function deleteColony(id) {
         console.error(err);
     }
 }
+
+/* Profile Dropdown logic */
+function toggleProfileDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('profileDropdownContent');
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+    }
+}
+
+function closeProfileDropdown() {
+    const dropdown = document.getElementById('profileDropdownContent');
+    if (dropdown) {
+        dropdown.classList.remove('show');
+    }
+}
+
+document.addEventListener('click', (event) => {
+    const dropdown = document.getElementById('profileDropdownContent');
+    if (dropdown && dropdown.classList.contains('show')) {
+        const toggleBtn = document.querySelector('.dropdown-toggle');
+        if (toggleBtn && !dropdown.contains(event.target) && !toggleBtn.contains(event.target)) {
+            closeProfileDropdown();
+        }
+    }
+});

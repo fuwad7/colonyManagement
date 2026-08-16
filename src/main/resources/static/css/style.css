@@ -760,3 +760,57 @@ body {
     flex-direction: column;
     justify-content: center;
 }
+
+/* Profile Dropdown styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 8px;
+    background-color: #2c3e50;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 6px;
+    z-index: 1000;
+    overflow: hidden;
+    border: 1px solid #34495e;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    background: transparent;
+    color: #ecf0f1;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #34495e;
+}
+
+.dropdown-item.btn-logout-dropdown {
+    color: #e74c3c;
+    border-top: 1px solid #34495e;
+}
+
+.dropdown-item.btn-logout-dropdown:hover {
+    background-color: rgba(231, 76, 60, 0.1);
+}

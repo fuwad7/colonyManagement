@@ -63,17 +63,18 @@
             <div class="brand-title">
                 🏢 Colony Management
             </div>
-            <div class="user-profile-bar">
-            <button class="btn-profile" onclick="openProfileModal()">
-
-        <span id="profileAvatar" class="profile-avatar">U</span>
-            <span class="profile-header-info">
-            <span id="displayUsername"
-            class="profile-header-name">user</span>
-
-                <span class="profile-chevron">⌄</span>
+            <div class="user-profile-bar dropdown">
+                <button class="btn-profile dropdown-toggle" onclick="toggleProfileDropdown(event)">
+                    <span id="profileAvatar" class="profile-avatar">U</span>
+                    <span class="profile-header-info">
+                        <span id="displayUsername" class="profile-header-name">user</span>
+                    </span>
+                    <span class="profile-chevron">⌄</span>
                 </button>
-                <button class="btn-logout" onclick="handleLogout()">Logout</button>
+                <div id="profileDropdownContent" class="dropdown-menu">
+                    <button type="button" class="dropdown-item" onclick="openProfileModal(); closeProfileDropdown();">👤 My Profile</button>
+                    <button type="button" class="dropdown-item btn-logout-dropdown" onclick="handleLogout(); closeProfileDropdown();">🚪 Logout</button>
+                </div>
             </div>
         </header>
 
@@ -713,6 +714,13 @@
                                     id="editProfilePhone"
                                     class="form-input"
                                     required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProfilePassword">New Password (optional)</label>
+                            <input  type="password"
+                                    id="editProfilePassword"
+                                    class="form-input"
+                                    placeholder="Leave blank to keep current">
                         </div>
                     </div>
                 </div>
