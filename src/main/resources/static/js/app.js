@@ -33,6 +33,18 @@ function showAuthView() {
         dashboardIntervalId = null;
     }
 
+    const authError = document.getElementById('authError');
+    if (authError) {
+        authError.style.display = 'none';
+        authError.textContent = '';
+    }
+
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) loginForm.reset();
+
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) registerForm.reset();
+
     document.getElementById('authView').style.display = 'flex';
     document.getElementById('appView').style.display = 'none';
 }
@@ -44,27 +56,26 @@ function showAppView() {
     document.getElementById('displayUsername').textContent =
         currentUser.username;
 
-    document.getElementById('displayRole').textContent =
-        currentUser.role || 'RESIDENT';
+    const displayRole = document.getElementById('displayRole');
+    if (displayRole) {
+        displayRole.textContent = currentUser.role || 'RESIDENT';
+    }
 
     const isAdmin =
         currentUser && currentUser.role === 'ADMIN';
 
-    document.getElementById('nav-dashboard').style.display =
-        isAdmin ? 'flex' : 'none';
+    document.getElementById('nav-dashboard').style.display = 'flex';
+    document.getElementById('nav-colonies').style.display = 'flex';
+    document.getElementById('nav-buildings').style.display = 'flex';
+    document.getElementById('nav-assets').style.display = 'flex';
+    document.getElementById('nav-persons').style.display = 'flex';
 
     document.getElementById('nav-users').style.display =
         isAdmin ? 'flex' : 'none';
 
-    document.getElementById('nav-persons').style.display =
-        isAdmin ? 'flex' : 'none';
-
-    // Start on the correct route
-    if (isAdmin) {
-        navigateTo('/dashboard', true);
-    } else {
-        navigateTo('/buildings', true);
-    }
+    // Start on the requested route or default to dashboard
+    const currentPath = window.location.pathname;
+    navigateTo(currentPath || '/dashboard', true);
 }
 
 function switchAuthTab(tab) {
@@ -72,6 +83,12 @@ function switchAuthTab(tab) {
     const registerForm = document.getElementById('registerForm');
     const tabLoginBtn = document.getElementById('tabLoginBtn');
     const tabRegBtn = document.getElementById('tabRegBtn');
+
+    const authError = document.getElementById('authError');
+    if (authError) {
+        authError.style.display = 'none';
+        authError.textContent = '';
+    }
 
     if (tab === 'login') {
         loginForm.style.display = 'block';
@@ -224,15 +241,8 @@ function switchNav(section) {
         currentUser &&
         currentUser.role === 'ADMIN';
 
-    if (
-        !isAdmin &&
-        (
-            section === 'dashboard' ||
-            section === 'users' ||
-            section === 'persons'
-        )
-    ) {
-        section = 'buildings';
+    if (!isAdmin && section === 'users') {
+        section = 'dashboard';
     }
 
     if (dashboardIntervalId) {
@@ -272,10 +282,7 @@ function switchNav(section) {
         }
     });
 
-    if (
-        section === 'dashboard' &&
-        isAdmin
-    ) {
+    if (section === 'dashboard') {
         loadDashboardStats();
 
         dashboardIntervalId =
@@ -304,10 +311,7 @@ function switchNav(section) {
         loadAssetSection();
     }
 
-    if (
-        section === 'persons' &&
-        isAdmin
-    ) {
+    if (section === 'persons') {
         loadPersonsList();
     }
 }
@@ -331,15 +335,8 @@ function navigateTo(
         currentUser &&
         currentUser.role === 'ADMIN';
 
-    if (
-        !isAdmin &&
-        (
-            section === 'dashboard' ||
-            section === 'users' ||
-            section === 'persons'
-        )
-    ) {
-        section = 'buildings';
+    if (!isAdmin && section === 'users') {
+        section = 'dashboard';
     }
 
     // Stop old dashboard polling
@@ -417,17 +414,9 @@ document.addEventListener(
         const path =
             window.location.pathname;
 
-        if (
-            currentUser &&
-            currentUser.role === 'ADMIN'
-        ) {
+        if (currentUser) {
             navigateTo(
                 path || '/dashboard',
-                true
-            );
-        } else if (currentUser) {
-            navigateTo(
-                path || '/buildings',
                 true
             );
         }
