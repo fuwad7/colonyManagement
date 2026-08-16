@@ -63,19 +63,28 @@ function showAppView() {
 
     const isAdmin =
         currentUser && currentUser.role === 'ADMIN';
+    const isResident =
+        currentUser && currentUser.role === 'RESIDENT';
 
-    document.getElementById('nav-dashboard').style.display = 'flex';
+    document.getElementById('nav-dashboard').style.display = isResident ? 'none' : 'flex';
     document.getElementById('nav-colonies').style.display = 'flex';
     document.getElementById('nav-buildings').style.display = 'flex';
     document.getElementById('nav-assets').style.display = 'flex';
-    document.getElementById('nav-persons').style.display = 'flex';
+    document.getElementById('nav-persons').style.display = isResident ? 'none' : 'flex';
 
     document.getElementById('nav-users').style.display =
         isAdmin ? 'flex' : 'none';
 
-    // Start on the requested route or default to dashboard
+    // Start on the requested route or default
     const currentPath = window.location.pathname;
-    navigateTo(currentPath || '/dashboard', true);
+    let defaultPath = isResident ? '/buildings' : '/dashboard';
+    
+    // If resident tries to access restricted root path, redirect
+    if (isResident && (currentPath === '/' || currentPath === '/dashboard')) {
+        navigateTo('/buildings', true);
+    } else {
+        navigateTo(currentPath || defaultPath, true);
+    }
 }
 
 function switchAuthTab(tab) {
@@ -240,9 +249,16 @@ function switchNav(section) {
     const isAdmin =
         currentUser &&
         currentUser.role === 'ADMIN';
+    const isResident =
+        currentUser &&
+        currentUser.role === 'RESIDENT';
 
     if (!isAdmin && section === 'users') {
         section = 'dashboard';
+    }
+
+    if (isResident && (section === 'dashboard' || section === 'persons' || section === 'users')) {
+        section = 'buildings';
     }
 
     if (dashboardIntervalId) {
@@ -334,9 +350,16 @@ function navigateTo(
     const isAdmin =
         currentUser &&
         currentUser.role === 'ADMIN';
+    const isResident =
+        currentUser &&
+        currentUser.role === 'RESIDENT';
 
     if (!isAdmin && section === 'users') {
         section = 'dashboard';
+    }
+
+    if (isResident && (section === 'dashboard' || section === 'persons' || section === 'users')) {
+        section = 'buildings';
     }
 
     // Stop old dashboard polling
@@ -415,10 +438,14 @@ document.addEventListener(
             window.location.pathname;
 
         if (currentUser) {
-            navigateTo(
-                path || '/dashboard',
-                true
-            );
+            const isResident = currentUser.role === 'RESIDENT';
+            const defaultPath = isResident ? '/buildings' : '/dashboard';
+            
+            if (isResident && (path === '/' || path === '/dashboard' || path === '/persons' || path === '/users')) {
+                navigateTo('/buildings', true);
+            } else {
+                navigateTo(path || defaultPath, true);
+            }
         }
     }
 );
