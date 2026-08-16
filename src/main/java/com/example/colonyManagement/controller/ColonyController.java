@@ -38,8 +38,7 @@ public class ColonyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Colony> updateColony(@PathVariable Long id,
-                                               @RequestBody Colony colonyDetails) {
+    public ResponseEntity<Colony> updateColony(@PathVariable Long id, @RequestBody Colony colonyDetails) {
         return colonyService.updateColony(id, colonyDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
