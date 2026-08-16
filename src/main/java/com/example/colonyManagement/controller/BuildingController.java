@@ -20,6 +20,7 @@ public class BuildingController {
 
     @PostMapping
     public ResponseEntity<Building> createBuilding(@RequestBody Building building) {
+        building.setId(null);
         Building savedBuilding = buildingService.createBuilding(building);
         return new ResponseEntity<>(savedBuilding, HttpStatus.CREATED);
     }
@@ -39,7 +40,7 @@ public class BuildingController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Building> updateBuilding(@PathVariable Long id,
-                                                   @RequestBody Building buildingDetails) {
+            @RequestBody Building buildingDetails) {
         return buildingService.updateBuilding(id, buildingDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

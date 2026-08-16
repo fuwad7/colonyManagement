@@ -68,12 +68,17 @@
             vm.loading = true;
             vm.error = null;
 
+            var payload = angular.copy(vm.currentBuilding);
+            if (!payload.id) {
+                delete payload.id;
+            }
+
             if (vm.currentBuilding.id) {
-                BuildingService.updateBuilding(vm.currentBuilding.id, vm.currentBuilding)
+                BuildingService.updateBuilding(vm.currentBuilding.id, payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             } else {
-                BuildingService.createBuilding(vm.currentBuilding)
+                BuildingService.createBuilding(payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             }

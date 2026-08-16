@@ -68,12 +68,17 @@
             vm.loading = true;
             vm.error = null;
 
+            var payload = angular.copy(vm.currentFlats);
+            if (!payload.id) {
+                delete payload.id;
+            }
+
             if (vm.currentFlats.id) {
-                FlatService.updateFlat(vm.currentFlats.id, vm.currentFlats)
+                FlatService.updateFlat(vm.currentFlats.id, payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             } else {
-                FlatService.createFlat(vm.currentFlats)
+                FlatService.createFlat(payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             }

@@ -68,12 +68,17 @@
             vm.loading = true;
             vm.error = null;
 
+            var payload = angular.copy(vm.currentPerson);
+            if (!payload.id) {
+                delete payload.id;
+            }
+
             if (vm.currentPerson.id) {
-                PersonService.updatePerson(vm.currentPerson.id, vm.currentPerson)
+                PersonService.updatePerson(vm.currentPerson.id, payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             } else {
-                PersonService.createPerson(vm.currentPerson)
+                PersonService.createPerson(payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             }

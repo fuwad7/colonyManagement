@@ -90,12 +90,17 @@
             vm.loading = true;
             vm.error = null;
 
+            var payload = angular.copy(vm.currentUsers);
+            if (!payload.id) {
+                delete payload.id;
+            }
+
             if (vm.currentUsers.id) {
-                UserService.updateUser(vm.currentUsers.id, vm.currentUsers)
+                UserService.updateUser(vm.currentUsers.id, payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             } else {
-                UserService.saveUser(vm.currentUsers)
+                UserService.saveUser(payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             }

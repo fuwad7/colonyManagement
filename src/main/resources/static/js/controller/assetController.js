@@ -86,12 +86,17 @@
             vm.loading = true;
             vm.error = null;
 
+            var payload = angular.copy(vm.currentAsset);
+            if (!payload.id) {
+                delete payload.id;
+            }
+
             if (vm.currentAsset.id) {
-                AssetService.updateAsset(vm.currentAsset.id, vm.currentAsset)
+                AssetService.updateAsset(vm.currentAsset.id, payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             } else {
-                AssetService.saveAsset(vm.currentAsset)
+                AssetService.saveAsset(payload)
                     .then(handleWriteSuccess)
                     .catch(handleWriteError);
             }
