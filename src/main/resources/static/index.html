@@ -5,20 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colony Management</title>
     <link rel="stylesheet" href="css/style.css">
-
+    <script src="js/controller/languageController.js" defer></script>
 </head>
 
 <body>
     <div id="authView" class="auth-wrapper">
+        <!-- Language toggle on the auth page (top-right corner) -->
+        <div class="auth-lang-toggle">
+            <label class="header_toggle">
+                <input type="checkbox"
+                       class="lang-toggle-checkbox"
+                       onchange="toggleLanguage()">
+                <span class="header_slider"></span>
+                <span class="header_labels" data-on="বাংলা" data-off="ENG"></span>
+            </label>
+        </div>
+
         <div class="auth-card">
             <div class="auth-brand">
-                <h1>🏢 Colony Management</h1>
-                <p>Sign in to your account</p>
+                <h1>🏢 <span data-i18n="APP_TITLE">Colony Management</span></h1>
+                <p data-i18n="SIGN_IN_SUBTITLE">Sign in to your account</p>
             </div>
 
             <div class="auth-tabs">
-                <button id="tabLoginBtn" class="auth-tab-btn active" onclick="switchAuthTab('login')">Login</button>
-                <button id="tabRegBtn" class="auth-tab-btn" onclick="switchAuthTab('register')">Register</button>
+                <button id="tabLoginBtn" class="auth-tab-btn active" onclick="switchAuthTab('login')" data-i18n="TAB_LOGIN">Login</button>
+                <button id="tabRegBtn" class="auth-tab-btn" onclick="switchAuthTab('register')" data-i18n="TAB_REGISTER">Register</button>
             </div>
 
             <div id="authError"
@@ -27,34 +38,34 @@
 
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label for="loginUsername">Username</label>
-                    <input type="text" id="loginUsername" class="form-input" placeholder="Username" required>
+                    <label for="loginUsername" data-i18n="LABEL_USERNAME">Username</label>
+                    <input type="text" id="loginUsername" class="form-input" placeholder="Username" data-i18n-placeholder="PLACEHOLDER_USERNAME" required>
                 </div>
                 <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" class="form-input" placeholder="Password" required>
+                    <label for="loginPassword" data-i18n="LABEL_PASSWORD">Password</label>
+                    <input type="password" id="loginPassword" class="form-input" placeholder="Password" data-i18n-placeholder="PLACEHOLDER_PASSWORD" required>
                 </div>
-                <button type="submit" class="btn-primary">Login</button>
+                <button type="submit" class="btn-primary" data-i18n="BTN_LOGIN">Login</button>
             </form>
 
             <form id="registerForm" onsubmit="handleRegister(event)" style="display:none">
                 <div class="form-group">
-                    <label for="regUsername">Username</label>
-                    <input type="text" id="regUsername" class="form-input" placeholder="Username" required>
+                    <label for="regUsername" data-i18n="LABEL_USERNAME">Username</label>
+                    <input type="text" id="regUsername" class="form-input" placeholder="Username" data-i18n-placeholder="PLACEHOLDER_USERNAME" required>
                 </div>
                 <div class="form-group">
-                    <label for="regEmail">Email</label>
-                    <input type="email" id="regEmail" class="form-input" placeholder="Email address">
+                    <label for="regEmail" data-i18n="LABEL_EMAIL">Email</label>
+                    <input type="email" id="regEmail" class="form-input" placeholder="Email address" data-i18n-placeholder="PLACEHOLDER_EMAIL">
                 </div>
                 <div class="form-group">
-                    <label for="regPhone">Phone Number</label>
-                    <input type="text" id="regPhone" class="form-input" placeholder="Phone Number" required>
+                    <label for="regPhone" data-i18n="LABEL_PHONE">Phone Number</label>
+                    <input type="text" id="regPhone" class="form-input" placeholder="Phone Number" data-i18n-placeholder="PLACEHOLDER_PHONE" required>
                 </div>
                 <div class="form-group">
-                    <label for="regPassword">Password</label>
-                    <input type="password" id="regPassword" class="form-input" placeholder="Password" required>
+                    <label for="regPassword" data-i18n="LABEL_PASSWORD">Password</label>
+                    <input type="password" id="regPassword" class="form-input" placeholder="Password" data-i18n-placeholder="PLACEHOLDER_PASSWORD" required>
                 </div>
-                <button type="submit" class="btn-primary">Register</button>
+                <button type="submit" class="btn-primary" data-i18n="BTN_REGISTER">Register</button>
             </form>
         </div>
     </div>
@@ -71,6 +82,7 @@
                     <label class="header_toggle">
                         <input type="checkbox"
                                id="languageToggle"
+                               class="lang-toggle-checkbox"
                                onchange="toggleLanguage()">
                         <span class="header_slider"></span>
                         <span class="header_labels" data-on="বাংলা" data-off="ENG"></span>
@@ -85,8 +97,8 @@
                 </span>
                     </button>
                     <div id="profileDropdownContent" class="dropdown-menu">
-                        <button type="button" class="dropdown-item" onclick="openProfileModal(); closeProfileDropdown();">👤 My Profile</button>
-                        <button type="button" class="dropdown-item btn-logout-dropdown" onclick="handleLogout(); closeProfileDropdown();">🚪 Logout</button>
+                        <button type="button" class="dropdown-item" onclick="openProfileModal(); closeProfileDropdown();">👤 <span data-i18n="PROFILE_MY_PROFILE">My Profile</span></button>
+                        <button type="button" class="dropdown-item btn-logout-dropdown" onclick="handleLogout(); closeProfileDropdown();">🚪 <span data-i18n="BTN_LOGOUT">Logout</span></button>
                     </div>
                 </div>
 
@@ -95,19 +107,19 @@
 
         <div class="app-container">
             <nav class="app-sidebar">
-                <a id="nav-dashboard" class="nav-item active" href="/dashboard">📊 Dashboard</a>
-                <a id="nav-colonies" class="nav-item" href="/colonies">🏘️ Colonies</a>
-                <a id="nav-buildings" class="nav-item" href="/buildings">🏢 Buildings & Floors</a>
-                <a id="nav-users" class="nav-item" href="/users">👥 User Management</a>
-                <a id="nav-assets" class="nav-item" href="/assets">⚙️ Assets</a>
-                <a id="nav-persons" class="nav-item" href="/persons">👤 Residents</a>
+                <a id="nav-dashboard" class="nav-item active" href="/dashboard">📊 <span data-i18n="NAV_DASHBOARD">Dashboard</span></a>
+                <a id="nav-colonies" class="nav-item" href="/colonies">🏘️ <span data-i18n="NAV_COLONIES">Colonies</span></a>
+                <a id="nav-buildings" class="nav-item" href="/buildings">🏢 <span data-i18n="NAV_BUILDINGS">Buildings &amp; Floors</span></a>
+                <a id="nav-users" class="nav-item" href="/users">👥 <span data-i18n="NAV_USERS">User Management</span></a>
+                <a id="nav-assets" class="nav-item" href="/assets">⚙️ <span data-i18n="NAV_ASSETS">Assets</span></a>
+                <a id="nav-persons" class="nav-item" href="/persons">👤 <span data-i18n="NAV_PERSONS">Residents</span></a>
             </nav>
 
             <main class="app-content">
 
                 <div id="sec-dashboard">
                     <div class="section-title">
-                        <span>Dashboard</span>
+                        <span data-i18n="DASHBOARD_TITLE">Dashboard</span>
                     </div>
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -115,7 +127,7 @@
                                 <div class="stat-icon" style="color:var(--accent-emerald)">🏘️</div>
                                 <div class="stat-info">
                                     <h3 id="statColonies">0</h3>
-                                    <p>Colonies</p>
+                                    <p data-i18n="STAT_COLONIES">Colonies</p>
                                 </div>
                             </a>
                         </div>
@@ -124,7 +136,7 @@
                                 <div class="stat-icon" style="color:var(--accent-blue)">🏢</div>
                                 <div class="stat-info">
                                     <h3 id="statBuildings">0</h3>
-                                    <p>Buildings</p>
+                                    <p data-i18n="STAT_BUILDINGS">Buildings</p>
                                 </div>
                             </a>
                         </div>
@@ -132,35 +144,35 @@
                             <div class="stat-icon" style="color:var(--accent-indigo)">🔑</div>
                             <div class="stat-info">
                                 <h3 id="statFlats">0</h3>
-                                <p>Flats</p>
+                                <p data-i18n="STAT_FLATS">Flats</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon" style="color:var(--accent-emerald)">👤</div>
                             <div class="stat-info">
                                 <h3 id="statResidents">0</h3>
-                                <p>Residents</p>
+                                <p data-i18n="STAT_RESIDENTS">Residents</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon" style="color:var(--accent-amber)">🏠</div>
                             <div class="stat-info">
                                 <h3 id="statOwners">0</h3>
-                                <p>Owners</p>
+                                <p data-i18n="STAT_OWNERS">Owners</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon" style="color:var(--accent-blue)">🔑</div>
                             <div class="stat-info">
                                 <h3 id="statTenants">0</h3>
-                                <p>Tenants</p>
+                                <p data-i18n="STAT_TENANTS">Tenants</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon" style="color:var(--accent-rose)">🤝</div>
                             <div class="stat-info">
                                 <h3 id="statSubTenants">0</h3>
-                                <p>Sub-Tenants</p>
+                                <p data-i18n="STAT_SUB_TENANTS">Sub-Tenants</p>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -168,7 +180,7 @@
                                 <div class="stat-icon" style="color:var(--accent-blue)">⚙️</div>
                                 <div class="stat-info">
                                     <h3 id="statAssets">0</h3>
-                                    <p>Assets</p>
+                                    <p data-i18n="STAT_ASSETS">Assets</p>
                                 </div>
                             </a>
                         </div>
@@ -177,7 +189,7 @@
                                 <div class="stat-icon" style="color:var(--accent-blue)">👥</div>
                                 <div class="stat-info">
                                     <h3 id="statUsers">0</h3>
-                                    <p>Users</p>
+                                    <p data-i18n="STAT_USERS">Users</p>
                                 </div>
                             </a>
                         </div>
@@ -187,43 +199,43 @@
                 <div id="sec-colonies" style="display:none">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
                         <div class="section-title" style="margin:0">
-                            <span>Colony Management</span>
+                            <span data-i18n="SECTION_COLONY_MGMT">Colony Management</span>
                         </div>
                     </div>
 
                     <div class="card-panel" id="addColonyPanel" style="margin-bottom:24px">
-                        <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-emerald)">Add New Colony</h3>
+                        <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-emerald)" data-i18n="COLONY_ADD">Add New Colony</h3>
                         <form id="createColonyForm" onsubmit="handleCreateColony(event)"
                             style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px">
                             <div>
-                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Colony Name</label>
-                                <input type="text" id="colonyName" class="form-input" placeholder="e.g. Green Valley Colony" required>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="COLONY_NAME">Colony Name</label>
+                                <input type="text" id="colonyName" class="form-input" placeholder="e.g. Green Valley Colony" data-i18n-placeholder="PLACEHOLDER_COLONY_NAME" required>
                             </div>
                             <div>
-                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Location / Address</label>
-                                <input type="text" id="colonyLocation" class="form-input" placeholder="e.g. Sector 5, North Avenue">
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="COLONY_LOCATION">Location / Address</label>
+                                <input type="text" id="colonyLocation" class="form-input" placeholder="e.g. Sector 5, North Avenue" data-i18n-placeholder="PLACEHOLDER_LOCATION">
                             </div>
                             <div>
-                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Description</label>
-                                <input type="text" id="colonyDescription" class="form-input" placeholder="Optional description">
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="COLONY_DESCRIPTION">Description</label>
+                                <input type="text" id="colonyDescription" class="form-input" placeholder="Optional description" data-i18n-placeholder="PLACEHOLDER_DESCRIPTION">
                             </div>
                             <div style="display:flex; align-items:flex-end">
-                                <button type="submit" class="btn-primary" style="height:44px">Create Colony</button>
+                                <button type="submit" class="btn-primary" style="height:44px" data-i18n="BTN_CREATE_COLONY">Create Colony</button>
                             </div>
                         </form>
                     </div>
 
                     <div class="card-panel">
-                        <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--text-primary)">All Colonies</h3>
+                        <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--text-primary)" data-i18n="COLONY_ALL">All Colonies</h3>
                         <table class="custom-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Colony Name</th>
-                                    <th>Location</th>
-                                    <th>Description</th>
-                                    <th>Total Buildings</th>
-                                    <th>Actions</th>
+                                    <th data-i18n="TABLE_ID">ID</th>
+                                    <th data-i18n="TABLE_COLONY_NAME">Colony Name</th>
+                                    <th data-i18n="TABLE_LOCATION">Location</th>
+                                    <th data-i18n="TABLE_DESCRIPTION">Description</th>
+                                    <th data-i18n="TABLE_TOTAL_BUILDINGS">Total Buildings</th>
+                                    <th data-i18n="TABLE_ACTIONS">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="colonyTableBody"></tbody>
@@ -233,62 +245,59 @@
 
                 <div id="sec-buildings" style="display:none">
                     <div class="section-title">
-                        <span>Buildings & Floors</span>
+                        <span data-i18n="SECTION_BUILDINGS">Buildings &amp; Floors</span>
                     </div>
 
                     <div class="card-panel" id="addBuildingPanel">
-                        <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-blue)">Add Building</h3>
+                        <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-blue)" data-i18n="BUILDING_ADD">Add Building</h3>
                         <form id="createBuildingForm" onsubmit="handleCreateBuilding(event)"
                             style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px">
                             <div>
-                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Colony</label>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="BUILDING_COLONY">Colony</label>
                                 <select id="bldgColonySelect" class="form-input" required>
-                                    <option value="">-- Select Colony --</option>
+                                    <option value="" data-i18n="SELECT_COLONY">-- Select Colony --</option>
                                 </select>
                             </div>
                             <div>
                                 <label
-                                    style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Building
-                                    Name</label>
-                                <input type="text" id="bldgName" class="form-input" placeholder="Building Name"
+                                    style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="BUILDING_NAME">Building Name</label>
+                                <input type="text" id="bldgName" class="form-input" placeholder="Building Name" data-i18n-placeholder="PLACEHOLDER_BUILDING_NAME"
                                     required>
                             </div>
                             <div>
                                 <label
-                                    style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Floor
-                                    Count</label>
+                                    style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="BUILDING_FLOORS">Floor Count</label>
                                 <input type="number" id="bldgFloors" class="form-input" min="1" max="50"
-                                    placeholder="Number of floors" required>
+                                    placeholder="Number of floors" data-i18n-placeholder="PLACEHOLDER_FLOORS" required>
                             </div>
                             <div>
                                 <label
-                                    style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px">Units
-                                    / Floor</label>
+                                    style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="BUILDING_UNITS">Units / Floor</label>
                                 <input type="number" id="bldgUnits" class="form-input" min="1" max="20"
-                                    placeholder="Units per floor" required>
+                                    placeholder="Units per floor" data-i18n-placeholder="PLACEHOLDER_UNITS" required>
                             </div>
                             <div style="display:flex; align-items:flex-end">
-                                <button type="submit" class="btn-primary" style="height:44px">Create Building</button>
+                                <button type="submit" class="btn-primary" style="height:44px" data-i18n="BTN_CREATE_BUILDING">Create Building</button>
                             </div>
                         </form>
                     </div>
 
-                    <div class="section-title" style="font-size:1.1rem; margin-top:20px">Buildings:</div>
+                    <div class="section-title" style="font-size:1.1rem; margin-top:20px" data-i18n="BUILDINGS_LABEL">Buildings:</div>
                     <div id="buildingListGrid" class="building-grid"></div>
 
                     <div style="margin-top:32px">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
                             <div id="selectedBuildingTitle" class="section-title"
                                 style="font-size:1.2rem; color:var(--accent-blue); margin:0">
-                                🏢 Floor Layout
+                                🏢 <span data-i18n="BUILDING_LAYOUT">Floor Layout</span>
                             </div>
                             <button id="closeFloorLayoutBtn" onclick="closeFloorLayout()"
-                                style="display:none; background:#e2e8f0; color:#475569; border:none; padding:6px 12px; border-radius:4px; font-weight:600; font-size:0.85rem; cursor:pointer">
+                                style="display:none; background:#e2e8f0; color:#475569; border:none; padding:6px 12px; border-radius:4px; font-weight:600; font-size:0.85rem; cursor:pointer" data-i18n="BUILDING_CLOSE">
                                 ✖ Close Building
                             </button>
                         </div>
                         <div id="floorLayoutContainer" class="floor-container">
-                            <p style="color:var(--text-secondary)">Select a building to view layout.</p>
+                            <p style="color:var(--text-secondary)" data-i18n="SELECT_BUILDING">Select a building to view layout.</p>
                         </div>
                     </div>
                 </div>
@@ -296,21 +305,21 @@
                 <div id="sec-users" style="display:none">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
                         <div class="section-title" style="margin:0">
-                            <span>User Management</span>
+                            <span data-i18n="SECTION_USER_MGMT">User Management</span>
                         </div>
-                        <button class="btn-primary" onclick="openAddUserModal()" style="width:auto; padding:10px 20px">Add User</button>
+                        <button class="btn-primary" onclick="openAddUserModal()" style="width:auto; padding:10px 20px" data-i18n="BTN_ADD_USER">Add User</button>
                     </div>
 
                     <div class="card-panel">
                         <table class="custom-table">
                             <thead>
                                 <tr>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th data-i18n="TABLE_USERNAME">Username</th>
+                                    <th data-i18n="TABLE_EMAIL">Email</th>
+                                    <th data-i18n="TABLE_PHONE">Phone</th>
+                                    <th data-i18n="TABLE_ROLE">Role</th>
+                                    <th data-i18n="TABLE_STATUS">Status</th>
+                                    <th data-i18n="TABLE_ACTIONS">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="userTableBody"></tbody>
@@ -320,21 +329,21 @@
 
                 <div id="sec-assets" style="display:none">
                     <div class="section-title">
-                        <span>Assets</span>
+                        <span data-i18n="SECTION_ASSETS">Assets</span>
                     </div>
 
                     <div id="assetAdminRow"
                         style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px; margin-bottom:24px">
                         <div class="card-panel">
-                            <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-blue)">Add Asset</h3>
+                            <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-blue)" data-i18n="ASSET_ADD">Add Asset</h3>
                             <form id="createAssetForm" onsubmit="handleCreateAsset(event)">
                                 <div class="form-group">
-                                    <label>Asset Name</label>
-                                    <input type="text" id="assetName" class="form-input" placeholder="Asset Name"
+                                    <label data-i18n="ASSET_NAME">Asset Name</label>
+                                    <input type="text" id="assetName" class="form-input" placeholder="Asset Name" data-i18n-placeholder="PLACEHOLDER_ASSET_NAME"
                                         required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Asset Type</label>
+                                    <label data-i18n="ASSET_TYPE">Asset Type</label>
                                     <select id="assetType" class="form-input" required>
                                         <option value="FIELD">FIELD</option>
                                         <option value="SCHOOL">SCHOOL</option>
@@ -342,70 +351,69 @@
                                         <option value="COMMUNITY_BUILDING">COMMUNITY_BUILDING</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn-primary">Save Asset</button>
+                                <button type="submit" class="btn-primary" data-i18n="BTN_SAVE_ASSET">Save Asset</button>
                             </form>
                         </div>
 
                         <div class="card-panel">
-                            <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-emerald)">Assign
-                                Person to Asset</h3>
+                            <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-emerald)" data-i18n="ASSET_ASSIGN">Assign Person to Asset</h3>
                             <form id="assignAssetForm" onsubmit="handleAssignAssetToPerson(event)">
                                 <div class="form-group">
-                                    <label>Select Asset</label>
+                                    <label data-i18n="ASSET_SELECT">Select Asset</label>
                                     <select id="assignAssetSelect" class="form-input" required></select>
                                 </div>
                                 <div class="form-group">
                                     <div style="display:flex; gap:15px; margin-bottom:12px">
                                         <label style="font-size:0.85rem; cursor:pointer">
-                                            <input type="radio" name="assetPersonMode" value="select" checked onchange="toggleAssetPersonMode('select')"> Select Existing Person
+                                            <input type="radio" name="assetPersonMode" value="select" checked onchange="toggleAssetPersonMode('select')"> <span data-i18n="ASSET_SELECT_EXISTING">Select Existing Person</span>
                                         </label>
                                         <label style="font-size:0.85rem; cursor:pointer">
-                                            <input type="radio" name="assetPersonMode" value="new" onchange="toggleAssetPersonMode('new')"> Add New Person
+                                            <input type="radio" name="assetPersonMode" value="new" onchange="toggleAssetPersonMode('new')"> <span data-i18n="ASSET_NEW_PERSON">Add New Person</span>
                                         </label>
                                     </div>
                                 </div>
                                 <div id="assetPersonSelectGroup" class="form-group">
-                                    <label>Select Person</label>
+                                    <label data-i18n="ASSET_SELECT_PERSON">Select Person</label>
                                     <select id="assignPersonSelect" class="form-input" required></select>
                                 </div>
                                 <div id="assetPersonNewGroup" style="display:none">
                                     <div class="form-group">
-                                        <label>Full Name</label>
+                                        <label data-i18n="ASSET_FULL_NAME">Full Name</label>
                                         <input type="text" id="assetPersonName" class="form-input"
-                                            placeholder="Person Full Name">
+                                            placeholder="Person Full Name" data-i18n-placeholder="PLACEHOLDER_FULL_NAME">
                                     </div>
                                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
                                         <div class="form-group">
-                                            <label>Phone</label>
-                                            <input type="text" id="assetPersonPhone" class="form-input" placeholder="Phone">
+                                            <label data-i18n="ASSET_PHONE">Phone</label>
+                                            <input type="text" id="assetPersonPhone" class="form-input" placeholder="Phone" data-i18n-placeholder="PLACEHOLDER_PHONE">
                                         </div>
                                         <div class="form-group">
-                                            <label>NID / ID</label>
-                                            <input type="text" id="assetPersonId" class="form-input" placeholder="ID Number">
+                                            <label data-i18n="ASSET_NID">NID / ID</label>
+                                            <input type="text" id="assetPersonId" class="form-input" placeholder="ID Number" data-i18n-placeholder="PLACEHOLDER_ASSET_NID">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Role / Position</label>
-                                    <input type="text" id="assetJobRole" class="form-input" placeholder="Job Role"
+                                    <label data-i18n="ASSET_JOB_ROLE">Role / Position</label>
+                                    <input type="text" id="assetJobRole" class="form-input" placeholder="Job Role" data-i18n-placeholder="PLACEHOLDER_JOB_ROLE"
                                         required>
                                 </div>
-                                <button type="submit" class="btn-primary">Save Assignment</button>
+                                <button type="submit" class="btn-primary" data-i18n="BTN_SAVE_ASSIGNMENT">Save Assignment</button>
                             </form>
                         </div>
                     </div>
 
                     <div class="card-panel">
 
-                        <h3 style="font-size:1.1rem; margin-bottom:16px">Asset Assignments</h3>
+                        <h3 style="font-size:1.1rem; margin-bottom:16px" data-i18n="ASSET_ASSIGNMENTS">Asset Assignments</h3>
                         <table class="custom-table">
                             <thead>
                                 <tr>
-                                    <th>Asset</th>
-                                    <th>Type</th>
-                                    <th>Assigned Person</th>
-                                    <th>Job Role</th>
-                                    <th id="assetActionTh">Action</th>
+                                    <th data-i18n="TABLE_ASSET">Asset</th>
+                                    <th data-i18n="TABLE_TYPE">Type</th>
+                                    <th data-i18n="TABLE_ASSIGNED_PERSON">Assigned Person</th>
+                                    <th data-i18n="TABLE_JOB_ROLE">Job Role</th>
+                                    <th id="assetActionTh" data-i18n="TABLE_ACTION">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="assetAssignTableBody"></tbody>
@@ -415,16 +423,16 @@
 
                 <div id="sec-persons" style="display:none">
                     <div class="section-title">
-                        <span>Total Residents</span>
+                        <span data-i18n="SECTION_RESIDENTS">Total Residents</span>
                     </div>
 
                     <div class="card-panel">
                         <table class="custom-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Full Name</th>
-                                    <th>Phone</th>
+                                    <th data-i18n="TABLE_ID">ID</th>
+                                    <th data-i18n="TABLE_FULL_NAME">Full Name</th>
+                                    <th data-i18n="TABLE_PHONE">Phone</th>
                                 </tr>
                             </thead>
                             <tbody id="personTableBody"></tbody>
@@ -524,28 +532,28 @@
     <div id="addUserModal" class="modal-backdrop">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size:1.2rem; color:var(--accent-blue)">Add New User</h3>
+                <h3 style="font-size:1.2rem; color:var(--accent-blue)" data-i18n="MODAL_ADD_USER_TITLE">Add New User</h3>
                 <button class="modal-close" onclick="closeAddUserModal()">&times;</button>
             </div>
             <form id="addUserForm" onsubmit="handleSaveNewUser(event)">
                 <div class="form-group">
-                    <label>Username</label>
+                    <label data-i18n="LABEL_USERNAME">Username</label>
                     <input type="text" id="addUsername" class="form-input" required>
                 </div>
                 <div class="form-group">
-                    <label>Email</label>
+                    <label data-i18n="LABEL_EMAIL">Email</label>
                     <input type="email" id="addEmail" class="form-input" required>
                 </div>
                 <div class="form-group">
-                    <label>Phone Number</label>
+                    <label data-i18n="LABEL_PHONE">Phone Number</label>
                     <input type="text" id="addPhone" class="form-input" required>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
+                    <label data-i18n="LABEL_PASSWORD">Password</label>
                     <input type="password" id="addPassword" class="form-input" required>
                 </div>
                 <div class="form-group">
-                    <label>Role</label>
+                    <label data-i18n="LABEL_ROLE">Role</label>
                     <select id="addRole" class="form-input" required>
                         <option value="ADMIN">ADMIN</option>
                         <option value="RESIDENT" selected>RESIDENT</option>
@@ -555,8 +563,8 @@
                 <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
                     <button type="button"
                         style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer"
-                        onclick="closeAddUserModal()">Cancel</button>
-                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save</button>
+                        onclick="closeAddUserModal()" data-i18n="BTN_CANCEL">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px" data-i18n="BTN_SAVE">Save</button>
                 </div>
             </form>
         </div>
@@ -639,8 +647,8 @@
 
             <div class="modal-header">
                 <div>
-                    <h3 class="profile-modal-title">My Profile</h3>
-                    <p class="profile-modal-subtitle">Your account information</p>
+                    <h3 class="profile-modal-title" data-i18n="PROFILE_TITLE">My Profile</h3>
+                    <p class="profile-modal-subtitle" data-i18n="PROFILE_SUBTITLE">Your account information</p>
                 </div>
                 <button class="modal-close"
                         onclick="closeProfileModal()">&times;</button>
@@ -658,24 +666,24 @@
                 </div>
                 <div class="profile-info-grid">
                     <div class="profile-info-item">
-                    <span class="profile-info-label">Username</span>
+                    <span class="profile-info-label" data-i18n="LABEL_USERNAME">Username</span>
                         <span id="profileUsername"
                               class="profile-info-value">
                     </span>
                     </div>
                     <div class="profile-info-item">
-                    <span class="profile-info-label">Email</span>
+                    <span class="profile-info-label" data-i18n="LABEL_EMAIL">Email</span>
                         <span id="profileEmail"
                               class="profile-info-value"></span>
 
                     </div>
                     <div class="profile-info-item">
-                    <span class="profile-info-label">Phone</span>
+                    <span class="profile-info-label" data-i18n="LABEL_PHONE">Phone</span>
                         <span id="profilePhone"
                               class="profile-info-value"></span>
                     </div>
                     <div class="profile-info-item">
-                    <span class="profile-info-label">Role</span>
+                    <span class="profile-info-label" data-i18n="LABEL_ROLE">Role</span>
                         <span id="profileRole"
                               class="profile-info-value"></span>
                     </div>
@@ -684,10 +692,10 @@
             <div class="profile-modal-footer">
                 <button type="button"
                         class="profile-close-btn"
-                        onclick="closeProfileModal()">Close</button>
+                        onclick="closeProfileModal()" data-i18n="BTN_CLOSE">Close</button>
                 <button type="button"
                         class="btn-primary"
-                        onclick="openEditProfile()">Edit Profile</button>
+                        onclick="openEditProfile()" data-i18n="BTN_EDIT_PROFILE">Edit Profile</button>
             </div>
         </div>
     </div>
@@ -791,9 +799,7 @@
         </div>
     </div>
 
-    <script src="https://jquery.com"></script>
     <script src="appModule.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/controller/languageController.js"></script>
 </body>
 </html>
