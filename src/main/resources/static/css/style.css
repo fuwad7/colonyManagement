@@ -987,3 +987,20 @@ input:checked ~ .header_labels:after {
     color: #ffffff;
 }
 
+/* ─── Auth Page Language Toggle ──────────────────────────────────────────── */
+.auth-wrapper {
+    position: relative;
+}
+
+.auth-lang-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+/* Ensure Bengali text renders properly everywhere */
+body, input, button, select, label, th, td, p, h1, h2, h3, span, a {
+    font-family: 'Segoe UI', 'Noto Sans Bengali', 'Hind Siliguri', Arial, sans-serif;
+}
+
