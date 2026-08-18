@@ -67,7 +67,8 @@ public class AuthApiController {
 
         Optional<User> userOpt = userRepository.findByUsername(username);
 
-        if (userOpt.isPresent()) {User user = userOpt.get();
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
 
             if (!user.isEnabled()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account disabled by Admin.");
