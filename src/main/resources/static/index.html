@@ -60,20 +60,18 @@
     </div>
 
     <div id="appView" style="display:none; flex-direction:column; min-height:100vh">
-        <header class="app-header" ng-controller="LanguageController">
-            <div class="brand-title">
+        <header class="app-header">
+        <div class="brand-title">
                 🏢 Colony Management
             </div>
 
-            <!-- Container grouping the language switcher and profile together -->
             <div class="header-actions-group" style="display: flex; align-items: center; gap: 15px;">
 
-                <!-- 1. Language Toggle Switch (Placed on the LEFT side of profile) -->
                 <div class="language-toggle-wrapper">
                     <label class="header_toggle">
                         <input type="checkbox"
-                               ng-model="isBangla"
-                               ng-change="toggleLanguage()">
+                               id="languageToggle"
+                               onchange="toggleLanguage()">
                         <span class="header_slider"></span>
                         <span class="header_labels" data-on="বাংলা" data-off="ENG"></span>
                     </label>
@@ -794,5 +792,6 @@
     </div>
 
     <script src="js/app.js"></script>
+    <script src="js/controller/languageController.js"></script>
 </body>
 </html>
