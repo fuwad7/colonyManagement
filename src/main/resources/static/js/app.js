@@ -948,15 +948,54 @@ async function selectBuilding(building) {
     renderFloorLayout(building);
 }
 
+function formatNumber(n) {
+    if (window.i18n && window.i18n.getCurrentLang() === 'bn') {
+        const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        return n.toString().split('').map(d => bnDigits[parseInt(d)] || d).join('');
+    }
+    return n;
+}
+
+function formatFloorTitle(floorNum) {
+    const isBn = window.i18n && window.i18n.getCurrentLang() === 'bn';
+    if (isBn) {
+        const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        const numStr = floorNum.toString().split('').map(d => bnDigits[parseInt(d)]).join('');
+        let suffix = 'ম';
+        const lastDigit = floorNum % 10;
+        const lastTwo = floorNum % 100;
+        if (lastTwo >= 11 && lastTwo <= 19) {
+            suffix = 'তম';
+        } else if (lastDigit === 1) {
+            suffix = 'ম';
+        } else if (lastDigit === 2 || lastDigit === 3) {
+            suffix = 'য়';
+        } else if (lastDigit === 4) {
+            suffix = 'র্থ';
+        } else if (lastDigit === 6) {
+            suffix = 'ষ্ঠ';
+        } else {
+            suffix = 'ম';
+        }
+        return `${numStr}${suffix} তলা`;
+    } else {
+        const s = ["th", "st", "nd", "rd"];
+        const v = floorNum % 100;
+        const ord = floorNum + (s[(v - 20) % 10] || s[v] || s[0]);
+        return `${ord} Floor`;
+    }
+}
+
 async function renderFloorLayout(building) {
     const isAdmin =
         currentUser &&
         currentUser.role === 'ADMIN';
 
+    const layoutTitlePrefix = window.i18n ? window.i18n.t('FLOOR_LAYOUT_OCCUPANCY') : 'Floor Layout & Resident Occupancy:';
     document.getElementById(
         'selectedBuildingTitle'
     ).textContent =
-        `Floor Layout & Resident Occupancy: ${building.name}`;
+        `${layoutTitlePrefix} ${building.name}`;
 
     const closeBtn =
         document.getElementById(
@@ -974,7 +1013,7 @@ async function renderFloorLayout(building) {
         );
 
     floorContainer.innerHTML =
-        '<p style="color:var(--text-secondary)">Loading floor layout...</p>';
+        `<p style="color:var(--text-secondary)">${window.i18n ? window.i18n.t('LOADING_FLOOR_LAYOUT') : 'Loading floor layout...'}</p>`;
 
     try {
         const [
@@ -1058,11 +1097,13 @@ async function renderFloorLayout(building) {
                                 flat.id
                         );
 
+                    const vacantTxt = window.i18n ? window.i18n.t('BADGE_VACANT') : 'VACANT';
+                    const noOccTxt = window.i18n ? window.i18n.t('NO_OCCUPANT') : 'No Occupant assigned';
                     let occBadge =
-                        '<span class="occupant-badge badge-vacant">VACANT</span>';
+                        `<span class="occupant-badge badge-vacant">${vacantTxt}</span>`;
 
                     let occDetails =
-                        '<em>No Occupant assigned</em>';
+                        `<em>${noOccTxt}</em>`;
 
                     if (occ) {
                         const resident =
@@ -1092,8 +1133,9 @@ async function renderFloorLayout(building) {
                                 'badge-subtenant';
                         }
 
+                        const translatedBadge = window.i18n ? window.i18n.t(occType) : occType;
                         occBadge =
-                            `<span class="occupant-badge ${badgeClass}">${occType}</span>`;
+                            `<span class="occupant-badge ${badgeClass}">${translatedBadge}</span>`;
 
                         let rentedFromStr =
                             '';
@@ -1101,25 +1143,35 @@ async function renderFloorLayout(building) {
                         if (
                             occ.rentedFrom
                         ) {
+                            const rentedFromLabel = window.i18n ? window.i18n.t('RENTED_FROM') : 'Rented From:';
+                            const landlordLabel = window.i18n ? window.i18n.t('LANDLORD_LABEL') : 'Landlord';
                             rentedFromStr =
-                                `<br><small style="color:var(--accent-amber)">Rented From: ${occ.rentedFrom.fullName || 'Landlord'}</small>`;
+                                `<br><small style="color:var(--accent-amber)">${rentedFromLabel} ${occ.rentedFrom.fullName || landlordLabel}</small>`;
                         }
+                        const occLabel = window.i18n ? window.i18n.t('OCCUPANT_LABEL') : 'Occupant';
+                        const phoneLabel = window.i18n ? window.i18n.t('PHONE_LABEL') : 'Phone:';
+                        const naLabel = window.i18n ? window.i18n.t('NA_LABEL') : 'N/A';
+
                         occDetails = `
                             <strong>
                                 ${resident
                                 ? resident.fullName
-                                : 'Occupant'
+                                : occLabel
                             }
                             </strong>
                             <br>
-                            Phone:
+                            ${phoneLabel}
                             ${resident
                                 ? resident.phone
-                                : 'N/A'
+                                : naLabel
                             }
                             ${rentedFromStr}
                         `;
                     }
+                    const editOccTxt = window.i18n ? window.i18n.t('BTN_EDIT_OCCUPANT') : 'Edit Occupant';
+                    const removeTxt = window.i18n ? window.i18n.t('BTN_REMOVE') : 'Remove';
+                    const addOccTxt = window.i18n ? window.i18n.t('BTN_ADD_OCCUPANT') : 'Add Occupant';
+
                     const assignBtnHtml =
                         isAdmin
                             ? (
@@ -1130,12 +1182,12 @@ async function renderFloorLayout(building) {
                                                 class="btn-assign-flat"
                                                 onclick="openAssignModal(${flat.id}, '${flat.flatName}')"
                                                 style="margin-top:0; flex:1">
-                                                Edit Occupant
+                                                ${editOccTxt}
                                             </button>
                                             <button
                                                 onclick="removeOccupant(${occ.id})"
                                                 style="background:#fee2e2; border:1px solid #fca5a5; color:#b91c1c; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer">
-                                                Remove
+                                                ${removeTxt}
                                             </button>
 
                                         </div>
@@ -1145,7 +1197,7 @@ async function renderFloorLayout(building) {
                                             class="btn-assign-flat"
                                             onclick="openAssignModal(${flat.id}, '${flat.flatName}')"
                                             style="margin-top:8px">
-                                            Add Occupant
+                                            ${addOccTxt}
                                         </button>
                                     `
                             )
@@ -1162,10 +1214,14 @@ async function renderFloorLayout(building) {
                 }
             );
 
+            const formattedFloorTitle = formatFloorTitle(floorNum);
+            const flatsSuffix = window.i18n ? window.i18n.t('FLATS_COUNT_SUFFIX') : 'Flats';
+            const formattedCount = formatNumber(floorFlats.length);
+
             floorRow.innerHTML = `
                 <div class="floor-header">
-                    Floor ${floorNum}
-                    (${floorFlats.length} Flats)
+                    ${formattedFloorTitle}
+                    (${formattedCount} ${flatsSuffix})
                 </div>
 
                 <div class="flat-cards-wrapper">
@@ -1180,8 +1236,9 @@ async function renderFloorLayout(building) {
     } catch (e) {
         console.error(e);
 
+        const failText = window.i18n ? window.i18n.t('FAILED_FLOOR_LAYOUT') : 'Failed to load floor layout.';
         floorContainer.innerHTML =
-            '<p style="color:var(--accent-rose)">Failed to load floor layout.</p>';
+            `<p style="color:var(--accent-rose)">${failText}</p>`;
     }
 }
 
@@ -1193,7 +1250,7 @@ function closeFloorLayout() {
     document.getElementById(
         'selectedBuildingTitle'
     ).textContent =
-        'Floor Layout';
+        window.i18n ? window.i18n.t('BUILDING_LAYOUT') : 'Floor Layout';
 
     const closeBtn =
         document.getElementById(
@@ -1205,10 +1262,11 @@ function closeFloorLayout() {
             'none';
     }
 
+    const selectBldgTxt = window.i18n ? window.i18n.t('SELECT_BUILDING') : 'Select a building to view layout.';
     document.getElementById(
         'floorLayoutContainer'
     ).innerHTML =
-        '<p style="color:var(--text-secondary)">Select a building to view layout.</p>';
+        `<p style="color:var(--text-secondary)">${selectBldgTxt}</p>`;
 
     loadBuildingsSection();
 }
@@ -3246,5 +3304,15 @@ document.addEventListener('click', (event) => {
         if (toggleBtn && !dropdown.contains(event.target) && !toggleBtn.contains(event.target)) {
             closeProfileDropdown();
         }
+    }
+});
+
+/* Re-render floor layout dynamically on language change if building layout is active */
+window.addEventListener('languageChanged', function () {
+    if (typeof currentBuildingId !== 'undefined' && currentBuildingId) {
+        fetch('/api/buildings/' + currentBuildingId)
+            .then(res => res.json())
+            .then(building => renderFloorLayout(building))
+            .catch(() => {});
     }
 });
