@@ -24,6 +24,7 @@
             AuthService.login(vm.loginData)
                 .then(function (data) {
                     AuthService.saveSession(data);
+                    $window.localStorage.setItem('appLang', 'en');
                     $window.location.href = 'index.html';
                 })
                 .catch(function (error) {
