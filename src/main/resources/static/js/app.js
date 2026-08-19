@@ -594,7 +594,8 @@ async function loadBuildingsSection() {
             const sel = document.getElementById('bldgColonySelect');
             if (sel) {
                 const currentVal = sel.value;
-                sel.innerHTML = '<option value="">-- Select Colony --</option>';
+                const selectColonyText = (window.i18n && window.i18n.t('SELECT_COLONY')) || '-- Select Colony --';
+                sel.innerHTML = `<option value="" data-i18n="SELECT_COLONY">${selectColonyText}</option>`;
                 colonies.forEach(c => {
                     const opt = document.createElement('option');
                     opt.value = c.id;
