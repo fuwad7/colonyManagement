@@ -2407,19 +2407,15 @@ function loadProfileData() {
 
     const role = currentUser.role || 'RESIDENT';
 
-    const firstLetter = username
-            .charAt(0)
-            .toUpperCase();
+    const firstLetter = username.charAt(0).toUpperCase();
 
-    const profileAvatar = document.getElementById('profileAvatar'
-        );
+    const profileAvatar = document.getElementById('profileAvatar');
 
     if (profileAvatar) {
         profileAvatar.textContent = firstLetter;
     }
 
-    const profileModalAvatar = document.getElementById('profileModalAvatar'
-        );
+    const profileModalAvatar = document.getElementById('profileModalAvatar');
 
     if (profileModalAvatar) {
         profileModalAvatar.textContent = firstLetter;
