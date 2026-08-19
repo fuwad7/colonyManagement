@@ -2047,15 +2047,21 @@ async function loadAssetSection() {
             const assetSelect = document.getElementById('assignAssetSelect');
 
             if (assetSelect) {
-                assetSelect.innerHTML = '<option value="">-- Select Asset --</option>';
+                const selectAssetText = window.i18n ? window.i18n.t('SELECT_ASSET') : '-- Select Asset --';
+                assetSelect.innerHTML = `<option value="" data-i18n="SELECT_ASSET">${selectAssetText}</option>`;
 
-                assets.forEach(a => {assetSelect.innerHTML += `<option value="${a.id}">${a.name} (${a.type})</option>`;});
+                assets.forEach(a => {
+                    const typeKey = 'ASSET_TYPE_' + a.type;
+                    const translatedType = (window.i18n && window.i18n.t(typeKey) !== typeKey) ? window.i18n.t(typeKey) : a.type;
+                    assetSelect.innerHTML += `<option value="${a.id}">${a.name} (${translatedType})</option>`;
+                });
             }
 
             const personSelect = document.getElementById('assignPersonSelect');
 
             if (personSelect) {
-                personSelect.innerHTML = '<option value="">-- Select Person --</option>';
+                const selectPersonText = window.i18n ? window.i18n.t('SELECT_PERSON') : '-- Select Person --';
+                personSelect.innerHTML = `<option value="" data-i18n="SELECT_PERSON">${selectPersonText}</option>`;
 
                 persons.forEach(p => {
                     const info = p.phone
@@ -2107,6 +2113,9 @@ async function loadAssetSection() {
                     `
                     : '';
 
+            const assetTypeKey = as.asset ? ('ASSET_TYPE_' + as.asset.type) : '';
+            const translatedType = as.asset ? ((window.i18n && window.i18n.t(assetTypeKey) !== assetTypeKey) ? window.i18n.t(assetTypeKey) : as.asset.type) : 'N/A';
+
             tr.innerHTML = `
                 <td>
                     <b>
@@ -2118,11 +2127,8 @@ async function loadAssetSection() {
                 </td>
 
                 <td>
-                    <span class="occupant-badge badge-tenant">
-                        ${as.asset
-                    ? as.asset.type
-                    : 'N/A'
-                }
+                    <span class="occupant-badge badge-tenant"${assetTypeKey ? ` data-i18n="${assetTypeKey}"` : ''}>
+                        ${translatedType}
                     </span>
                 </td>
 
@@ -2740,12 +2746,16 @@ document.addEventListener('click', (event) => {
     }
 });
 
-// update floor layout on lang change
+// update floor layout and assets on lang change
 window.addEventListener('languageChanged', function () {
     if (typeof currentBuildingId !== 'undefined' && currentBuildingId) {
         fetch('/api/buildings/' + currentBuildingId)
             .then(res => res.json())
             .then(building => renderFloorLayout(building))
             .catch(() => {});
+    }
+    const secAssets = document.getElementById('sec-assets');
+    if (secAssets && secAssets.style.display !== 'none') {
+        loadAssets();
     }
 });

@@ -87,10 +87,16 @@
     "BUILDINGS_LABEL": "Buildings:",
 
     "SELECT_COLONY": "-- Select Colony --",
+    "SELECT_ASSET": "-- Select Asset --",
+    "SELECT_PERSON": "-- Select Person --",
 
     "ASSET_ADD": "Add Asset",
     "ASSET_NAME": "Asset Name",
     "ASSET_TYPE": "Asset Type",
+    "ASSET_TYPE_FIELD": "Field",
+    "ASSET_TYPE_SCHOOL": "School",
+    "ASSET_TYPE_COLLEGE": "College",
+    "ASSET_TYPE_COMMUNITY_BUILDING": "Community Building",
     "ASSET_ASSIGN": "Assign Person to Asset",
     "ASSET_SELECT": "Select Asset",
     "ASSET_ASSIGNMENTS": "Asset Assignments",
