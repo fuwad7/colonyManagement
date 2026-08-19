@@ -108,6 +108,7 @@
     "MODAL_OWNER_FULLNAME":  "মালিকের পূর্ণ নাম",
     "MODAL_OWNER_PHONE":  "মালিকের ফোন নম্বর",
     "MODAL_ADD_USER_TITLE":  "নতুন ব্যবহারকারী যোগ করুন",
+    "MODAL_ADD_RESIDENT_TITLE": "বাসিন্দা নিয়োগ করুন",
     "MODAL_EDIT_USER_TITLE":  "ব্যবহারকারী সম্পাদনা",
     "MODAL_EDIT_BUILDING_TITLE":  "ভবন সম্পাদনা",
     "MODAL_EDIT_COLONY_TITLE":  "কলোনি সম্পাদনা",
