@@ -110,6 +110,7 @@
     "MODAL_OWNER_FULLNAME":  "Owner Full Name",
     "MODAL_OWNER_PHONE":  "Owner Phone Number",
     "MODAL_ADD_USER_TITLE":  "Add New User",
+    "MODAL_ADD_RESIDENT_TITLE":  "Assign Resident",
     "MODAL_EDIT_USER_TITLE":  "Edit User",
     "MODAL_EDIT_BUILDING_TITLE":  "Edit Building",
     "MODAL_EDIT_COLONY_TITLE":  "Edit Colony",
@@ -136,7 +137,7 @@
     "TOTAL_FLATS_LABEL":  "Total Flats:",
     "LANG_TOGGLE_OFF":  "ENG",
     "LANG_TOGGLE_ON":  "BN",
-    "FLOOR_LAYOUT_OCCUPANCY":  "Floor Layout \u0026 Resident Occupancy:",
+    "FLOOR_LAYOUT_OCCUPANCY":  "Floor Layout & Resident Occupancy:",
     "LOADING_FLOOR_LAYOUT":  "Loading floor layout...",
     "FAILED_FLOOR_LAYOUT":  "Failed to load floor layout.",
     "BADGE_VACANT":  "VACANT",
@@ -151,5 +152,9 @@
     "BTN_ADD_OCCUPANT":  "Add Occupant",
     "FLOOR_LABEL":  "Floor",
     "FLATS_COUNT_SUFFIX":  "Flats",
-    "PLACEHOLDER_ASSET_NID":  "ID Number"
+    "PLACEHOLDER_ASSET_NID":  "ID Number",
+    "OWNER":  "Owner",
+    "TENANT":  "Tenant",
+    "SUB_TENANT":  "Sub-Tenant",
+    "OCCUPIED":  "Occupied"
 }
