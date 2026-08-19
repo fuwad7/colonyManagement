@@ -1,4 +1,4 @@
-﻿{
+{
     "APP_TITLE":  "কলোনি ম্যানেজমেন্ট",
     "SIGN_IN_SUBTITLE":  "আপনার অ্যাকাউন্টে সাইন ইন করুন",
     "TAB_LOGIN":  "লগইন",
@@ -94,7 +94,9 @@
     "PROFILE_EDIT_TITLE":  "প্রোফাইল সম্পাদনা",
     "PROFILE_EDIT_SUBTITLE":  "আপনার অ্যাকাউন্টের তথ্য আপডেট করুন",
     "PROFILE_MY_PROFILE":  "আমার প্রোফাইল",
-    "MODAL_ASSIGN_TITLE":  "ফ্ল্যাটে বাসিন্দা নিযুক্ত করুন",
+    "MODAL_ASSIGN_TITLE":  "ফ্ল্যাটে বাসিন্দা নিযুক্ত করুন:",
+    "SELECT_RESIDENT":  "-- বাসিন্দা নির্বাচন করুন --",
+    "SELECT_OWNER":  "-- মালিক নির্বাচন করুন --",
     "MODAL_OCCUPANCY_TYPE":  "দখলের ধরন",
     "MODAL_RESIDENT_DETAILS":  "বাসিন্দার তথ্য",
     "MODAL_SELECT_EXISTING":  "বিদ্যমান বাসিন্দা নির্বাচন করুন",

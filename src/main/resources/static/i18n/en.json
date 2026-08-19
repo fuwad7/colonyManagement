@@ -1,4 +1,4 @@
-﻿{
+{
     "APP_TITLE":  "Colony Management",
     "SIGN_IN_SUBTITLE":  "Sign in to your account",
     "TAB_LOGIN":  "Login",
@@ -95,6 +95,8 @@
     "PROFILE_EDIT_SUBTITLE":  "Update your account information",
     "PROFILE_MY_PROFILE":  "My Profile",
     "MODAL_ASSIGN_TITLE":  "Assign Resident to",
+    "SELECT_RESIDENT":  "-- Select Resident --",
+    "SELECT_OWNER":  "-- Select Owner --",
     "MODAL_OCCUPANCY_TYPE":  "Occupancy Type",
     "MODAL_RESIDENT_DETAILS":  "Resident Details",
     "MODAL_SELECT_EXISTING":  "Select Existing Resident",
