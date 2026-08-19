@@ -11,8 +11,10 @@
         },
         getCurrentLang: function () {
             return _currentLang;
-        }
+        },
+        setLanguage: setLanguage
     };
+    window.setLanguage = setLanguage;
 
     async function loadTranslations(lang) {
         try {
