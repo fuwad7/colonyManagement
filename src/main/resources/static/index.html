@@ -10,12 +10,10 @@
 
 <body>
     <div id="authView" class="auth-wrapper">
-        <!-- Language toggle on the auth page (top-right corner) -->
+<!--        Language toggle button on auth page-->
         <div class="auth-lang-toggle">
             <label class="header_toggle">
-                <input type="checkbox"
-                       class="lang-toggle-checkbox"
-                       onchange="toggleLanguage()">
+                <input type="checkbox" class="lang-toggle-checkbox" onchange="toggleLanguage()">
                 <span class="header_slider"></span>
                 <span class="header_labels" data-on="বাংলা" data-off="ENG"></span>
             </label>
@@ -32,8 +30,7 @@
                 <button id="tabRegBtn" class="auth-tab-btn" onclick="switchAuthTab('register')" data-i18n="TAB_REGISTER">Register</button>
             </div>
 
-            <div id="authError"
-                style="display:none; color:var(--accent-rose); background:rgba(244,63,94,0.1); border:1px solid rgba(244,63,94,0.3); padding:10px; border-radius:8px; margin-bottom:15px; font-size:0.85rem">
+            <div id="authError" style="display:none; color:var(--accent-rose); background:rgba(244,63,94,0.1); border:1px solid rgba(244,63,94,0.3); padding:10px; border-radius:8px; margin-bottom:15px; font-size:0.85rem">
             </div>
 
             <form id="loginForm" onsubmit="handleLogin(event)">
@@ -72,9 +69,7 @@
 
     <div id="appView" style="display:none; flex-direction:column; min-height:100vh">
         <header class="app-header">
-        <div class="brand-title">
-                🏢 Colony Management
-            </div>
+        <div class="brand-title">🏢 Colony Management</div>
 
             <div class="header-actions-group" style="display: flex; align-items: center; gap: 15px;">
 
@@ -259,10 +254,8 @@
                                 </select>
                             </div>
                             <div>
-                                <label
-                                    style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="BUILDING_NAME">Building Name</label>
-                                <input type="text" id="bldgName" class="form-input" placeholder="Building Name" data-i18n-placeholder="PLACEHOLDER_BUILDING_NAME"
-                                    required>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="BUILDING_NAME">Building Name</label>
+                                <input type="text" id="bldgName" class="form-input" placeholder="Building Name" data-i18n-placeholder="PLACEHOLDER_BUILDING_NAME" required>
                             </div>
                             <div>
                                 <label
@@ -271,13 +264,10 @@
                                     placeholder="Number of floors" data-i18n-placeholder="PLACEHOLDER_FLOORS" required>
                             </div>
                             <div>
-                                <label
-                                    style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="BUILDING_UNITS">Units / Floor</label>
-                                <input type="number" id="bldgUnits" class="form-input" min="1" max="20"
-                                    placeholder="Units per floor" data-i18n-placeholder="PLACEHOLDER_UNITS" required>
+                                <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px" data-i18n="BUILDING_UNITS">Units / Floor</label>
+                                <input type="number" id="bldgUnits" class="form-input" min="1" max="20" placeholder="Units per floor" data-i18n-placeholder="PLACEHOLDER_UNITS" required>
                             </div>
-                            <div style="display:flex; align-items:flex-end">
-                                <button type="submit" class="btn-primary" style="height:44px" data-i18n="BTN_CREATE_BUILDING">Create Building</button>
+                            <div style="display:flex; align-items:flex-end"><button type="submit" class="btn-primary" style="height:44px" data-i18n="BTN_CREATE_BUILDING">Create Building</button>
                             </div>
                         </form>
                     </div>
@@ -288,13 +278,8 @@
                     <div style="margin-top:32px">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
                             <div id="selectedBuildingTitle" class="section-title"
-                                style="font-size:1.2rem; color:var(--accent-blue); margin:0">
-                                🏢 <span data-i18n="BUILDING_LAYOUT">Floor Layout</span>
-                            </div>
-                            <button id="closeFloorLayoutBtn" onclick="closeFloorLayout()"
-                                style="display:none; background:#e2e8f0; color:#475569; border:none; padding:6px 12px; border-radius:4px; font-weight:600; font-size:0.85rem; cursor:pointer" data-i18n="BUILDING_CLOSE">
-                                ✖ Close Building
-                            </button>
+                                style="font-size:1.2rem; color:var(--accent-blue); margin:0">🏢 <span data-i18n="BUILDING_LAYOUT">Floor Layout</span></div>
+                            <button id="closeFloorLayoutBtn" onclick="closeFloorLayout()" style="display:none; background:#e2e8f0; color:#475569; border:none; padding:6px 12px; border-radius:4px; font-weight:600; font-size:0.85rem; cursor:pointer" data-i18n="BUILDING_CLOSE">✖ Close Building</button>
                         </div>
                         <div id="floorLayoutContainer" class="floor-container">
                             <p style="color:var(--text-secondary)" data-i18n="SELECT_BUILDING">Select a building to view layout.</p>
@@ -339,8 +324,7 @@
                             <form id="createAssetForm" onsubmit="handleCreateAsset(event)">
                                 <div class="form-group">
                                     <label data-i18n="ASSET_NAME">Asset Name</label>
-                                    <input type="text" id="assetName" class="form-input" placeholder="Asset Name" data-i18n-placeholder="PLACEHOLDER_ASSET_NAME"
-                                        required>
+                                    <input type="text" id="assetName" class="form-input" placeholder="Asset Name" data-i18n-placeholder="PLACEHOLDER_ASSET_NAME" required>
                                 </div>
                                 <div class="form-group">
                                     <label data-i18n="ASSET_TYPE">Asset Type</label>
@@ -395,8 +379,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label data-i18n="ASSET_JOB_ROLE">Role / Position</label>
-                                    <input type="text" id="assetJobRole" class="form-input" placeholder="Job Role" data-i18n-placeholder="PLACEHOLDER_JOB_ROLE"
-                                        required>
+                                    <input type="text" id="assetJobRole" class="form-input" placeholder="Job Role" data-i18n-placeholder="PLACEHOLDER_JOB_ROLE" required>
                                 </div>
                                 <button type="submit" class="btn-primary" data-i18n="BTN_SAVE_ASSIGNMENT">Save Assignment</button>
                             </form>
@@ -447,8 +430,7 @@
     <div id="assignModal" class="modal-backdrop">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size:1.2rem; color:var(--accent-blue)">Assign Resident to <span
-                        id="modalFlatName">Flat</span></h3>
+                <h3 style="font-size:1.2rem; color:var(--accent-blue)">Assign Resident to <span id="modalFlatName">Flat</span></h3>
                 <button class="modal-close" onclick="closeAssignModal()">&times;</button>
             </div>
             <form id="assignModalForm" onsubmit="handleAssignOccupant(event)">
@@ -464,23 +446,19 @@
                 <div class="form-group">
                     <label style="font-weight:600; color:var(--accent-indigo); display:block; margin-bottom:10px">Resident Details</label>
                     <div style="display:flex; gap:15px; margin-bottom:12px">
-                        <label style="font-size:0.85rem; cursor:pointer">
-                            <input type="radio" name="residentMode" value="select" checked onchange="toggleResidentMode('select')"> Select Existing Resident
+                        <label style="font-size:0.85rem; cursor:pointer"><input type="radio" name="residentMode" value="select" checked onchange="toggleResidentMode('select')"> Select Existing Resident
                         </label>
-                        <label style="font-size:0.85rem; cursor:pointer">
-                            <input type="radio" name="residentMode" value="new" onchange="toggleResidentMode('new')"> Add New Resident
+                        <label style="font-size:0.85rem; cursor:pointer"><input type="radio" name="residentMode" value="new" onchange="toggleResidentMode('new')"> Add New Resident
                         </label>
                     </div>
                 </div>
 
-                <div id="residentSelectGroup" class="form-group">
-                    <label>Select Resident</label>
+                <div id="residentSelectGroup" class="form-group"><label>Select Resident</label>
                     <select id="residentSelect" class="form-input" required></select>
                 </div>
 
                 <div id="residentNewGroup" style="display:none; grid-template-columns:1fr 1fr; gap:12px">
-                    <div class="form-group">
-                        <label>Resident Full Name</label>
+                    <div class="form-group"><label>Resident Full Name</label>
                         <input type="text" id="resFullName" class="form-input" placeholder="Full Name">
                     </div>
 
@@ -491,9 +469,7 @@
                 </div>
 
                 <div id="ownerSection"
-                    style="display:none; border-top:1px solid var(--border-color); padding-top:15px; margin-top:15px">
-                    <label style="font-weight:600; color:var(--accent-amber); display:block; margin-bottom:10px">Owner /
-                        Landlord Details</label>
+                    style="display:none; border-top:1px solid var(--border-color); padding-top:15px; margin-top:15px"><label style="font-weight:600; color:var(--accent-amber); display:block; margin-bottom:10px">Owner / Landlord Details</label>
 
                     <div style="display:flex; gap:15px; margin-bottom:12px">
                         <label style="font-size:0.85rem; cursor:pointer"><input type="radio" name="ownerMode"
@@ -520,9 +496,7 @@
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
-                    <button type="button"
-                        style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer"
-                        onclick="closeAssignModal()">Cancel</button>
+                    <button type="button" style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer" onclick="closeAssignModal()">Cancel</button>
                     <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save</button>
                 </div>
             </form>
@@ -561,9 +535,7 @@
                     </select>
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
-                    <button type="button"
-                        style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer"
-                        onclick="closeAddUserModal()" data-i18n="BTN_CANCEL">Cancel</button>
+                    <button type="button" style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer" onclick="closeAddUserModal()" data-i18n="BTN_CANCEL">Cancel</button>
                     <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px" data-i18n="BTN_SAVE">Save</button>
                 </div>
             </form>
@@ -603,9 +575,7 @@
                     <input type="password" id="editPassword" class="form-input" placeholder="New password">
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
-                    <button type="button"
-                        style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer"
-                        onclick="closeEditUserModal()">Cancel</button>
+                    <button type="button" style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer" onclick="closeEditUserModal()">Cancel</button>
                     <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save</button>
                 </div>
             </form>
@@ -650,52 +620,40 @@
                     <h3 class="profile-modal-title" data-i18n="PROFILE_TITLE">My Profile</h3>
                     <p class="profile-modal-subtitle" data-i18n="PROFILE_SUBTITLE">Your account information</p>
                 </div>
-                <button class="modal-close"
-                        onclick="closeProfileModal()">&times;</button>
+                <button class="modal-close" onclick="closeProfileModal()">&times;</button>
             </div>
             <div class="profile-modal-body">
 
                 <div class="profile-summary">
 
-                    <div id="profileModalAvatar"
-                         class="profile-modal-avatar">U
+                    <div id="profileModalAvatar" class="profile-modal-avatar">U
                     </div>
-                    <div>
-                        <h2 id="profileModalName">User</h2>
-                    </div>
+                    <div><h2 id="profileModalName">User</h2></div>
                 </div>
                 <div class="profile-info-grid">
                     <div class="profile-info-item">
                     <span class="profile-info-label" data-i18n="LABEL_USERNAME">Username</span>
-                        <span id="profileUsername"
-                              class="profile-info-value">
+                        <span id="profileUsername" class="profile-info-value">
                     </span>
                     </div>
                     <div class="profile-info-item">
                     <span class="profile-info-label" data-i18n="LABEL_EMAIL">Email</span>
-                        <span id="profileEmail"
-                              class="profile-info-value"></span>
+                        <span id="profileEmail" class="profile-info-value"></span>
 
                     </div>
                     <div class="profile-info-item">
                     <span class="profile-info-label" data-i18n="LABEL_PHONE">Phone</span>
-                        <span id="profilePhone"
-                              class="profile-info-value"></span>
+                        <span id="profilePhone" class="profile-info-value"></span>
                     </div>
                     <div class="profile-info-item">
                     <span class="profile-info-label" data-i18n="LABEL_ROLE">Role</span>
-                        <span id="profileRole"
-                              class="profile-info-value"></span>
+                        <span id="profileRole" class="profile-info-value"></span>
                     </div>
                 </div>
             </div>
             <div class="profile-modal-footer">
-                <button type="button"
-                        class="profile-close-btn"
-                        onclick="closeProfileModal()" data-i18n="BTN_CLOSE">Close</button>
-                <button type="button"
-                        class="btn-primary"
-                        onclick="openEditProfile()" data-i18n="BTN_EDIT_PROFILE">Edit Profile</button>
+                <button type="button" class="profile-close-btn" onclick="closeProfileModal()" data-i18n="BTN_CLOSE">Close</button>
+                <button type="button" class="btn-primary" onclick="openEditProfile()" data-i18n="BTN_EDIT_PROFILE">Edit Profile</button>
             </div>
         </div>
     </div>
@@ -708,60 +666,38 @@
                     <h3 class="profile-modal-title">Edit Profile</h3>
                     <p class="profile-modal-subtitle">Update your account information</p>
                 </div>
-                <button class="modal-close"
-                        type="button"
-                        onclick="closeEditProfile()">&times;</button>
+                <button class="modal-close" type="button" onclick="closeEditProfile()">&times;</button>
             </div>
 
-            <form id="editProfileForm"
-                  onsubmit="saveEditProfile(event)">
+            <form id="editProfileForm" onsubmit="saveEditProfile(event)">
                 <div class="profile-modal-body">
 
                     <div class="profile-edit-grid">
                         <div class="form-group">
                             <label for="editProfileUsername">Username</label>
-                            <input  type="text"
-                                    id="editProfileUsername"
-                                    class="form-input"
-                                    required></div>
+                            <input  type="text" id="editProfileUsername" class="form-input" required></div>
                         <div class="form-group">
                             <label for="editProfileEmail">Email</label>
-                            <input  type="email"
-                                    id="editProfileEmail"
-                                    class="form-input"
-                                    required></div>
+                            <input  type="email" id="editProfileEmail" class="form-input" required></div>
 
                         <div class="form-group">
                             <label for="editProfilePhone">Phone Number</label>
-                            <input  type="text"
-                                    id="editProfilePhone"
-                                    class="form-input"
-                                    required>
+                            <input  type="text" id="editProfilePhone" class="form-input" required>
                         </div>
                         <div class="form-group">
                             <label for="editProfilePassword">New Password</label>
-                            <input  type="password"
-                                    id="editProfilePassword"
-                                    class="form-input"
-                                    placeholder="Enter your new password">
+                            <input  type="password" id="editProfilePassword" class="form-input" placeholder="Enter your new password">
                         </div>
                         <div class="form-group">
                             <label for="editProfileCurrentPassword">Current Password</label>
-                            <input  type="password"
-                                    id="editProfileCurrentPassword"
-                                    class="form-input"
-                                    placeholder="Enter your current password">
+                            <input  type="password" id="editProfileCurrentPassword" class="form-input" placeholder="Enter your current password">
                         </div>
                     </div>
                 </div>
 
                 <div class="profile-modal-footer">
-                    <button type="button"
-                            class="profile-close-btn"
-                            onclick="closeEditProfile()">Cancel</button>
-                    <button type="submit"
-                            class="btn-primary"
-                            style="width:auto; padding:10px 20px;">Save Changes</button>
+                    <button type="button" class="profile-close-btn" onclick="closeEditProfile()">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 20px;">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -790,16 +726,13 @@
                     <input type="text" id="editColonyDescription" class="form-input">
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px">
-                    <button type="button"
-                        style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer"
-                        onclick="closeEditColonyModal()">Cancel</button>
+                    <button type="button" style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer" onclick="closeEditColonyModal()">Cancel</button>
                     <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="appModule.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
