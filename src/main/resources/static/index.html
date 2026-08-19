@@ -430,53 +430,52 @@
     <div id="assignModal" class="modal-backdrop">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size:1.2rem; color:var(--accent-blue)">Assign Resident to <span id="modalFlatName">Flat</span></h3>
+                <h3 style="font-size:1.2rem; color:var(--accent-blue)"><span data-i18n="MODAL_ASSIGN_TITLE">Assign Resident to</span> <span id="modalFlatName">Flat</span></h3>
                 <button class="modal-close" onclick="closeAssignModal()">&times;</button>
             </div>
             <form id="assignModalForm" onsubmit="handleAssignOccupant(event)">
                 <div class="form-group">
-                    <label>Occupancy Type</label>
+                    <label data-i18n="MODAL_OCCUPANCY_TYPE">Occupancy Type</label>
                     <select id="resOccupancyType" class="form-input" required onchange="toggleOwnerOption(this.value)">
-                        <option value="OWNER">OWNER</option>
-                        <option value="TENANT">TENANT</option>
-                        <option value="SUB_TENANT">SUB_TENANT</option>
+                        <option value="OWNER" data-i18n="OWNER">Owner</option>
+                        <option value="TENANT" data-i18n="TENANT">Tenant</option>
+                        <option value="SUB_TENANT" data-i18n="SUB_TENANT">Sub-Tenant</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label style="font-weight:600; color:var(--accent-indigo); display:block; margin-bottom:10px">Resident Details</label>
+                    <label style="font-weight:600; color:var(--accent-indigo); display:block; margin-bottom:10px" data-i18n="MODAL_RESIDENT_DETAILS">Resident Details</label>
                     <div style="display:flex; gap:15px; margin-bottom:12px">
-                        <label style="font-size:0.85rem; cursor:pointer"><input type="radio" name="residentMode" value="select" checked onchange="toggleResidentMode('select')"> Select Existing Resident
+                        <label style="font-size:0.85rem; cursor:pointer"><input type="radio" name="residentMode" value="select" checked onchange="toggleResidentMode('select')"> <span data-i18n="MODAL_SELECT_EXISTING">Select Existing Resident</span>
                         </label>
-                        <label style="font-size:0.85rem; cursor:pointer"><input type="radio" name="residentMode" value="new" onchange="toggleResidentMode('new')"> Add New Resident
+                        <label style="font-size:0.85rem; cursor:pointer"><input type="radio" name="residentMode" value="new" onchange="toggleResidentMode('new')"> <span data-i18n="MODAL_ADD_NEW">Add New Resident</span>
                         </label>
                     </div>
                 </div>
 
-                <div id="residentSelectGroup" class="form-group"><label>Select Resident</label>
+                <div id="residentSelectGroup" class="form-group"><label data-i18n="MODAL_SELECT_RESIDENT">Select Resident</label>
                     <select id="residentSelect" class="form-input" required></select>
                 </div>
 
                 <div id="residentNewGroup" style="display:none; grid-template-columns:1fr 1fr; gap:12px">
-                    <div class="form-group"><label>Resident Full Name</label>
-                        <input type="text" id="resFullName" class="form-input" placeholder="Full Name">
+                    <div class="form-group"><label data-i18n="MODAL_RESIDENT_FULLNAME">Resident Full Name</label>
+                        <input type="text" id="resFullName" class="form-input" placeholder="Full Name" data-i18n-placeholder="PLACEHOLDER_FULL_NAME">
                     </div>
 
                     <div class="form-group">
-                        <label>Resident Phone Number</label>
-                        <input type="text" id="resPhone" class="form-input" placeholder="Phone Number">
+                        <label data-i18n="MODAL_RESIDENT_PHONE">Resident Phone Number</label>
+                        <input type="text" id="resPhone" class="form-input" placeholder="Phone Number" data-i18n-placeholder="PLACEHOLDER_PHONE">
                     </div>
                 </div>
 
                 <div id="ownerSection"
-                    style="display:none; border-top:1px solid var(--border-color); padding-top:15px; margin-top:15px"><label style="font-weight:600; color:var(--accent-amber); display:block; margin-bottom:10px">Owner / Landlord Details</label>
+                    style="display:none; border-top:1px solid var(--border-color); padding-top:15px; margin-top:15px"><label style="font-weight:600; color:var(--accent-amber); display:block; margin-bottom:10px" data-i18n="MODAL_OWNER_DETAILS">Owner / Landlord Details</label>
 
                     <div style="display:flex; gap:15px; margin-bottom:12px">
                         <label style="font-size:0.85rem; cursor:pointer"><input type="radio" name="ownerMode"
-                                value="select" checked onchange="toggleOwnerMode('select')"> Select Existing
-                            Owner</label>
+                                value="select" checked onchange="toggleOwnerMode('select')"> <span data-i18n="MODAL_SELECT_EXISTING_OWNER">Select Existing Owner</span></label>
                         <label style="font-size:0.85rem; cursor:pointer"><input type="radio" name="ownerMode"
-                                value="new" onchange="toggleOwnerMode('new')"> Add New Owner</label>
+                                value="new" onchange="toggleOwnerMode('new')"> <span data-i18n="MODAL_ADD_NEW_OWNER">Add New Owner</span></label>
                     </div>
 
                     <div id="ownerSelectGroup" class="form-group">
@@ -485,19 +484,19 @@
 
                     <div id="ownerNewGroup" style="display:none; grid-template-columns:1fr 1fr; gap:12px">
                         <div class="form-group">
-                            <label style="font-size:0.8rem">Owner Full Name</label>
-                            <input type="text" id="newOwnerName" class="form-input" placeholder="Owner Full Name">
+                            <label style="font-size:0.8rem" data-i18n="MODAL_OWNER_FULLNAME">Owner Full Name</label>
+                            <input type="text" id="newOwnerName" class="form-input" placeholder="Owner Full Name" data-i18n-placeholder="PLACEHOLDER_FULL_NAME">
                         </div>
                         <div class="form-group">
-                            <label style="font-size:0.8rem">Owner Phone Number</label>
-                            <input type="text" id="newOwnerPhone" class="form-input" placeholder="Owner Phone Number">
+                            <label style="font-size:0.8rem" data-i18n="MODAL_OWNER_PHONE">Owner Phone Number</label>
+                            <input type="text" id="newOwnerPhone" class="form-input" placeholder="Owner Phone Number" data-i18n-placeholder="PLACEHOLDER_PHONE">
                         </div>
                     </div>
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
-                    <button type="button" style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer" onclick="closeAssignModal()">Cancel</button>
-                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px">Save</button>
+                    <button type="button" style="background:var(--bg-input); color:var(--text-secondary); border:none; padding:10px 18px; border-radius:var(--radius-md); font-weight:600; cursor:pointer" onclick="closeAssignModal()" data-i18n="BTN_CANCEL">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:10px 24px" data-i18n="BTN_SAVE">Save</button>
                 </div>
             </form>
         </div>

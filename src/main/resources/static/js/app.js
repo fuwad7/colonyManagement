@@ -162,6 +162,13 @@ async function handleLogin(e) {
 
         if (res.ok) {
             currentUser = await res.json();
+            if (window.i18n && window.i18n.setLanguage) {
+                await window.i18n.setLanguage('en');
+            } else if (typeof window.setLanguage === 'function') {
+                await window.setLanguage('en');
+            } else {
+                localStorage.setItem('appLang', 'en');
+            }
             showAppView();
         } else {
             const msg = await res.text();
@@ -1323,7 +1330,8 @@ async function openAssignModal(
         const residentSelect = document.getElementById('residentSelect');
 
         if (residentSelect) {
-            residentSelect.innerHTML = '<option value="">-- Select Resident --</option>';
+            const selectResTxt = (window.i18n && window.i18n.t) ? window.i18n.t('SELECT_RESIDENT') : '-- Select Resident --';
+            residentSelect.innerHTML = `<option value="">${selectResTxt}</option>`;
 
             persons.forEach(p => {
                 const info = p.phone
@@ -1337,8 +1345,8 @@ async function openAssignModal(
         const select = document.getElementById('rentedFromSelect');
 
         if (select) {
-            select.innerHTML =
-                '<option value="">-- Select Owner --</option>';
+            const selectOwnerTxt = (window.i18n && window.i18n.t) ? window.i18n.t('SELECT_OWNER') : '-- Select Owner --';
+            select.innerHTML = `<option value="">${selectOwnerTxt}</option>`;
 
             persons.forEach(p => {
                 const info = p.phone
