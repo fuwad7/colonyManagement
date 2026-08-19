@@ -926,23 +926,17 @@ async function deleteBuilding(id) {
             loadBuildingsSection();
             loadDashboardStats();
         } else {
-            alert(
-                'Failed to delete building'
-            );
+            alert('Failed to delete building');
         }
     } catch (e) {
-        alert(
-            'Error deleting building'
-        );
+        alert('Error deleting building');
     }
 }
 
 async function selectBuilding(building) {
-    currentBuildingId =
-        building.id;
+    currentBuildingId = building.id;
 
-    layoutClosedByUser =
-        false;
+    layoutClosedByUser = false;
 
     loadBuildingsSection();
     renderFloorLayout(building);
@@ -1237,8 +1231,7 @@ async function renderFloorLayout(building) {
         console.error(e);
 
         const failText = window.i18n ? window.i18n.t('FAILED_FLOOR_LAYOUT') : 'Failed to load floor layout.';
-        floorContainer.innerHTML =
-            `<p style="color:var(--accent-rose)">${failText}</p>`;
+        floorContainer.innerHTML = `<p style="color:var(--accent-rose)">${failText}</p>`;
     }
 }
 
@@ -1248,51 +1241,36 @@ function closeFloorLayout() {
     layoutClosedByUser = true;
 
     document.getElementById(
-        'selectedBuildingTitle'
-    ).textContent =
+        'selectedBuildingTitle').textContent =
         window.i18n ? window.i18n.t('BUILDING_LAYOUT') : 'Floor Layout';
 
-    const closeBtn =
-        document.getElementById(
-            'closeFloorLayoutBtn'
-        );
+    const closeBtn = document.getElementById('closeFloorLayoutBtn');
 
     if (closeBtn) {
-        closeBtn.style.display =
-            'none';
+        closeBtn.style.display = 'none';
     }
 
     const selectBldgTxt = window.i18n ? window.i18n.t('SELECT_BUILDING') : 'Select a building to view layout.';
-    document.getElementById(
-        'floorLayoutContainer'
-    ).innerHTML =
-        `<p style="color:var(--text-secondary)">${selectBldgTxt}</p>`;
+    document.getElementById('floorLayoutContainer'
+    ).innerHTML = `<p style="color:var(--text-secondary)">${selectBldgTxt}</p>`;
 
     loadBuildingsSection();
 }
 
 async function removeOccupant(occId) {
-    if (
-        !currentUser ||
-        currentUser.role !== 'ADMIN'
-    ) {
-        alert(
-            'Only admin can remove occupant'
-        );
+    if (!currentUser || currentUser.role !== 'ADMIN') {
+        alert('Only admin can remove occupant');
         return;
     }
 
     if (
-        !confirm(
-            'You want to remove this Occupant?'
-        )
+        !confirm('You want to remove this Occupant?')
     ) {
         return;
     }
 
     try {
-        const res =
-            await fetch(
+        const res = await fetch(
                 `/api/occupancies/${occId}`,
                 {
                     method: 'DELETE'
@@ -1303,39 +1281,25 @@ async function removeOccupant(occId) {
             loadBuildingsSection();
             loadDashboardStats();
         } else {
-            alert(
-                'Failed to remove Occupant'
-            );
+            alert('Failed to remove Occupant');
         }
     } catch (err) {
         console.error(err);
 
-        alert(
-            'Error removing Occupant'
-        );
+        alert('Error removing Occupant');
     }
 }
 
 async function openAssignModal(
     flatId,
-    flatName
-) {
-    selectedFlatId =
-        flatId;
+    flatName) {
+    selectedFlatId = flatId;
 
-    document.getElementById(
-        'modalFlatName'
-    ).textContent =
-        flatName;
+    document.getElementById('modalFlatName').textContent = flatName;
 
-    document.getElementById(
-        'assignModal'
-    ).classList.add('show');
+    document.getElementById('assignModal').classList.add('show');
 
-    const typeSelect =
-        document.getElementById(
-            'resOccupancyType'
-        );
+    const typeSelect = document.getElementById('resOccupancyType');
 
     if (typeSelect) {
         toggleOwnerOption(
@@ -1346,89 +1310,59 @@ async function openAssignModal(
     toggleOwnerMode('select');
     toggleResidentMode('select');
 
-    const residentSelectRadio =
-        document.querySelector(
-            'input[name="residentMode"][value="select"]'
-        );
+    const residentSelectRadio = document.querySelector('input[name="residentMode"][value="select"]');
 
     if (residentSelectRadio) {
-        residentSelectRadio.checked =
-            true;
-    }
+        residentSelectRadio.checked = true;}
 
     try {
-        const res =
-            await fetch('/api/persons');
+        const res = await fetch('/api/persons');
 
-        const persons =
-            await res.json();
+        const persons = await res.json();
 
-        const residentSelect =
-            document.getElementById(
-                'residentSelect'
-            );
+        const residentSelect = document.getElementById('residentSelect');
 
         if (residentSelect) {
-            residentSelect.innerHTML =
-                '<option value="">-- Select Resident --</option>';
+            residentSelect.innerHTML = '<option value="">-- Select Resident --</option>';
 
             persons.forEach(p => {
-                const info =
-                    p.phone
+                const info = p.phone
                         ? ` (${p.phone})`
                         : '';
 
-                residentSelect.innerHTML +=
-                    `<option value="${p.id}">${p.fullName}${info}</option>`;
+                residentSelect.innerHTML += `<option value="${p.id}">${p.fullName}${info}</option>`;
             });
         }
 
-        const select =
-            document.getElementById(
-                'rentedFromSelect'
-            );
+        const select = document.getElementById('rentedFromSelect');
 
         if (select) {
             select.innerHTML =
                 '<option value="">-- Select Owner --</option>';
 
             persons.forEach(p => {
-                const info =
-                    p.phone
+                const info = p.phone
                         ? ` (${p.phone})`
                         : '';
 
-                select.innerHTML +=
-                    `<option value="${p.id}">${p.fullName}${info}</option>`;
+                select.innerHTML += `<option value="${p.id}">${p.fullName}${info}</option>`;
             });
         }
     } catch (e) {
-        console.error(
-            'Failed to load persons:',
-            e
-        );
+        console.error('Failed to load persons:', e);
     }
 }
 
 function closeAssignModal() {
-    document.getElementById(
-        'assignModal'
-    ).classList.remove('show');
+    document.getElementById('assignModal').classList.remove('show');
 
-    document.getElementById(
-        'assignModalForm'
-    ).reset();
+    document.getElementById('assignModalForm').reset();
 
-    toggleOwnerOption(
-        'OWNER'
-    );
+    toggleOwnerOption('OWNER');
 }
 
 function toggleOwnerOption(type) {
-    const ownerSection =
-        document.getElementById(
-            'ownerSection'
-        );
+    const ownerSection = document.getElementById('ownerSection');
 
     if (ownerSection) {
         ownerSection.style.display =
@@ -1442,208 +1376,145 @@ function toggleOwnerOption(type) {
 }
 
 function toggleOwnerMode(mode) {
-    const selectGroup =
-        document.getElementById(
-            'ownerSelectGroup'
-        );
+    const selectGroup = document.getElementById('ownerSelectGroup');
 
-    const newGroup =
-        document.getElementById(
-            'ownerNewGroup'
-        );
+    const newGroup = document.getElementById('ownerNewGroup');
 
     if (mode === 'select') {
         if (selectGroup) {
-            selectGroup.style.display =
-                'block';
+            selectGroup.style.display = 'block';
         }
 
         if (newGroup) {
-            newGroup.style.display =
-                'none';
+            newGroup.style.display = 'none';
         }
     } else {
         if (selectGroup) {
-            selectGroup.style.display =
-                'none';
+            selectGroup.style.display = 'none';
         }
 
         if (newGroup) {
-            newGroup.style.display =
-                'grid';
+            newGroup.style.display = 'grid';
         }
     }
 }
 
 function toggleResidentMode(mode) {
-    const selectGroup =
-        document.getElementById(
-            'residentSelectGroup'
+    const selectGroup = document.getElementById('residentSelectGroup');
+
+    const newGroup = document.getElementById('residentNewGroup'
         );
 
-    const newGroup =
-        document.getElementById(
-            'residentNewGroup'
+    const resSelect = document.getElementById('residentSelect'
         );
 
-    const resSelect =
-        document.getElementById(
-            'residentSelect'
+    const resFullName = document.getElementById('resFullName'
         );
 
-    const resFullName =
-        document.getElementById(
-            'resFullName'
-        );
-
-    const resPhone =
-        document.getElementById(
-            'resPhone'
-        );
+    const resPhone = document.getElementById('resPhone');
 
     if (mode === 'select') {
         if (selectGroup) {
-            selectGroup.style.display =
-                'block';
+            selectGroup.style.display = 'block';
         }
 
         if (newGroup) {
-            newGroup.style.display =
-                'none';
+            newGroup.style.display = 'none';
         }
 
         if (resSelect) {
-            resSelect.required =
-                true;
+            resSelect.required = true;
         }
 
         if (resFullName) {
-            resFullName.required =
-                false;
+            resFullName.required = false;
         }
 
         if (resPhone) {
-            resPhone.required =
-                false;
+            resPhone.required = false;
         }
     } else {
         if (selectGroup) {
-            selectGroup.style.display =
-                'none';
+            selectGroup.style.display = 'none';
         }
 
         if (newGroup) {
-            newGroup.style.display =
-                'grid';
+            newGroup.style.display = 'grid';
         }
 
         if (resSelect) {
-            resSelect.required =
-                false;
+            resSelect.required = false;
         }
 
         if (resFullName) {
-            resFullName.required =
-                true;
+            resFullName.required = true;
         }
 
-        if (resPhone) {
-            resPhone.required =
-                true;
+        if (resPhone) {resPhone.required = true;
         }
     }
 }
 
 function toggleAssetPersonMode(mode) {
-    const selectGroup =
-        document.getElementById(
-            'assetPersonSelectGroup'
-        );
+    const selectGroup = document.getElementById('assetPersonSelectGroup');
 
-    const newGroup =
-        document.getElementById(
-            'assetPersonNewGroup'
-        );
+    const newGroup = document.getElementById('assetPersonNewGroup');
 
-    const personSelect =
-        document.getElementById(
-            'assignPersonSelect'
-        );
+    const personSelect = document.getElementById('assignPersonSelect');
 
-    const personName =
-        document.getElementById(
-            'assetPersonName'
-        );
+    const personName = document.getElementById('assetPersonName');
 
-    const personPhone =
-        document.getElementById(
-            'assetPersonPhone'
-        );
+    const personPhone = document.getElementById('assetPersonPhone');
 
-    const personId =
-        document.getElementById(
-            'assetPersonId'
-        );
+    const personId = document.getElementById('assetPersonId');
 
     if (mode === 'select') {
         if (selectGroup) {
-            selectGroup.style.display =
-                'block';
+            selectGroup.style.display = 'block';
         }
 
         if (newGroup) {
-            newGroup.style.display =
-                'none';
+            newGroup.style.display = 'none';
         }
 
         if (personSelect) {
-            personSelect.required =
-                true;
+            personSelect.required = true;
         }
 
         if (personName) {
-            personName.required =
-                false;
+            personName.required = false;
         }
 
         if (personPhone) {
-            personPhone.required =
-                false;
+            personPhone.required = false;
         }
 
         if (personId) {
-            personId.required =
-                false;
+            personId.required = false;
         }
     } else {
         if (selectGroup) {
-            selectGroup.style.display =
-                'none';
+            selectGroup.style.display = 'none';
         }
 
         if (newGroup) {
-            newGroup.style.display =
-                'block';
+            newGroup.style.display = 'block';
         }
 
         if (personSelect) {
-            personSelect.required =
-                false;
+            personSelect.required = false;
         }
 
         if (personName) {
-            personName.required =
-                true;
+            personName.required = true;
         }
 
         if (personPhone) {
-            personPhone.required =
-                true;
+            personPhone.required = true;
         }
 
         if (personId) {
-            personId.required =
-                true;
+            personId.required = true;
         }
     }
 }
@@ -1651,20 +1522,11 @@ function toggleAssetPersonMode(mode) {
 async function handleAssignOccupant(e) {
     e.preventDefault();
 
-    const residentRadio =
-        document.querySelector(
-            'input[name="residentMode"]:checked'
-        );
+    const residentRadio = document.querySelector('input[name="residentMode"]:checked');
 
-    const residentMode =
-        residentRadio
-            ? residentRadio.value
-            : 'select';
+    const residentMode = residentRadio ? residentRadio.value : 'select';
 
-    const occupancyType =
-        document.getElementById(
-            'resOccupancyType'
-        ).value;
+    const occupancyType = document.getElementById('resOccupancyType').value;
 
     try {
         let personId = null;
@@ -1672,18 +1534,11 @@ async function handleAssignOccupant(e) {
         if (
             residentMode === 'new'
         ) {
-            const fullName =
-                document.getElementById(
-                    'resFullName'
-                ).value;
+            const fullName = document.getElementById('resFullName').value;
 
-            const phone =
-                document.getElementById(
-                    'resPhone'
-                ).value;
+            const phone = document.getElementById('resPhone').value;
 
-            const personRes =
-                await fetch(
+            const personRes = await fetch(
                     '/api/persons',
                     {
                         method: 'POST',
@@ -1700,75 +1555,45 @@ async function handleAssignOccupant(e) {
                 );
 
             if (!personRes.ok) {
-                alert(
-                    'Failed to create resident'
-                );
+                alert('Failed to create resident');
                 return;
             }
 
-            const person =
-                await personRes.json();
-
-            personId =
-                person.id;
+            const person = await personRes.json();
+            personId = person.id;
         } else {
-            const selectVal =
-                document.getElementById(
-                    'residentSelect'
-                ).value;
+            const selectVal = document.getElementById('residentSelect').value;
 
             if (selectVal) {
-                personId =
-                    parseInt(
-                        selectVal
-                    );
+                personId = parseInt(selectVal);
             }
         }
 
         if (!personId) {
-            alert(
-                'Please select or create a resident'
-            );
+            alert('Please select or create a resident');
             return;
         }
 
         let rentedFromId = null;
 
         if (
-            occupancyType ===
-            'TENANT' ||
-            occupancyType ===
-            'SUB_TENANT'
+            occupancyType === 'TENANT' || occupancyType === 'SUB_TENANT'
         ) {
-            const ownerRadio =
-                document.querySelector(
-                    'input[name="ownerMode"]:checked'
-                );
+            const ownerRadio = document.querySelector('input[name="ownerMode"]:checked');
 
-            const ownerMode =
-                ownerRadio
-                    ? ownerRadio.value
-                    : 'select';
+            const ownerMode = ownerRadio ? ownerRadio.value : 'select';
 
             if (
                 ownerMode === 'new'
             ) {
-                const newOwnerName =
-                    document.getElementById(
-                        'newOwnerName'
-                    ).value;
+                const newOwnerName = document.getElementById('newOwnerName').value;
 
-                const newOwnerPhone =
-                    document.getElementById(
-                        'newOwnerPhone'
-                    ).value;
+                const newOwnerPhone = document.getElementById('newOwnerPhone').value;
 
                 if (
-                    newOwnerName &&
-                    newOwnerPhone
+                    newOwnerName && newOwnerPhone
                 ) {
-                    const ownerRes =
-                        await fetch(
+                    const ownerRes = await fetch(
                             '/api/persons',
                             {
                                 method: 'POST',
@@ -1788,23 +1613,17 @@ async function handleAssignOccupant(e) {
                         );
 
                     if (!ownerRes.ok) {
-                        alert(
-                            'Failed to create owner'
-                        );
+                        alert('Failed to create owner');
                         return;
                     }
 
-                    const ownerPerson =
-                        await ownerRes.json();
+                    const ownerPerson = await ownerRes.json();
 
-                    rentedFromId =
-                        ownerPerson.id;
+                    rentedFromId = ownerPerson.id;
                 }
             } else {
-                const selectVal =
-                    document.getElementById(
-                        'rentedFromSelect'
-                    ).value;
+                const selectVal = document.getElementById(
+                        'rentedFromSelect').value;
 
                 if (selectVal) {
                     rentedFromId =
@@ -1835,8 +1654,7 @@ async function handleAssignOccupant(e) {
                     : null
         };
 
-        const occRes =
-            await fetch(
+        const occRes = await fetch(
                 '/api/occupancies',
                 {
                     method: 'POST',
@@ -1857,71 +1675,42 @@ async function handleAssignOccupant(e) {
             loadBuildingsSection();
             loadDashboardStats();
         } else {
-            const msg =
-                await occRes.text();
+            const msg = await occRes.text();
 
-            alert(
-                'Failed to assign occupant: ' +
-                (msg ||
-                    occRes.statusText)
-            );
+            alert('Failed to assign occupant: ' + (msg || occRes.statusText));
         }
     } catch (err) {
         console.error(err);
 
-        alert(
-            'Error saving occupant details'
-        );
+        alert('Error saving occupant details');
     }
 }
 
 function openAddUserModal() {
-    document.getElementById(
-        'addUserForm'
-    ).reset();
+    document.getElementById('addUserForm').reset();
 
-    document.getElementById(
-        'addUserModal'
-    ).classList.add('show');
+    document.getElementById('addUserModal').classList.add('show');
 }
 
 function closeAddUserModal() {
-    document.getElementById(
-        'addUserModal'
-    ).classList.remove('show');
+    document.getElementById('addUserModal').classList.remove('show');
 }
 
 async function handleSaveNewUser(e) {
     e.preventDefault();
 
-    const username =
-        document.getElementById(
-            'addUsername'
-        ).value;
+    const username = document.getElementById('addUsername').value;
 
-    const email =
-        document.getElementById(
-            'addEmail'
-        ).value;
+    const email = document.getElementById('addEmail').value;
 
-    const phone =
-        document.getElementById(
-            'addPhone'
-        ).value;
+    const phone = document.getElementById('addPhone').value;
 
-    const password =
-        document.getElementById(
-            'addPassword'
-        ).value;
+    const password = document.getElementById('addPassword').value;
 
-    const role =
-        document.getElementById(
-            'addRole'
-        ).value;
+    const role = document.getElementById('addRole').value;
 
     try {
-        const res =
-            await fetch(
+        const res = await fetch(
                 '/api/users',
                 {
                     method: 'POST',
@@ -1946,14 +1735,11 @@ async function handleSaveNewUser(e) {
             loadUserManagement();
             loadDashboardStats();
         } else {
-            const msg =
-                await res.text();
+            const msg = await res.text();
 
-            alert(
-                'Failed to add user: ' +
+            alert('Failed to add user: ' +
                 (
-                    msg ||
-                    res.statusText
+                    msg || res.statusText
                 )
             );
         }
@@ -1971,31 +1757,18 @@ async function loadUserManagement() {
                 '/api/users'
             );
 
-        const users =
-            await res.json();
+        const users = await res.json();
 
-        const tbody =
-            document.getElementById(
-                'userTableBody'
-            );
+        const tbody = document.getElementById('userTableBody');
 
         tbody.innerHTML = '';
 
         users.forEach(u => {
-            const tr =
-                document.createElement(
-                    'tr'
-                );
+            const tr = document.createElement('tr');
 
-            const statusBtnClass =
-                u.enabled
-                    ? 'btn-enabled'
-                    : 'btn-disabled';
+            const statusBtnClass = u.enabled ? 'btn-enabled' : 'btn-disabled';
 
-            const statusText =
-                u.enabled
-                    ? 'ENABLED'
-                    : 'DISABLED';
+            const statusText = u.enabled ? 'ENABLED' : 'DISABLED';
 
             tr.innerHTML = `
                 <td>
@@ -2068,12 +1841,9 @@ async function loadUserManagement() {
     }
 }
 
-async function toggleUserStatus(
-    userId
-) {
+async function toggleUserStatus(userId) {
     try {
-        const res =
-            await fetch(
+        const res = await fetch(
                 `/api/users/${userId}/toggle-status`,
                 {
                     method: 'PUT'
@@ -2084,9 +1854,7 @@ async function toggleUserStatus(
             loadUserManagement();
         }
     } catch (e) {
-        alert(
-            'Failed to toggle status'
-        );
+        alert('Failed to toggle status');
     }
 }
 
@@ -2102,9 +1870,7 @@ async function changeUserRole(
         return;
     }
 
-    const confirmed = confirm(
-        `Are you sure you want to change the role of user "${username}" from ${oldRole} to ${newRole}?`
-    );
+    const confirmed = confirm(`Are you sure you want to change the role of user "${username}" from ${oldRole} to ${newRole}?`);
 
     if (!confirmed) {
         selectEl.value = oldRole;
@@ -2112,8 +1878,7 @@ async function changeUserRole(
     }
 
     try {
-        const res =
-            await fetch(
+        const res = await fetch(
                 `/api/users/${userId}/role`,
                 {
                     method: 'PUT',
@@ -2129,19 +1894,13 @@ async function changeUserRole(
 
         if (res.ok) {
             selectEl.setAttribute('data-old-role', newRole);
-            alert(
-                `Role for "${username}" updated to ${newRole} successfully!`
-            );
+            alert(`Role for "${username}" updated to ${newRole} successfully!`);
         } else {
-            alert(
-                'Failed to update role.'
-            );
+            alert('Failed to update role.');
             selectEl.value = oldRole;
         }
     } catch (e) {
-        alert(
-            'Failed to update role due to server error.'
-        );
+        alert('Failed to update role due to server error.');
         selectEl.value = oldRole;
     }
 }
@@ -2162,43 +1921,23 @@ function openEditUserModal(id, username, email, role, phone) {
 }
 
 function closeEditUserModal() {
-    document.getElementById(
-        'editUserModal'
-    ).classList.remove('show');
+    document.getElementById('editUserModal').classList.remove('show');
 }
 
 async function handleSaveEditedUser(e) {
     e.preventDefault();
 
-    const id =
-        document.getElementById(
-            'editUserId'
-        ).value;
+    const id = document.getElementById('editUserId').value;
 
-    const username =
-        document.getElementById(
-            'editUsername'
-        ).value;
+    const username = document.getElementById('editUsername').value;
 
-    const email =
-        document.getElementById(
-            'editEmail'
-        ).value;
+    const email = document.getElementById('editEmail').value;
 
-    const role =
-        document.getElementById(
-            'editRole'
-        ).value;
+    const role = document.getElementById('editRole').value;
 
-    const phone =
-        document.getElementById(
-            'editPhone'
-        ).value;
+    const phone = document.getElementById('editPhone').value;
 
-    const password =
-        document.getElementById(
-            'editPassword'
-        ).value;
+    const password = document.getElementById('editPassword').value;
 
     try {
         const payload = {
@@ -2208,16 +1947,11 @@ async function handleSaveEditedUser(e) {
             phone
         };
 
-        if (
-            password &&
-            password.trim().length > 0
-        ) {
-            payload.password =
-                password;
+        if (password && password.trim().length > 0) {
+            payload.password = password;
         }
 
-        const res =
-            await fetch(
+        const res = await fetch(
                 `/api/users/${id}`,
                 {
                     method: 'PUT',
@@ -2238,76 +1972,48 @@ async function handleSaveEditedUser(e) {
             loadUserManagement();
             loadDashboardStats();
         } else {
-            alert(
-                'Failed to update user details'
-            );
+            alert('Failed to update user details');
         }
-    } catch (err) {
-        alert(
-            'Error updating user'
-        );
-    }
+    } catch (err) {alert('Error updating user');}
 }
 
-async function deleteUser(
-    userId
-) {
+async function deleteUser(userId) {
     if (
-        !confirm(
-            'Are you sure you want to delete this account?'
-        )
+        !confirm('Are you sure you want to delete this account?')
     ) {
         return;
     }
 
     try {
-        const res =
-            await fetch(
+        const res = await fetch(
                 `/api/users/${userId}`,
-                {
-                    method: 'DELETE'
-                }
+                {method: 'DELETE'}
             );
 
         if (res.ok) {
             loadUserManagement();
             loadDashboardStats();
         } else {
-            alert(
-                'Failed to delete user'
-            );
+            alert('Failed to delete user');
         }
     } catch (e) {
-        alert(
-            'Error deleting user'
-        );
+        alert('Error deleting user');
     }
 }
 
-
 async function loadAssetSection() {
-    const isAdmin =
-        currentUser &&
-        currentUser.role === 'ADMIN';
+    const isAdmin = currentUser && currentUser.role === 'ADMIN';
 
-    const assetAdminRow =
-        document.getElementById(
-            'assetAdminRow'
-        );
+    const assetAdminRow = document.getElementById('assetAdminRow');
 
     if (assetAdminRow) {
-        assetAdminRow.style.display =
-            isAdmin ? 'grid' : 'none';
+        assetAdminRow.style.display = isAdmin ? 'grid' : 'none';
     }
 
-    const assetActionTh =
-        document.getElementById(
-            'assetActionTh'
-        );
+    const assetActionTh = document.getElementById('assetActionTh');
 
     if (assetActionTh) {
-        assetActionTh.style.display =
-            isAdmin
+        assetActionTh.style.display = isAdmin
                 ? 'table-cell'
                 : 'none';
     }
@@ -2323,81 +2029,50 @@ async function loadAssetSection() {
             fetch('/api/persons')
         ]);
 
-        const assets =
-            await assetsRes.json();
+        const assets = await assetsRes.json();
 
-        const assignments =
-            await assignmentsRes.json();
+        const assignments = await assignmentsRes.json();
 
-        const persons =
-            await personsRes.json();
+        const persons = await personsRes.json();
 
         if (isAdmin) {
-            const assetSelect =
-                document.getElementById(
-                    'assignAssetSelect'
-                );
+            const assetSelect = document.getElementById('assignAssetSelect');
 
             if (assetSelect) {
-                assetSelect.innerHTML =
-                    '<option value="">-- Select Asset --</option>';
+                assetSelect.innerHTML = '<option value="">-- Select Asset --</option>';
 
-                assets.forEach(a => {
-                    assetSelect.innerHTML +=
-                        `<option value="${a.id}">${a.name} (${a.type})</option>`;
-                });
+                assets.forEach(a => {assetSelect.innerHTML += `<option value="${a.id}">${a.name} (${a.type})</option>`;});
             }
 
-            const personSelect =
-                document.getElementById(
-                    'assignPersonSelect'
-                );
+            const personSelect = document.getElementById('assignPersonSelect');
 
             if (personSelect) {
-                personSelect.innerHTML =
-                    '<option value="">-- Select Person --</option>';
+                personSelect.innerHTML = '<option value="">-- Select Person --</option>';
 
                 persons.forEach(p => {
-                    const info =
-                        p.phone
+                    const info = p.phone
                             ? ` (${p.phone})`
                             : '';
 
-                    personSelect.innerHTML +=
-                        `<option value="${p.id}">${p.fullName}${info}</option>`;
+                    personSelect.innerHTML += `<option value="${p.id}">${p.fullName}${info}</option>`;
                 });
             }
 
-            const selectRadio =
-                document.querySelector(
-                    'input[name="assetPersonMode"][value="select"]'
-                );
+            const selectRadio = document.querySelector('input[name="assetPersonMode"][value="select"]');
 
-            if (selectRadio) {
-                selectRadio.checked =
-                    true;
-            }
+            if (selectRadio) {selectRadio.checked = true;}
 
-            toggleAssetPersonMode(
-                'select'
-            );
+            toggleAssetPersonMode('select');
         }
 
-        const tbody =
-            document.getElementById(
-                'assetAssignTableBody'
-            );
+        const tbody = document.getElementById('assetAssignTableBody');
 
         tbody.innerHTML = '';
 
         if (
-            !Array.isArray(
-                assignments
-            ) ||
-            assignments.length === 0
+            !Array.isArray(assignments) || assignments.length === 0
         ) {
-            const colSpan =
-                isAdmin ? 5 : 4;
+            const colSpan = isAdmin ? 5 : 4;
 
             tbody.innerHTML =
                 `<tr>
@@ -2411,14 +2086,9 @@ async function loadAssetSection() {
         }
 
         assignments.forEach(as => {
-            const tr =
-                document.createElement(
-                    'tr'
-                );
+            const tr = document.createElement('tr');
 
-            const actionTd =
-                isAdmin
-                    ? `
+            const actionTd = isAdmin ? `
                         <td>
                             <button
                                 onclick="deleteAssetAssignment(${as.id})"
@@ -2464,9 +2134,7 @@ async function loadAssetSection() {
 
                 <td>
                     <b>
-                        ${as.jobRole ||
-                'Assignee'
-                }
+                        ${as.jobRole || 'Assignee'}
                     </b>
                 </td>
 
@@ -2483,29 +2151,18 @@ async function loadAssetSection() {
 async function handleCreateAsset(e) {
     e.preventDefault();
 
-    if (
-        !currentUser ||
-        currentUser.role !== 'ADMIN'
+    if (!currentUser || currentUser.role !== 'ADMIN'
     ) {
-        alert(
-            'Only admin can add assets'
-        );
+        alert('Only admin can add assets');
         return;
     }
 
-    const name =
-        document.getElementById(
-            'assetName'
-        ).value;
+    const name = document.getElementById('assetName').value;
 
-    const type =
-        document.getElementById(
-            'assetType'
-        ).value;
+    const type = document.getElementById('assetType').value;
 
     try {
-        const res =
-            await fetch(
+        const res = await fetch(
                 '/api/assets',
                 {
                     method: 'POST',
@@ -2520,71 +2177,40 @@ async function handleCreateAsset(e) {
                 }
             );
 
-        if (res.ok) {
-            document.getElementById(
-                'createAssetForm'
-            ).reset();
+        if (res.ok) {document.getElementById('createAssetForm').reset();
 
             loadAssetSection();
             loadDashboardStats();
         } else {
-            const msg =
-                await res.text();
+            const msg = await res.text();
 
-            alert(
-                'Failed to create asset: ' +
-                (
-                    msg ||
-                    res.statusText
-                )
+            alert('Failed to create asset: ' + (msg || res.statusText)
             );
         }
     } catch (e) {
-        alert(
-            'Failed to create asset'
-        );
+        alert('Failed to create asset');
     }
 }
 
-async function handleAssignAssetToPerson(
-    e
-) {
+async function handleAssignAssetToPerson(e) {
     e.preventDefault();
 
-    if (
-        !currentUser ||
-        currentUser.role !== 'ADMIN'
-    ) {
-        alert(
-            'Only admin can assign persons to assets'
-        );
+    if (!currentUser || currentUser.role !== 'ADMIN') {
+        alert('Only admin can assign persons to assets');
         return;
     }
+    const assetId = document.getElementById('assignAssetSelect').value;
 
-    const assetId =
-        document.getElementById(
-            'assignAssetSelect'
-        ).value;
-
-    const jobRole =
-        document.getElementById(
-            'assetJobRole'
-        ).value;
+    const jobRole = document.getElementById('assetJobRole').value;
 
     if (!assetId) {
-        alert(
-            'Please select an asset to assign!'
-        );
+        alert('Please select an asset to assign!');
         return;
     }
 
-    const modeRadio =
-        document.querySelector(
-            'input[name="assetPersonMode"]:checked'
-        );
+    const modeRadio = document.querySelector('input[name="assetPersonMode"]:checked');
 
-    const personMode =
-        modeRadio
+    const personMode = modeRadio
             ? modeRadio.value
             : 'select';
 
@@ -2594,23 +2220,13 @@ async function handleAssignAssetToPerson(
         if (
             personMode === 'new'
         ) {
-            const fullName =
-                document.getElementById(
-                    'assetPersonName'
-                ).value;
+            const fullName = document.getElementById('assetPersonName').value;
 
-            const phone =
-                document.getElementById(
-                    'assetPersonPhone'
-                ).value;
+            const phone = document.getElementById('assetPersonPhone').value;
 
-            const personId =
-                document.getElementById(
-                    'assetPersonId'
-                ).value;
+            const personId = document.getElementById('assetPersonId').value;
 
-            const personRes =
-                await fetch(
+            const personRes = await fetch(
                     '/api/persons',
                     {
                         method: 'POST',
@@ -2627,38 +2243,25 @@ async function handleAssignAssetToPerson(
                 );
 
             if (!personRes.ok) {
-                alert(
-                    'Failed to register person details'
-                );
+                alert('Failed to register person details');
                 return;
             }
 
-            const person =
-                await personRes.json();
+            const person = await personRes.json();
 
-            finalPersonId =
-                person.id;
+            finalPersonId = person.id;
         } else {
-            const selectVal =
-                document.getElementById(
-                    'assignPersonSelect'
-                ).value;
+            const selectVal = document.getElementById('assignPersonSelect').value;
 
             if (!selectVal) {
-                alert(
-                    'Please select a person to assign!'
-                );
+                alert('Please select a person to assign!');
                 return;
             }
 
-            finalPersonId =
-                parseInt(
-                    selectVal
-                );
+            finalPersonId = parseInt(selectVal);
         }
 
-        const assignRes =
-            await fetch(
+        const assignRes = await fetch(
                 '/api/asset-Assignment',
                 {
                     method: 'POST',
@@ -2666,35 +2269,24 @@ async function handleAssignAssetToPerson(
                         'Content-Type':
                             'application/json'
                     },
-                    body: JSON.stringify({
-                        jobRole,
+                    body: JSON.stringify({jobRole,
                         asset: {
-                            id:
-                                parseInt(
-                                    assetId
-                                )
+                            id: parseInt(assetId)
                         },
                         person: {
-                            id:
-                                finalPersonId
+                            id: finalPersonId
                         }
                     })
                 }
             );
 
         if (assignRes.ok) {
-            document.getElementById(
-                'assignAssetForm'
-            ).reset();
+            document.getElementById('assignAssetForm').reset();
 
-            const selectRadio =
-                document.querySelector(
-                    'input[name="assetPersonMode"][value="select"]'
+            const selectRadio = document.querySelector('input[name="assetPersonMode"][value="select"]'
                 );
 
-            if (selectRadio) {
-                selectRadio.checked =
-                    true;
+            if (selectRadio) {selectRadio.checked = true;
             }
 
             toggleAssetPersonMode(
@@ -2703,25 +2295,16 @@ async function handleAssignAssetToPerson(
 
             await loadAssetSection();
 
-            alert(
-                'Person assigned to asset successfully!'
-            );
+            alert('Person assigned to asset successfully!');
         } else {
-            const errText =
-                await assignRes.text();
+            const errText = await assignRes.text();
 
-            alert(
-                'Failed to assign person to asset: ' +
-                errText
-            );
+            alert('Failed to assign person to asset: ' + errText);
         }
     } catch (e) {
         console.error(e);
 
-        alert(
-            'Error creating asset assignment: ' +
-            (e.message || e)
-        );
+        alert('Error creating asset assignment: ' + (e.message || e));
     }
 }
 
@@ -2729,8 +2312,7 @@ async function deleteAssetAssignment(
     id
 ) {
     try {
-        const res =
-            await fetch(
+        const res = await fetch(
                 `/api/asset-Assignment/${id}`,
                 {
                     method: 'DELETE'
@@ -2741,9 +2323,7 @@ async function deleteAssetAssignment(
             await loadAssetSection();
         }
     } catch (e) {
-        alert(
-            'Failed to delete assignment'
-        );
+        alert('Failed to delete assignment');
     }
 }
 
@@ -2783,248 +2363,155 @@ async function loadPersonsList() {
 }
 
 function openProfileModal() {
-    const modal =
-        document.getElementById(
-            'profileModal'
-        );
+    const modal = document.getElementById('profileModal');
 
     if (!modal) {
-        console.error(
-            'Profile modal not found.'
-        );
+        console.error('Profile modal not found.');
         return;
     }
 
     loadProfileData();
 
-    modal.classList.add(
-        'show'
-    );
+    modal.classList.add('show');
 }
 
 function closeProfileModal() {
-    const modal =
-        document.getElementById(
-            'profileModal'
-        );
+    const modal = document.getElementById('profileModal');
 
     if (!modal) {
         return;
     }
 
-    modal.classList.remove(
-        'show'
-    );
+    modal.classList.remove('show');
 }
 
 function loadProfileData() {
     if (!currentUser) {
-        console.warn(
-            'No logged-in user found.'
-        );
+        console.warn('No logged-in user found.');
         return;
     }
 
-    const username =
-        currentUser.username ||
-        'User';
+    const username = currentUser.username || 'User';
 
-    const email =
-        currentUser.email ||
-        '-';
+    const email = currentUser.email || '-';
 
-    const phone =
-        currentUser.phone ||
-        '-';
+    const phone = currentUser.phone || '-';
 
-    const role =
-        currentUser.role ||
-        'RESIDENT';
+    const role = currentUser.role || 'RESIDENT';
 
-    const firstLetter =
-        username
+    const firstLetter = username
             .charAt(0)
             .toUpperCase();
 
-    const profileAvatar =
-        document.getElementById(
-            'profileAvatar'
+    const profileAvatar = document.getElementById('profileAvatar'
         );
 
     if (profileAvatar) {
-        profileAvatar.textContent =
-            firstLetter;
+        profileAvatar.textContent = firstLetter;
     }
 
-    const profileModalAvatar =
-        document.getElementById(
-            'profileModalAvatar'
+    const profileModalAvatar = document.getElementById('profileModalAvatar'
         );
 
     if (profileModalAvatar) {
-        profileModalAvatar.textContent =
-            firstLetter;
+        profileModalAvatar.textContent = firstLetter;
     }
 
-    const profileModalName =
-        document.getElementById(
-            'profileModalName'
+    const profileModalName = document.getElementById('profileModalName'
         );
 
-    if (profileModalName) {
-        profileModalName.textContent =
-            username;
+    if (profileModalName) {profileModalName.textContent = username;
     }
 
-    const profileModalRole =
-        document.getElementById(
-            'profileModalRole'
+    const profileModalRole = document.getElementById('profileModalRole'
         );
 
     if (profileModalRole) {
-        profileModalRole.textContent =
-            role;
+        profileModalRole.textContent = role;
     }
 
-    const profileUsername =
-        document.getElementById(
-            'profileUsername'
+    const profileUsername = document.getElementById('profileUsername'
         );
 
     if (profileUsername) {
-        profileUsername.textContent =
-            username;
+        profileUsername.textContent = username;
     }
 
-    const profileEmail =
-        document.getElementById(
-            'profileEmail'
+    const profileEmail = document.getElementById('profileEmail'
         );
 
     if (profileEmail) {
-        profileEmail.textContent =
-            email;
+        profileEmail.textContent = email;
     }
 
-    const profilePhone =
-        document.getElementById(
-            'profilePhone'
+    const profilePhone = document.getElementById('profilePhone'
         );
 
     if (profilePhone) {
-        profilePhone.textContent =
-            phone;
+        profilePhone.textContent = phone;
     }
 
-    const profileRole =
-        document.getElementById(
-            'profileRole'
+    const profileRole = document.getElementById('profileRole'
         );
 
-    if (profileRole) {
-        profileRole.textContent =
-            role;
+    if (profileRole) {profileRole.textContent = role;
     }
 }
 
 function openEditProfile() {
     if (!currentUser) {
-        console.warn(
-            'No logged-in user found.'
-        );
+        console.warn('No logged-in user found.');
         return;
     }
 
-    document.getElementById(
-        'editProfileUsername'
-    ).value =
-        currentUser.username || '';
+    document.getElementById('editProfileUsername').value = currentUser.username || '';
 
-    document.getElementById(
-        'editProfileEmail'
-    ).value =
-        currentUser.email || '';
+    document.getElementById('editProfileEmail').value = currentUser.email || '';
 
-    document.getElementById(
-        'editProfilePhone'
-    ).value =
-        currentUser.phone || '';
+    document.getElementById('editProfilePhone').value = currentUser.phone || '';
 
-    document.getElementById(
-        'editProfilePassword'
-    ).value = '';
+    document.getElementById('editProfilePassword').value = '';
 
-    document.getElementById(
-        'editProfileCurrentPassword'
-    ).value = '';
+    document.getElementById('editProfileCurrentPassword').value = '';
 
     closeProfileModal();
 
-    document.getElementById(
-        'editProfileModal'
-    ).classList.add(
-        'show'
-    );
+    document.getElementById('editProfileModal'
+    ).classList.add('show');
 }
 
 function closeEditProfile() {
-    const modal =
-        document.getElementById(
-            'editProfileModal'
-        );
+    const modal = document.getElementById('editProfileModal');
 
     if (!modal) {
         return;
     }
 
-    modal.classList.remove(
-        'show'
-    );
+    modal.classList.remove('show');
 }
 
-async function saveEditProfile(e) {
-    e.preventDefault();
+async function saveEditProfile(e) {e.preventDefault();
 
-    if (!currentUser) {
-        alert(
-            'No logged-in user found.'
-        );
+    if (!currentUser) {alert('No logged-in user found.');
         return;
     }
 
-    const username =
-        document.getElementById(
-            'editProfileUsername'
-        ).value.trim();
+    const username = document.getElementById('editProfileUsername').value.trim();
 
-    const email =
-        document.getElementById(
-            'editProfileEmail'
-        ).value.trim();
+    const email = document.getElementById('editProfileEmail').value.trim();
 
-    const phone =
-        document.getElementById(
-            'editProfilePhone'
-        ).value.trim();
+    const phone = document.getElementById('editProfilePhone').value.trim();
 
-    const password =
-        document.getElementById(
-            'editProfilePassword'
-        ).value;
+    const password = document.getElementById('editProfilePassword').value;
 
-    const currentPassword =
-        document.getElementById(
-            'editProfileCurrentPassword'
-        ).value;
+    const currentPassword = document.getElementById('editProfileCurrentPassword').value;
 
     if (
         !username ||
         !email ||
         !phone
     ) {
-        alert(
-            'Please fill in all fields.'
-        );
+        alert('Please fill in all fields.');
         return;
     }
 
@@ -3034,16 +2521,10 @@ async function saveEditProfile(e) {
             return;
         }
     }
-
     try {
-        const res =
-            await fetch(
-                '/api/users/profile',
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type':
-                            'application/json'
+        const res = await fetch('/api/users/profile',
+                {method: 'PUT',
+                    headers: {'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         username,
@@ -3055,99 +2536,51 @@ async function saveEditProfile(e) {
                 }
             );
 
-        if (!res.ok) {
-            const message =
-                await res.text();
+        if (!res.ok) {const message = await res.text();
+            alert('Failed to update profile: ' + (message || res.statusText));
+                return;}
 
-            alert(
-                'Failed to update profile: ' +
-                (
-                    message ||
-                    res.statusText
-                )
-            );
-
-            return;
-        }
-
-        const refreshed =
-            await refreshCurrentUser();
+        const refreshed = await refreshCurrentUser();
 
         if (!refreshed) {
-            alert(
-                'Profile updated, but the latest user information could not be loaded.'
-            );
+            alert('Profile updated, but the latest user information could not be loaded.');
             return;
         }
-
         closeEditProfile();
         openProfileModal();
 
     } catch (error) {
-        console.error(
-            'Profile update error:',
-            error
-        );
-
-        alert(
-            'An error occurred while updating your profile.'
-        );
+        console.error('Profile update error:', error);
+        alert('An error occurred while updating your profile.');
     }
 }
 
 async function refreshCurrentUser() {
     try {
-        const res =
-            await fetch(
-                '/api/auth/me'
-            );
+        const res = await fetch('/api/auth/me');
 
         if (!res.ok) {
-            console.error(
-                'Failed to refresh current user.'
-            );
-
+            console.error('Failed to refresh current user.');
             return false;
         }
 
-        currentUser =
-            await res.json();
+        currentUser = await res.json();
 
-        const usernameElement =
-            document.getElementById(
-                'displayUsername'
-            );
+        const usernameElement = document.getElementById('displayUsername');
 
-        if (usernameElement) {
-            usernameElement.textContent =
-                currentUser.username ||
-                'User';
-        }
+        if (usernameElement) {usernameElement.textContent = currentUser.username || 'User';}
 
-        const roleElement =
-            document.getElementById(
-                'displayRole'
-            );
+        const roleElement = document.getElementById('displayRole');
 
-        if (roleElement) {
-            roleElement.textContent =
-                currentUser.role ||
-                'RESIDENT';
-        }
-
+        if (roleElement) {roleElement.textContent = currentUser.role || 'RESIDENT';}
         return true;
 
     } catch (error) {
-        console.error(
-            'Failed to refresh current user:',
-            error
-        );
-
+        console.error('Failed to refresh current user:', error);
         return false;
     }
 }
 
-/* Colony Management Functions */
 function escapeQuote(str) {
     if (!str) return '';
     return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
@@ -3281,7 +2714,7 @@ async function deleteColony(id) {
     }
 }
 
-/* Profile Dropdown logic */
+// Dropdown profile
 function toggleProfileDropdown(event) {
     event.stopPropagation();
     const dropdown = document.getElementById('profileDropdownContent');
@@ -3307,7 +2740,7 @@ document.addEventListener('click', (event) => {
     }
 });
 
-/* Re-render floor layout dynamically on language change if building layout is active */
+// update floor layout on lang change
 window.addEventListener('languageChanged', function () {
     if (typeof currentBuildingId !== 'undefined' && currentBuildingId) {
         fetch('/api/buildings/' + currentBuildingId)
