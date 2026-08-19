@@ -2434,29 +2434,25 @@ function loadProfileData() {
         profileModalRole.textContent = role;
     }
 
-    const profileUsername = document.getElementById('profileUsername'
-        );
+    const profileUsername = document.getElementById('profileUsername');
 
     if (profileUsername) {
         profileUsername.textContent = username;
     }
 
-    const profileEmail = document.getElementById('profileEmail'
-        );
+    const profileEmail = document.getElementById('profileEmail');
 
     if (profileEmail) {
         profileEmail.textContent = email;
     }
 
-    const profilePhone = document.getElementById('profilePhone'
-        );
+    const profilePhone = document.getElementById('profilePhone');
 
     if (profilePhone) {
         profilePhone.textContent = phone;
     }
 
-    const profileRole = document.getElementById('profileRole'
-        );
+    const profileRole = document.getElementById('profileRole');
 
     if (profileRole) {profileRole.textContent = role;
     }
