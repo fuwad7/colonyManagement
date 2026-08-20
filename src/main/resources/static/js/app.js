@@ -195,17 +195,10 @@ document.getElementById('loginPassword').addEventListener('input', () => {
 async function handleRegister(e) {
     e.preventDefault();
 
-    const username =
-        document.getElementById('regUsername').value;
-
-    const email =
-        document.getElementById('regEmail').value;
-
-    const phone =
-        document.getElementById('regPhone').value;
-
-    const password =
-        document.getElementById('regPassword').value;
+    const username = document.getElementById('regUsername').value;
+    const email = document.getElementById('regEmail').value;
+    const phone = document.getElementById('regPhone').value;
+    const password = document.getElementById('regPassword').value;
 
     const usernameError = document.getElementById('regUsernameError');
     const emailError = document.getElementById('regEmailError');
@@ -216,6 +209,44 @@ async function handleRegister(e) {
     emailError.textContent = '';
     phoneError.textContent = '';
     passwordError.textContent = '';
+
+    let isValid = true;
+
+    if (!username.trim()) {
+        usernameError.textContent = 'Username is required';
+        isValid = false;
+    } else if (username.trim().length < 3) {
+        usernameError.textContent = 'Username must be at least 3 characters';
+        isValid = false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+        emailError.textContent = 'Email address is required';
+        isValid = false;
+    } else if (!emailRegex.test(email.trim())) {
+        emailError.textContent = 'Invalid input format';
+        isValid = false;
+    }
+
+    const phoneRegex = /^\d{11}$/;
+    if (!phone.trim()) {
+        phoneError.textContent = 'Phone number is required';
+        isValid = false;
+    } else if (!phoneRegex.test(phone.trim())) {
+        phoneError.textContent = 'only 11 digits number';
+        isValid = false;
+    }
+
+    if (!password) {
+        passwordError.textContent = 'Password is required';
+        isValid = false;
+    } else if (password.length < 6) {
+        passwordError.textContent = 'Password must be at least 6 characters';
+        isValid = false;
+    }
+
+    if (!isValid) return;
 
     try {
         const res = await fetch('/api/auth/register', {
@@ -232,19 +263,12 @@ async function handleRegister(e) {
         });
 
         if (res.ok) {
-            alert(
-                'Registration successful! Please login.'
-            );
+            alert('Registration successful! Please login.');
 
             switchAuthTab('login');
 
-            document.getElementById(
-                'loginUsername'
-            ).value = username;
-
-            document.getElementById(
-                'loginPassword'
-            ).value = password;
+            document.getElementById('loginUsername').value = username;
+            document.getElementById('loginPassword').value = password;
         } else {
             const msg = await res.text();
             const lowerMsg = msg.toLowerCase();
@@ -268,11 +292,13 @@ async function handleRegister(e) {
 
 document.querySelectorAll('#registerForm .form-input').forEach(input => {
     input.addEventListener('input', function() {
+
         const errorDiv = document.getElementById(`${this.id}Error`);
-        if (errorDiv) errorDiv.textContent = '';
+        if (errorDiv) {
+            errorDiv.textContent = '';
+        }
     });
 });
-
 
 async function handleLogout() {
     try {
