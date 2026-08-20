@@ -137,16 +137,14 @@ function switchAuthTab(tab) {
 async function handleLogin(e) {
     e.preventDefault();
 
-    const username =
-        document.getElementById('loginUsername').value;
+    const usernameInput = document.getElementById('loginUsername');
+    const passwordInput = document.getElementById('loginPassword');
 
-    const password =
-        document.getElementById('loginPassword').value;
+    const usernameError = document.getElementById('usernameError');
+    const passwordError = document.getElementById('passwordError');
 
-    const errorEl =
-        document.getElementById('authError');
-
-    errorEl.style.display = 'none';
+    usernameError.textContent = '';
+    passwordError.textContent = '';
 
     try {
         const res = await fetch('/api/auth/login', {
@@ -155,8 +153,8 @@ async function handleLogin(e) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                username,
-                password
+                username: usernameInput.value,
+                password: passwordInput.value
             })
         });
 
@@ -172,19 +170,27 @@ async function handleLogin(e) {
             showAppView();
         } else {
             const msg = await res.text();
+            const lowerMsg = msg.toLowerCase();
 
-            errorEl.textContent =
-                msg || 'Login failed';
-
-            errorEl.style.display = 'block';
+            if (lowerMsg.includes('user') || lowerMsg.includes('email')) {
+                usernameError.textContent = msg || 'Invalid username';
+            } else if (lowerMsg.includes('password')) {
+                passwordError.textContent = msg || 'Invalid password';
+            } else {
+                usernameError.textContent = msg || 'Login failed';
+            }
         }
     } catch (err) {
-        errorEl.textContent =
-            'Server connection error';
-
-        errorEl.style.display = 'block';
+        usernameError.textContent = 'Server connection error';
     }
 }
+
+document.getElementById('loginUsername').addEventListener('input', () => {
+    document.getElementById('usernameError').textContent = '';
+});
+document.getElementById('loginPassword').addEventListener('input', () => {
+    document.getElementById('passwordError').textContent = '';
+});
 
 async function handleRegister(e) {
     e.preventDefault();
@@ -201,10 +207,15 @@ async function handleRegister(e) {
     const password =
         document.getElementById('regPassword').value;
 
-    const errorEl =
-        document.getElementById('authError');
+    const usernameError = document.getElementById('regUsernameError');
+    const emailError = document.getElementById('regEmailError');
+    const phoneError = document.getElementById('regPhoneError');
+    const passwordError = document.getElementById('regPasswordError');
 
-    errorEl.style.display = 'none';
+    usernameError.textContent = '';
+    emailError.textContent = '';
+    phoneError.textContent = '';
+    passwordError.textContent = '';
 
     try {
         const res = await fetch('/api/auth/register', {
@@ -236,19 +247,32 @@ async function handleRegister(e) {
             ).value = password;
         } else {
             const msg = await res.text();
+            const lowerMsg = msg.toLowerCase();
 
-            errorEl.textContent =
-                msg || 'Registration failed';
-
-            errorEl.style.display = 'block';
+            if (lowerMsg.includes('username') || lowerMsg.includes('user')) {
+                usernameError.textContent = msg || 'Invalid username';
+            } else if (lowerMsg.includes('email')) {
+                emailError.textContent = msg || 'Invalid email address';
+            } else if (lowerMsg.includes('phone') || lowerMsg.includes('mobile')) {
+                phoneError.textContent = msg || 'Invalid phone number';
+            } else if (lowerMsg.includes('password')) {
+                passwordError.textContent = msg || 'Invalid password';
+            } else {
+                usernameError.textContent = msg || 'Registration failed';
+            }
         }
     } catch (err) {
-        errorEl.textContent =
-            'Server connection error';
-
-        errorEl.style.display = 'block';
+        usernameError.textContent = 'Server connection error';
     }
 }
+
+document.querySelectorAll('#registerForm .form-input').forEach(input => {
+    input.addEventListener('input', function() {
+        const errorDiv = document.getElementById(`${this.id}Error`);
+        if (errorDiv) errorDiv.textContent = '';
+    });
+});
+
 
 async function handleLogout() {
     try {

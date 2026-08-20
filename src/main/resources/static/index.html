@@ -39,39 +39,49 @@
 
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label for="loginUsername" data-i18n="LABEL_USERNAME">Username</label>
+                    <label for="loginUsername">
+                        <span data-i18n="LABEL_USERNAME">Username</span> <span class="required">*</span>
+                    </label>
                     <input type="text" id="loginUsername" class="form-input" placeholder="Username"
                         data-i18n-placeholder="PLACEHOLDER_USERNAME" required>
+                    <div id = "usernameError" class = "error-text"></div>
                 </div>
                 <div class="form-group">
-                    <label for="loginPassword" data-i18n="LABEL_PASSWORD">Password</label>
+                    <label for="loginPassword">
+                        <span data-i18n="LABEL_PASSWORD">Password</span> <span class="required">*</span>
+                    </label>
                     <input type="password" id="loginPassword" class="form-input" placeholder="Password"
                         data-i18n-placeholder="PLACEHOLDER_PASSWORD" required>
                 </div>
+                <div id = "passwordError" class = "error-text"></div>
                 <button type="submit" class="btn-primary" data-i18n="BTN_LOGIN">Login</button>
             </form>
 
             <form id="registerForm" onsubmit="handleRegister(event)" style="display:none">
                 <div class="form-group">
-                    <label for="regUsername" data-i18n="LABEL_USERNAME">Username</label>
+                    <label for="regUsername" data-i18n="LABEL_USERNAME">Username <span class="required">*</span></label>
                     <input type="text" id="regUsername" class="form-input" placeholder="Username"
                         data-i18n-placeholder="PLACEHOLDER_USERNAME" required>
                 </div>
+                <div id = "regUsernameError" class = "error-text"></div>
                 <div class="form-group">
-                    <label for="regEmail" data-i18n="LABEL_EMAIL">Email</label>
+                    <label for="regEmail" data-i18n="LABEL_EMAIL">Email <span class="required">*</span></label>
                     <input type="email" id="regEmail" class="form-input" placeholder="Email address"
                         data-i18n-placeholder="PLACEHOLDER_EMAIL">
                 </div>
+                <div id = "regEmailError" class = "error-text"></div>
                 <div class="form-group">
-                    <label for="regPhone" data-i18n="LABEL_PHONE">Phone Number</label>
+                    <label for="regPhone" data-i18n="LABEL_PHONE">Phone Number <span class="required">*</span> </label>
                     <input type="text" id="regPhone" class="form-input" placeholder="Phone Number"
                         data-i18n-placeholder="PLACEHOLDER_PHONE" required>
                 </div>
+                <div id = "regPhoneError" class = "error-text"></div>
                 <div class="form-group">
-                    <label for="regPassword" data-i18n="LABEL_PASSWORD">Password</label>
+                    <label for="regPassword" data-i18n="LABEL_PASSWORD">Password <span class="required">*</span></label>
                     <input type="password" id="regPassword" class="form-input" placeholder="Password"
                         data-i18n-placeholder="PLACEHOLDER_PASSWORD" required>
                 </div>
+                <div id = "regPasswordError" class = "error-text"></div>
                 <button type="submit" class="btn-primary" data-i18n="BTN_REGISTER">Register</button>
             </form>
         </div>
