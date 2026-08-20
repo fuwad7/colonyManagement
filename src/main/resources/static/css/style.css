@@ -987,7 +987,6 @@ input:checked ~ .header_labels:after {
     color: #ffffff;
 }
 
-/* ─── Auth Page Language Toggle ──────────────────────────────────────────── */
 .auth-wrapper {
     position: relative;
 }
@@ -999,8 +998,22 @@ input:checked ~ .header_labels:after {
     z-index: 10;
 }
 
-/* Ensure Bengali text renders properly everywhere */
 body, input, button, select, label, th, td, p, h1, h2, h3, span, a {
     font-family: 'Segoe UI', 'Noto Sans Bengali', 'Hind Siliguri', Arial, sans-serif;
 }
+.form-group {
+    margin-bottom: 15px;
+}
 
+.error-text {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+    min-height: 18px;
+}
+.required {
+    color: #ff0000;
+    margin-left: 2px;
+    font-weight: bold;
+}
