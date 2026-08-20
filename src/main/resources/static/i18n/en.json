@@ -191,5 +191,29 @@
     "OWNER": "Owner",
     "TENANT": "Tenant",
     "SUB_TENANT": "Sub-Tenant",
-    "OCCUPIED": "Occupied"
+    "OCCUPIED": "Occupied",
+
+    "ERR_USERNAME_REQUIRED": "Username is required",
+    "ERR_USERNAME_MIN": "Username must be at least 3 characters",
+    "ERR_EMAIL_REQUIRED": "Email address is required",
+    "ERR_EMAIL_INVALID": "Invalid email format",
+    "ERR_PHONE_REQUIRED": "Phone number is required",
+    "ERR_PHONE_INVALID": "Only 11-digit numbers allowed",
+    "ERR_PASSWORD_REQUIRED": "Password is required",
+    "ERR_PASSWORD_MIN": "Password must be at least 6 characters",
+    "ERR_SERVER": "Server connection error",
+    "ERR_LOGIN_FAILED": "Login failed",
+    "ERR_INVALID_USERNAME": "Invalid username",
+    "ERR_INVALID_PASSWORD": "Invalid password",
+    "ERR_INVALID_EMAIL": "Invalid email address",
+    "ERR_INVALID_PHONE": "Invalid phone number",
+    "ERR_REGISTRATION_FAILED": "Registration failed",
+    "SUCCESS_REGISTER": "Registration successful! Please login.",
+
+    "SELECT_FLOOR": "-- Select Floor --",
+    "SELECT_FLOOR_PROMPT": "Select a floor from the dropdown above to view its flats.",
+    "NO_FLATS_ON_FLOOR": "No flats on this floor yet.",
+    "FILTER_BY_COLONY": "Filter by Colony:",
+    "ALL_COLONIES": "-- All Colonies --",
+    "JUMP_TO_FLOOR": "Jump to Floor:"
 }

@@ -191,5 +191,29 @@
     "OWNER": "মালিক",
     "TENANT": "ভাড়াটিয়া",
     "SUB_TENANT": "সাব-ভাড়াটিয়া",
-    "OCCUPIED": "দখলকৃত"
+    "OCCUPIED": "দখলকৃত",
+
+    "ERR_USERNAME_REQUIRED": "ইউজারনেম আবশ্যক",
+    "ERR_USERNAME_MIN": "ইউজারনেম অন্তত ৩ অক্ষরের হতে হবে",
+    "ERR_EMAIL_REQUIRED": "ইমেইল ঠিকানা আবশ্যক",
+    "ERR_EMAIL_INVALID": "ইমেইল ফরম্যাট সঠিক নয়",
+    "ERR_PHONE_REQUIRED": "ফোন নম্বর আবশ্যক",
+    "ERR_PHONE_INVALID": "শুধুমাত্র ১১ সংখ্যার নম্বর গ্রহণযোগ্য",
+    "ERR_PASSWORD_REQUIRED": "পাসওয়ার্ড আবশ্যক",
+    "ERR_PASSWORD_MIN": "পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে",
+    "ERR_SERVER": "সার্ভার সংযোগ ত্রুটি",
+    "ERR_LOGIN_FAILED": "লগইন ব্যর্থ হয়েছে",
+    "ERR_INVALID_USERNAME": "অবৈধ ইউজারনেম",
+    "ERR_INVALID_PASSWORD": "অবৈধ পাসওয়ার্ড",
+    "ERR_INVALID_EMAIL": "অবৈধ ইমেইল ঠিকানা",
+    "ERR_INVALID_PHONE": "অবৈধ ফোন নম্বর",
+    "ERR_REGISTRATION_FAILED": "নিবন্ধন ব্যর্থ হয়েছে",
+    "SUCCESS_REGISTER": "নিবন্ধন সফল হয়েছে! অনুগ্রহ করে লগইন করুন।",
+
+    "SELECT_FLOOR": "-- তলা নির্বাচন করুন --",
+    "SELECT_FLOOR_PROMPT": "ফ্ল্যাট দেখতে উপরের ড্রপডাউন থেকে একটি তলা নির্বাচন করুন।",
+    "NO_FLATS_ON_FLOOR": "এই তলায় এখনো কোনো ফ্ল্যাট নেই।",
+    "FILTER_BY_COLONY": "কলোনি অনুযায়ী ফিল্টার:",
+    "ALL_COLONIES": "-- সকল কলোনি --",
+    "JUMP_TO_FLOOR": "তলায় যান:"
 }
