@@ -7,6 +7,7 @@ let currentBuildingId = null;
 let selectedFlatId = null;
 let dashboardIntervalId = null;
 let layoutClosedByUser = false;
+let allBuildings = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
@@ -146,6 +147,8 @@ async function handleLogin(e) {
     usernameError.textContent = '';
     passwordError.textContent = '';
 
+    const t = (key) => (window.i18n && window.i18n.t(key)) || key;
+
     try {
         const res = await fetch('/api/auth/login', {
             method: 'POST',
@@ -173,15 +176,15 @@ async function handleLogin(e) {
             const lowerMsg = msg.toLowerCase();
 
             if (lowerMsg.includes('user') || lowerMsg.includes('email')) {
-                usernameError.textContent = msg || 'Invalid username';
+                usernameError.textContent = t('ERR_INVALID_USERNAME');
             } else if (lowerMsg.includes('password')) {
-                passwordError.textContent = msg || 'Invalid password';
+                passwordError.textContent = t('ERR_INVALID_PASSWORD');
             } else {
-                usernameError.textContent = msg || 'Login failed';
+                usernameError.textContent = msg || t('ERR_LOGIN_FAILED');
             }
         }
     } catch (err) {
-        usernameError.textContent = 'Server connection error';
+        usernameError.textContent = t('ERR_SERVER');
     }
 }
 
@@ -210,39 +213,41 @@ async function handleRegister(e) {
     phoneError.textContent = '';
     passwordError.textContent = '';
 
+    const t = (key) => (window.i18n && window.i18n.t(key)) || key;
+
     let isValid = true;
 
     if (!username.trim()) {
-        usernameError.textContent = 'Username is required';
+        usernameError.textContent = t('ERR_USERNAME_REQUIRED');
         isValid = false;
     } else if (username.trim().length < 3) {
-        usernameError.textContent = 'Username must be at least 3 characters';
+        usernameError.textContent = t('ERR_USERNAME_MIN');
         isValid = false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim()) {
-        emailError.textContent = 'Email address is required';
+        emailError.textContent = t('ERR_EMAIL_REQUIRED');
         isValid = false;
     } else if (!emailRegex.test(email.trim())) {
-        emailError.textContent = 'Invalid input format';
+        emailError.textContent = t('ERR_EMAIL_INVALID');
         isValid = false;
     }
 
     const phoneRegex = /^\d{11}$/;
     if (!phone.trim()) {
-        phoneError.textContent = 'Phone number is required';
+        phoneError.textContent = t('ERR_PHONE_REQUIRED');
         isValid = false;
     } else if (!phoneRegex.test(phone.trim())) {
-        phoneError.textContent = 'only 11 digits number';
+        phoneError.textContent = t('ERR_PHONE_INVALID');
         isValid = false;
     }
 
     if (!password) {
-        passwordError.textContent = 'Password is required';
+        passwordError.textContent = t('ERR_PASSWORD_REQUIRED');
         isValid = false;
     } else if (password.length < 6) {
-        passwordError.textContent = 'Password must be at least 6 characters';
+        passwordError.textContent = t('ERR_PASSWORD_MIN');
         isValid = false;
     }
 
@@ -263,7 +268,7 @@ async function handleRegister(e) {
         });
 
         if (res.ok) {
-            alert('Registration successful! Please login.');
+            alert(t('SUCCESS_REGISTER'));
 
             switchAuthTab('login');
 
@@ -274,19 +279,19 @@ async function handleRegister(e) {
             const lowerMsg = msg.toLowerCase();
 
             if (lowerMsg.includes('username') || lowerMsg.includes('user')) {
-                usernameError.textContent = msg || 'Invalid username';
+                usernameError.textContent = msg || t('ERR_INVALID_USERNAME');
             } else if (lowerMsg.includes('email')) {
-                emailError.textContent = msg || 'Invalid email address';
+                emailError.textContent = msg || t('ERR_INVALID_EMAIL');
             } else if (lowerMsg.includes('phone') || lowerMsg.includes('mobile')) {
-                phoneError.textContent = msg || 'Invalid phone number';
+                phoneError.textContent = msg || t('ERR_INVALID_PHONE');
             } else if (lowerMsg.includes('password')) {
-                passwordError.textContent = msg || 'Invalid password';
+                passwordError.textContent = msg || t('ERR_INVALID_PASSWORD');
             } else {
-                usernameError.textContent = msg || 'Registration failed';
+                usernameError.textContent = msg || t('ERR_REGISTRATION_FAILED');
             }
         }
     } catch (err) {
-        usernameError.textContent = 'Server connection error';
+        usernameError.textContent = t('ERR_SERVER');
     }
 }
 
@@ -634,6 +639,8 @@ async function loadBuildingsSection() {
         const colRes = await fetch('/api/colonies');
         if (colRes.ok) {
             const colonies = await colRes.json();
+
+            // Populate add-building form colony select
             const sel = document.getElementById('bldgColonySelect');
             if (sel) {
                 const currentVal = sel.value;
@@ -647,111 +654,114 @@ async function loadBuildingsSection() {
                 });
                 if (currentVal) sel.value = currentVal;
             }
+
+            // Populate building colony filter dropdown
+            const filterSel = document.getElementById('buildingColonyFilter');
+            if (filterSel) {
+                const prevFilter = filterSel.value;
+                const allColoniesText = (window.i18n && window.i18n.t('ALL_COLONIES')) || '-- All Colonies --';
+                filterSel.innerHTML = `<option value="">${allColoniesText}</option>`;
+                colonies.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    filterSel.appendChild(opt);
+                });
+                if (prevFilter) filterSel.value = prevFilter;
+            }
         }
     } catch (e) {
         console.error('Error loading colony dropdown:', e);
     }
     try {
         const res = await fetch('/api/buildings');
-
         const buildings = await res.json();
-
-        const container = document.getElementById('buildingListGrid');
-
-        container.innerHTML = '';
-
-        if (buildings.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-secondary)">No buildings created yet.</p>';
-
-            document.getElementById('floorLayoutContainer').innerHTML = '<p style="color:var(--text-secondary)">No building selected.</p>';
-            return;
-        }
-        buildings.forEach(b => {
-            const card = document.createElement('div');
-
-            card.className = 'building-card';
-
-            if (
-                currentBuildingId === b.id
-            ) {
-                card.style.borderColor = 'var(--accent-blue)';
-            }
-
-            const adminButtonsHtml =
-                isAdmin
-                    ? `
-                        <div style="display:flex; gap:6px">
-                            <button
-                                onclick="event.stopPropagation(); openEditBuildingModal(${b.id}, '${b.name}', ${b.floorCount}, ${b.unitsPerFloor})"
-                                style="background:var(--bg-input); color:var(--accent-blue); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer" title="Edit Building">
-                                ✏️ Edit
-                            </button>
-
-                            <button
-                                onclick="event.stopPropagation(); deleteBuilding(${b.id})"
-                                style="background:rgba(244,63,94,0.2); color:var(--accent-rose); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer" title="Delete Building">
-                                🗑️ Delete
-                            </button>
-                        </div>
-                    `
-                    : '';
-
-            const colonyName = b.colony ? b.colony.name : 'Unassigned Colony';
-
-            card.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:flex-start">
-
-                    <h3 style="color:var(--accent-blue); font-size:1.1rem; margin-bottom:8px">
-                        ${b.name}
-                    </h3>
-
-                    ${adminButtonsHtml}
-                </div>
-
-                <p style="color:var(--accent-emerald); font-size:0.8rem; margin-bottom:4px; font-weight:600">
-                    🏘️ ${colonyName}
-                </p>
-
-                <p style="color:var(--text-secondary); font-size:0.85rem">
-                    Floors:
-                    <b>${b.floorCount}</b>
-                    |
-                    Units/Floor:
-                    <b>${b.unitsPerFloor}</b>
-                </p>
-
-                <p style="color:var(--text-secondary); font-size:0.8rem; margin-top:4px">
-                    Total Flats:
-                    ${b.floorCount * b.unitsPerFloor}
-                </p>
-            `;
-
-            card.onclick = () => selectBuilding(b);
-            container.appendChild(card);
-        });
-
-        if (!layoutClosedByUser) {
-            const found =
-                buildings.find(
-                    b =>
-                        b.id ===
-                        currentBuildingId
-                );
-
-            if (found) {
-                renderFloorLayout(found);
-            } else if (
-                buildings.length > 0
-            ) {
-                selectBuilding(
-                    buildings[0]
-                );
-            }
-        }
+        allBuildings = buildings;
+        renderBuildingCards(buildings);
     } catch (e) {
         console.error(e);
     }
 }
+
+function renderBuildingCards(buildings) {
+    const isAdmin = currentUser && currentUser.role === 'ADMIN';
+    const container = document.getElementById('buildingListGrid');
+    container.innerHTML = '';
+
+    if (buildings.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-secondary)">No buildings found.</p>';
+        document.getElementById('floorLayoutContainer').innerHTML = '<p style="color:var(--text-secondary)">No building selected.</p>';
+        return;
+    }
+
+    buildings.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'building-card';
+
+        if (currentBuildingId === b.id) {
+            card.style.borderColor = 'var(--accent-blue)';
+        }
+
+        const adminButtonsHtml = isAdmin
+            ? `
+                <div style="display:flex; gap:6px">
+                    <button
+                        onclick="event.stopPropagation(); openEditBuildingModal(${b.id}, '${b.name}', ${b.floorCount}, ${b.unitsPerFloor})"
+                        style="background:var(--bg-input); color:var(--accent-blue); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer" title="Edit Building">
+                        ✏️ Edit
+                    </button>
+                    <button
+                        onclick="event.stopPropagation(); deleteBuilding(${b.id})"
+                        style="background:rgba(244,63,94,0.2); color:var(--accent-rose); border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer" title="Delete Building">
+                        🗑️ Delete
+                    </button>
+                </div>`
+            : '';
+
+        const colonyName = b.colony ? b.colony.name : 'Unassigned Colony';
+
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:flex-start">
+                <h3 style="color:var(--accent-blue); font-size:1.1rem; margin-bottom:8px">${b.name}</h3>
+                ${adminButtonsHtml}
+            </div>
+            <p style="color:var(--accent-emerald); font-size:0.8rem; margin-bottom:4px; font-weight:600">🏘️ ${colonyName}</p>
+            <p style="color:var(--text-secondary); font-size:0.85rem">Floors: <b>${b.floorCount}</b> | Units/Floor: <b>${b.unitsPerFloor}</b></p>
+            <p style="color:var(--text-secondary); font-size:0.8rem; margin-top:4px">Total Flats: ${b.floorCount * b.unitsPerFloor}</p>
+        `;
+
+        card.onclick = () => selectBuilding(b);
+        container.appendChild(card);
+    });
+
+    if (!layoutClosedByUser) {
+        const found = buildings.find(b => b.id === currentBuildingId);
+        if (found) {
+            renderFloorLayout(found);
+        } else if (buildings.length > 0) {
+            selectBuilding(buildings[0]);
+        }
+    }
+}
+
+function filterBuildingsByColony() {
+    const filterSel = document.getElementById('buildingColonyFilter');
+    const colonyId = filterSel ? filterSel.value : '';
+    if (!colonyId) {
+        renderBuildingCards(allBuildings);
+    } else {
+        const filtered = allBuildings.filter(b => b.colony && String(b.colony.id) === String(colonyId));
+        renderBuildingCards(filtered);
+    }
+}
+
+function jumpToFloor(floorNum) {
+    if (!floorNum) return;
+    const sel = document.getElementById('floorJumpSelect');
+    if (sel) sel.value = floorNum;
+    showFloorContent(parseInt(floorNum));
+}
+
 
 async function handleCreateBuilding(e) {
     e.preventDefault();
@@ -1089,175 +1099,34 @@ async function renderFloorLayout(building) {
             ].push(f);
         });
 
-        floorContainer.innerHTML =
-            '';
+        // Cache on building object so showFloorContent can use it
+        building._floorsMap = floorsMap;
+        building._occupancies = occupancies;
+        building._isAdmin = isAdmin;
+        window._currentBuildingData = building;
 
-        for (
-            let floorNum =
-                building.floorCount;
-            floorNum >= 1;
-            floorNum--
-        ) {
-            const floorFlats =
-                floorsMap[floorNum] ||
-                [];
-
-            const floorRow =
-                document.createElement(
-                    'div'
-                );
-
-            floorRow.className =
-                'floor-row';
-
-            let flatsHtml = '';
-
-            floorFlats.forEach(
-                flat => {
-                    const occ =
-                        occupancies.find(
-                            o =>
-                                o.flat &&
-                                o.flat.id ===
-                                flat.id
-                        );
-
-                    const vacantTxt = window.i18n ? window.i18n.t('BADGE_VACANT') : 'VACANT';
-                    const noOccTxt = window.i18n ? window.i18n.t('NO_OCCUPANT') : 'No Occupant assigned';
-                    let occBadge =
-                        `<span class="occupant-badge badge-vacant">${vacantTxt}</span>`;
-
-                    let occDetails =
-                        `<em>${noOccTxt}</em>`;
-
-                    if (occ) {
-                        const resident =
-                            occ.person;
-
-                        const occType =
-                            occ.occupancyType ||
-                            occ.OccupancyType ||
-                            'OCCUPIED';
-
-                        let badgeClass =
-                            'badge-owner';
-
-                        if (
-                            occType ===
-                            'TENANT'
-                        ) {
-                            badgeClass =
-                                'badge-tenant';
-                        }
-
-                        if (
-                            occType ===
-                            'SUB_TENANT'
-                        ) {
-                            badgeClass =
-                                'badge-subtenant';
-                        }
-
-                        const translatedBadge = window.i18n ? window.i18n.t(occType) : occType;
-                        occBadge =
-                            `<span class="occupant-badge ${badgeClass}">${translatedBadge}</span>`;
-
-                        let rentedFromStr =
-                            '';
-
-                        if (
-                            occ.rentedFrom
-                        ) {
-                            const rentedFromLabel = window.i18n ? window.i18n.t('RENTED_FROM') : 'Rented From:';
-                            const landlordLabel = window.i18n ? window.i18n.t('LANDLORD_LABEL') : 'Landlord';
-                            rentedFromStr =
-                                `<br><small style="color:var(--accent-amber)">${rentedFromLabel} ${occ.rentedFrom.fullName || landlordLabel}</small>`;
-                        }
-                        const occLabel = window.i18n ? window.i18n.t('OCCUPANT_LABEL') : 'Occupant';
-                        const phoneLabel = window.i18n ? window.i18n.t('PHONE_LABEL') : 'Phone:';
-                        const naLabel = window.i18n ? window.i18n.t('NA_LABEL') : 'N/A';
-
-                        occDetails = `
-                            <strong>
-                                ${resident
-                                ? resident.fullName
-                                : occLabel
-                            }
-                            </strong>
-                            <br>
-                            ${phoneLabel}
-                            ${resident
-                                ? resident.phone
-                                : naLabel
-                            }
-                            ${rentedFromStr}
-                        `;
-                    }
-                    const editOccTxt = window.i18n ? window.i18n.t('BTN_EDIT_OCCUPANT') : 'Edit Occupant';
-                    const removeTxt = window.i18n ? window.i18n.t('BTN_REMOVE') : 'Remove';
-                    const addOccTxt = window.i18n ? window.i18n.t('BTN_ADD_OCCUPANT') : 'Add Occupant';
-
-                    const assignBtnHtml =
-                        isAdmin
-                            ? (
-                                occ
-                                    ? `
-                                        <div style="display:flex; gap:6px; margin-top:8px">
-                                            <button
-                                                class="btn-assign-flat"
-                                                onclick="openAssignModal(${flat.id}, '${flat.flatName}')"
-                                                style="margin-top:0; flex:1">
-                                                ${editOccTxt}
-                                            </button>
-                                            <button
-                                                onclick="removeOccupant(${occ.id})"
-                                                style="background:#fee2e2; border:1px solid #fca5a5; color:#b91c1c; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer">
-                                                ${removeTxt}
-                                            </button>
-
-                                        </div>
-                                    `
-                                    : `
-                                        <button
-                                            class="btn-assign-flat"
-                                            onclick="openAssignModal(${flat.id}, '${flat.flatName}')"
-                                            style="margin-top:8px">
-                                            ${addOccTxt}
-                                        </button>
-                                    `
-                            )
-                            : '';
-
-                    flatsHtml += `
-                        <div class="flat-card">
-                            <div class="flat-card-title">
-                                <span>${flat.flatName}
-                                </span>${occBadge}</div>
-                            <div class="occupant-details">
-                                ${occDetails}
-                            </div>${assignBtnHtml}</div>`;
-                }
-            );
-
-            const formattedFloorTitle = formatFloorTitle(floorNum);
-            const flatsSuffix = window.i18n ? window.i18n.t('FLATS_COUNT_SUFFIX') : 'Flats';
-            const formattedCount = formatNumber(floorFlats.length);
-
-            floorRow.innerHTML = `
-                <div class="floor-header">
-                    ${formattedFloorTitle}
-                    (${formattedCount} ${flatsSuffix})
-                </div>
-
-                <div class="flat-cards-wrapper">
-                    ${flatsHtml}
-                </div>
-            `;
-
-            floorContainer.appendChild(
-                floorRow
-            );
+        // Populate and show the floor select dropdown
+        const floorJumpSel = document.getElementById('floorJumpSelect');
+        const floorWrapper = document.getElementById('floorDropdownWrapper');
+        if (floorJumpSel && floorWrapper) {
+            const selectFloorTxt = window.i18n ? window.i18n.t('SELECT_FLOOR') : '-- Select Floor --';
+            floorJumpSel.innerHTML = `<option value="">${selectFloorTxt}</option>`;
+            for (let fn = building.floorCount; fn >= 1; fn--) {
+                const opt = document.createElement('option');
+                opt.value = fn;
+                opt.textContent = formatFloorTitle(fn);
+                floorJumpSel.appendChild(opt);
+            }
+            floorWrapper.style.display = 'flex';
+            floorJumpSel.onchange = function() {
+                if (this.value) showFloorContent(parseInt(this.value));
+            };
         }
+
+        // Show prompt to select a floor
+        const selectFloorPrompt = window.i18n ? window.i18n.t('SELECT_FLOOR_PROMPT') : 'Select a floor from the dropdown above to view its flats.';
+        floorContainer.innerHTML = `<p style="color:var(--text-secondary); padding:20px 0">${selectFloorPrompt}</p>`;
+
     } catch (e) {
         console.error(e);
 
@@ -1265,6 +1134,86 @@ async function renderFloorLayout(building) {
         floorContainer.innerHTML = `<p style="color:var(--accent-rose)">${failText}</p>`;
     }
 }
+
+function showFloorContent(floorNum) {
+    const building = window._currentBuildingData;
+    if (!building || !building._floorsMap) return;
+
+    const floorContainer = document.getElementById('floorLayoutContainer');
+    const floorsMap = building._floorsMap;
+    const occupancies = building._occupancies;
+    const isAdmin = building._isAdmin;
+
+    const floorFlats = floorsMap[floorNum] || [];
+
+    let flatsHtml = '';
+
+    floorFlats.forEach(flat => {
+        const occ = occupancies.find(o => o.flat && o.flat.id === flat.id);
+
+        const vacantTxt = window.i18n ? window.i18n.t('BADGE_VACANT') : 'VACANT';
+        const noOccTxt = window.i18n ? window.i18n.t('NO_OCCUPANT') : 'No Occupant assigned';
+        let occBadge = `<span class="occupant-badge badge-vacant">${vacantTxt}</span>`;
+        let occDetails = `<em>${noOccTxt}</em>`;
+
+        if (occ) {
+            const resident = occ.person;
+            const occType = occ.occupancyType || occ.OccupancyType || 'OCCUPIED';
+            let badgeClass = 'badge-owner';
+            if (occType === 'TENANT') badgeClass = 'badge-tenant';
+            if (occType === 'SUB_TENANT') badgeClass = 'badge-subtenant';
+            const translatedBadge = window.i18n ? window.i18n.t(occType) : occType;
+            occBadge = `<span class="occupant-badge ${badgeClass}">${translatedBadge}</span>`;
+
+            let rentedFromStr = '';
+            if (occ.rentedFrom) {
+                const rentedFromLabel = window.i18n ? window.i18n.t('RENTED_FROM') : 'Rented From:';
+                const landlordLabel = window.i18n ? window.i18n.t('LANDLORD_LABEL') : 'Landlord';
+                rentedFromStr = `<br><small style="color:var(--accent-amber)">${rentedFromLabel} ${occ.rentedFrom.fullName || landlordLabel}</small>`;
+            }
+            const occLabel = window.i18n ? window.i18n.t('OCCUPANT_LABEL') : 'Occupant';
+            const phoneLabel = window.i18n ? window.i18n.t('PHONE_LABEL') : 'Phone:';
+            const naLabel = window.i18n ? window.i18n.t('NA_LABEL') : 'N/A';
+
+            occDetails = `<strong>${resident ? resident.fullName : occLabel}</strong><br>${phoneLabel} ${resident ? resident.phone : naLabel}${rentedFromStr}`;
+        }
+
+        const editOccTxt = window.i18n ? window.i18n.t('BTN_EDIT_OCCUPANT') : 'Edit Occupant';
+        const removeTxt = window.i18n ? window.i18n.t('BTN_REMOVE') : 'Remove';
+        const addOccTxt = window.i18n ? window.i18n.t('BTN_ADD_OCCUPANT') : 'Add Occupant';
+
+        const assignBtnHtml = isAdmin
+            ? (occ
+                ? `<div style="display:flex; gap:6px; margin-top:8px">
+                       <button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')" style="margin-top:0; flex:1">${editOccTxt}</button>
+                       <button onclick="removeOccupant(${occ.id})" style="background:#fee2e2; border:1px solid #fca5a5; color:#b91c1c; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer">${removeTxt}</button>
+                   </div>`
+                : `<button class="btn-assign-flat" onclick="openAssignModal(${flat.id}, '${flat.flatName}')" style="margin-top:8px">${addOccTxt}</button>`)
+            : '';
+
+        flatsHtml += `
+            <div class="flat-card">
+                <div class="flat-card-title"><span>${flat.flatName}</span>${occBadge}</div>
+                <div class="occupant-details">${occDetails}</div>
+                ${assignBtnHtml}
+            </div>`;
+    });
+
+    const formattedFloorTitle = formatFloorTitle(floorNum);
+    const flatsSuffix = window.i18n ? window.i18n.t('FLATS_COUNT_SUFFIX') : 'Flats';
+    const formattedCount = formatNumber(floorFlats.length);
+    const noFlatsMsg = window.i18n ? window.i18n.t('NO_FLATS_ON_FLOOR') : 'No flats on this floor yet.';
+
+    floorContainer.innerHTML = `
+        <div class="floor-row" id="floor-row-${floorNum}">
+            <div class="floor-header">${formattedFloorTitle} (${formattedCount} ${flatsSuffix})</div>
+            <div class="flat-cards-wrapper">
+                ${flatsHtml || `<p style="color:var(--text-secondary)">${noFlatsMsg}</p>`}
+            </div>
+        </div>
+    `;
+}
+
 
 function closeFloorLayout() {
     currentBuildingId = null;
@@ -1276,9 +1225,13 @@ function closeFloorLayout() {
         window.i18n ? window.i18n.t('BUILDING_LAYOUT') : 'Floor Layout';
 
     const closeBtn = document.getElementById('closeFloorLayoutBtn');
-
     if (closeBtn) {
         closeBtn.style.display = 'none';
+    }
+
+    const floorWrapper = document.getElementById('floorDropdownWrapper');
+    if (floorWrapper) {
+        floorWrapper.style.display = 'none';
     }
 
     const selectBldgTxt = window.i18n ? window.i18n.t('SELECT_BUILDING') : 'Select a building to view layout.';
