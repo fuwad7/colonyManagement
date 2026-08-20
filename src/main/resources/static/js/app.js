@@ -623,20 +623,13 @@ async function loadDashboardStats() {
 }
 
 async function loadBuildingsSection() {
-    const isAdmin =
-        currentUser &&
-        currentUser.role === 'ADMIN';
+    const isAdmin = currentUser && currentUser.role === 'ADMIN';
 
-    const addBuildingPanel =
-        document.getElementById(
-            'addBuildingPanel'
-        );
+    const addBuildingPanel = document.getElementById('addBuildingPanel');
 
     if (addBuildingPanel) {
-        addBuildingPanel.style.display =
-            isAdmin ? 'block' : 'none';
+        addBuildingPanel.style.display = isAdmin ? 'block' : 'none';
     }
-
     try {
         const colRes = await fetch('/api/colonies');
         if (colRes.ok) {
@@ -658,50 +651,30 @@ async function loadBuildingsSection() {
     } catch (e) {
         console.error('Error loading colony dropdown:', e);
     }
-
     try {
-        const res =
-            await fetch('/api/buildings');
+        const res = await fetch('/api/buildings');
 
-        const buildings =
-            await res.json();
+        const buildings = await res.json();
 
-        const container =
-            document.getElementById(
-                'buildingListGrid'
-            );
+        const container = document.getElementById('buildingListGrid');
 
         container.innerHTML = '';
 
-        if (
-            buildings.length === 0
-        ) {
-            container.innerHTML =
-                '<p style="color:var(--text-secondary)">No buildings created yet.</p>';
+        if (buildings.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-secondary)">No buildings created yet.</p>';
 
-            document.getElementById(
-                'floorLayoutContainer'
-            ).innerHTML =
-                '<p style="color:var(--text-secondary)">No building selected.</p>';
-
+            document.getElementById('floorLayoutContainer').innerHTML = '<p style="color:var(--text-secondary)">No building selected.</p>';
             return;
         }
-
         buildings.forEach(b => {
-            const card =
-                document.createElement(
-                    'div'
-                );
+            const card = document.createElement('div');
 
-            card.className =
-                'building-card';
+            card.className = 'building-card';
 
             if (
-                currentBuildingId ===
-                b.id
+                currentBuildingId === b.id
             ) {
-                card.style.borderColor =
-                    'var(--accent-blue)';
+                card.style.borderColor = 'var(--accent-blue)';
             }
 
             const adminButtonsHtml =

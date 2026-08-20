@@ -332,26 +332,27 @@
                             </div>
                         </form>
                     </div>
-
                     <div class="section-title" style="font-size:1.1rem; margin-top:20px" data-i18n="BUILDINGS_LABEL">
-                        Buildings:</div>
+                        Buildings:
+                    </div>
                     <div id="buildingListGrid" class="building-grid"></div>
 
+                    <div id="buildingPagination" class="pagination-container" style="margin-top: 15px;"></div>
+
                     <div style="margin-top:32px">
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
                             <div id="selectedBuildingTitle" class="section-title"
-                                style="font-size:1.2rem; color:var(--accent-blue); margin:0">🏢 <span
+                                 style="font-size:1.2rem; color:var(--accent-blue); margin:0">🏢 <span
                                     data-i18n="BUILDING_LAYOUT">Floor Layout</span></div>
                             <button id="closeFloorLayoutBtn" onclick="closeFloorLayout()"
-                                style="display:none; background:#e2e8f0; color:#475569; border:none; padding:6px 12px; border-radius:4px; font-weight:600; font-size:0.85rem; cursor:pointer"
-                                data-i18n="BUILDING_CLOSE">✖ Close Building</button>
+                                    style="display:none; background:#e2e8f0; color:#475569; border:none; padding:6px 12px; border-radius:4px; font-weight:600; font-size:0.85rem; cursor:pointer"
+                                    data-i18n="BUILDING_CLOSE">✖ Close Building</button>
                         </div>
                         <div id="floorLayoutContainer" class="floor-container">
-                            <p style="color:var(--text-secondary)" data-i18n="SELECT_BUILDING">Select a building to view
-                                layout.</p>
+                            <p style="color:var(--text-secondary)" data-i18n="SELECT_BUILDING">Select a building to view layout.</p>
                         </div>
                     </div>
+
                 </div>
 
                 <div id="sec-users" style="display:none">
