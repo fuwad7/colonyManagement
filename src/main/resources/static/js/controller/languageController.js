@@ -27,7 +27,6 @@
     }
 
     function applyTranslations() {
-        // Text content
         document.querySelectorAll('[data-i18n]').forEach(function (el) {
             const key = el.getAttribute('data-i18n');
             const value = _translations[key];
@@ -101,7 +100,6 @@
 
         observer.observe(document.body, { childList: true, subtree: true });
     }
-
     document.addEventListener('DOMContentLoaded', async function () {
         await setLanguage(_currentLang);
         observeDom();
